@@ -80,7 +80,7 @@ The `.mcp.json` config is included — Claude Code will auto-discover all tools.
 
 ## Architecture
 
-```
+```bash
 MCP Client (Claude Code — local)
     │
     ├── mcp_server.ts ─── tool registration (Neocortica tools)
