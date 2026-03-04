@@ -1,6 +1,11 @@
 <!-- markdownlint-disable -->
+
+# Ignore folder start with dot
+.assets/
+.claude/
+.memory/
+.context/
+.cache/
+
 # Ignore node_modules
 node_modules/
-
-# Ignore skills
-.claude/commands

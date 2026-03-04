@@ -1,4 +1,28 @@
+# Folders starting with a dot
+**.*/
+
+# Node
 node_modules/
 dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environment
 .env
-.claude/settings.local.json
+
+# Claude Code
+CLAUDE.md
+.mcp.json
+.claude/
+
+# Project
+TODO.md
+.mcp.json

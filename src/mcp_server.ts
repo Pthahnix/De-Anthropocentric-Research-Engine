@@ -1,106 +1,214 @@
-// src/mcp_server.ts — MCP server that forwards to NEOCORTICA_RAILWAY
-
-import 'dotenv/config';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { z } from 'zod';
-import { pdfMarkdown } from './pdf_utils.ts';
-
-// ── Config ───────────────────────────────────────────────────────────
-
-const BACKEND_URL = process.env['BASE_URL_NEOCORTICA'] ?? 'http://localhost:3000';
-const API_SECRET  = process.env['API_KEY_NEOCORTICA']  ?? '';
-
-// ── HTTP helper ──────────────────────────────────────────────────────
-
-async function apiCall<T>(
-  method: 'GET' | 'POST',
-  path: string,
-  params?: Record<string, string>,
-  body?: unknown,
-): Promise<T> {
-  let url = `${BACKEND_URL}/api${path}`;
-  if (params) {
-    const qs = new URLSearchParams(params);
-    url += '?' + qs.toString();
-  }
-  const resp = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_SECRET}`,
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  if (!resp.ok) {
-    const text = await resp.text();
-    throw new Error(`backend ${resp.status}: ${text}`);
-  }
-  return resp.json() as Promise<T>;
-}
-
-// ── MCP Server ───────────────────────────────────────────────────────
+import "dotenv/config";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+import { paperContent } from "./tools/markdown.js";
+import { acdSearch, dfsSearch } from "./tools/academic.js";
+import { webSearch, webContent } from "./tools/web.js";
+import { pplxSearch, pplxAsk, pplxProResearch, pplxDeepResearch } from "./tools/perplexity.js";
 
 const server = new McpServer({
-  name: 'neocortica',
-  version: '0.1.0',
+  name: "neocortica",
+  version: "0.2.0",
 });
 
-// paper_searching — fetch raw markdown
-server.tool(
-  'paper_searching',
-  'Fetch the full markdown text of an arXiv paper. Provide at least id, url, or title.',
-  {
-    id:    z.string().optional().describe('arXiv ID, e.g. "2205.14135"'),
-    url:   z.string().optional().describe('arXiv URL, e.g. "https://arxiv.org/abs/2205.14135"'),
-    title: z.string().optional().describe('Paper title, e.g. "Attention Is All You Need"'),
-  },
-  async (args) => {
-    const params: Record<string, string> = {};
-    if (args.id)    params['id']    = args.id;
-    if (args.url)   params['url']   = args.url;
-    if (args.title) params['title'] = args.title;
+// ── Helper: build progress callback from MCP extra ──────────────────
 
-    const data = await apiCall<{ markdown: string }>(
-      'GET', '/paper/search', params,
-    );
-    return { content: [{ type: 'text' as const, text: data.markdown }] };
-  },
-);
-
-// paper_reading — AI analysis (arxiv or local PDF)
-server.tool(
-  'paper_reading',
-  'Read a paper with AI analysis. Supports arXiv (id/url/title) or local PDF (path).',
-  {
-    id:     z.string().optional().describe('arXiv ID, e.g. "2205.14135"'),
-    url:    z.string().optional().describe('arXiv URL, e.g. "https://arxiv.org/abs/2205.14135"'),
-    title:  z.string().optional().describe('Paper title (optional)'),
-    path:   z.string().optional().describe('Local PDF file path'),
-    prompt: z.string().optional().describe('Custom reading prompt'),
-  },
-  async (args) => {
-    const body: Record<string, string> = {};
-    if (args.prompt) body['prompt'] = args.prompt;
-
-    if (args.path) {
-      // Local PDF → convert via Modal, send markdown to backend
-      const md = await pdfMarkdown({ path: args.path });
-      body['markdown'] = md;
-    } else {
-      if (args.id)    body['id']    = args.id;
-      if (args.url)   body['url']   = args.url;
-      if (args.title) body['title'] = args.title;
+function makeProgress(server: McpServer, extra: any) {
+  const token = extra?._meta?.progressToken;
+  return async (info: { message: string; current?: number; total?: number }) => {
+    if (token !== undefined && info.current !== undefined && info.total !== undefined) {
+      await extra.sendNotification({
+        method: "notifications/progress",
+        params: { progressToken: token, progress: info.current, total: info.total, message: info.message },
+      });
     }
+    try { await server.sendLoggingMessage({ level: "info", data: info.message }); } catch {}
+  };
+}
 
-    const data = await apiCall<{ response: string }>(
-      'POST', '/paper/read', undefined, body,
-    );
-    return { content: [{ type: 'text' as const, text: data.response }] };
+// ── Tools ───────────────────────────────────────────────────────────
+
+server.tool(
+  "paper_content",
+  "Convert a paper to markdown. Accepts a title, arXiv URL, PDF URL, or local PDF path. " +
+  "Returns paper metadata with cached markdown path.",
+  {
+    title: z.string().optional().describe("Paper title"),
+    url: z.string().optional().describe("arXiv URL or PDF URL"),
+    dir: z.string().optional().describe("Local PDF file path"),
+  },
+  async (args, extra: any) => {
+    try {
+      const result = await paperContent(args, makeProgress(server, extra));
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `paper_content failed: ${e.message}` }] };
+    }
   },
 );
 
-// ── Start ────────────────────────────────────────────────────────────
+server.tool(
+  "acd_search",
+  "Academic search: query Google Scholar, fetch full text for each result, " +
+  "cache markdown locally. Returns paper metadata list.",
+  {
+    query: z.string().describe("Search query for Google Scholar"),
+  },
+  async ({ query }, extra: any) => {
+    try {
+      const results = await acdSearch(query, makeProgress(server, extra));
+      return { content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `acd_search failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "dfs_search",
+  "Deep reference exploration via DFS. Follows references of a paper " +
+  "recursively up to depth/breadth limits. Returns all discovered papers.",
+  {
+    title: z.string().describe("Paper title"),
+    normalizedTitle: z.string().describe("Normalized title for dedup"),
+    s2Id: z.string().optional().describe("Semantic Scholar paper ID"),
+    depth: z.number().describe("Max recursion depth"),
+    breadth: z.number().describe("Max references per level"),
+    visited: z.array(z.string()).optional().describe("Already visited normalizedTitles"),
+  },
+  async (args, extra: any) => {
+    try {
+      const paper = {
+        title: args.title,
+        normalizedTitle: args.normalizedTitle,
+        s2Id: args.s2Id,
+      };
+      const results = await dfsSearch(
+        paper,
+        args.depth,
+        args.breadth,
+        args.visited ?? [],
+        makeProgress(server, extra),
+      );
+      return { content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `dfs_search failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "web_search",
+  "Search the web via Brave Search. Returns a list of results with title, URL, and description. " +
+  "Use web_content to fetch full markdown for specific URLs.",
+  {
+    query: z.string().describe("Search query"),
+    count: z.number().optional().describe("Max results (default 10)"),
+  },
+  async (args) => {
+    try {
+      const results = await webSearch(args.query, args.count);
+      return { content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `web_search failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "web_content",
+  "Fetch a web page and convert it to markdown. Caches the result locally. " +
+  "Returns metadata with cached markdown path.",
+  {
+    url: z.string().describe("URL to fetch"),
+    title: z.string().optional().describe("Page title (derived from URL if omitted)"),
+  },
+  async (args) => {
+    try {
+      const result = await webContent(args.url, args.title);
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `web_content failed: ${e.message}` }] };
+    }
+  },
+);
+
+// ── Perplexity Tools ─────────────────────────────────────────────────
+
+server.tool(
+  "pplx_search",
+  "Quick web search via Perplexity Search API. Returns structured search results with titles, URLs, and snippets. " +
+  "Use as a complement to web_search for broader coverage.",
+  {
+    query: z.string().describe("Search query"),
+    max_results: z.number().optional().describe("Max results (default 5)"),
+  },
+  async (args) => {
+    try {
+      const results = await pplxSearch(args.query, { max_results: args.max_results });
+      return { content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `pplx_search failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "pplx_ask",
+  "Ask a question via Perplexity Sonar. Returns a grounded answer with citations. " +
+  "Supports web/academic/sec search modes. Use for fact-checking and gap validation.",
+  {
+    question: z.string().describe("Question to ask"),
+    search_mode: z.enum(["web", "academic", "sec"]).optional().describe("Search mode (default: web)"),
+  },
+  async (args) => {
+    try {
+      const result = await pplxAsk(args.question, { search_mode: args.search_mode });
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `pplx_ask failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "pplx_pro_research",
+  "Multi-step research via Perplexity sonar-pro with high search context. " +
+  "Use for open-ended exploration of tangential topics and broad field scanning.",
+  {
+    question: z.string().describe("Research question"),
+    system_prompt: z.string().optional().describe("Optional system prompt for focus"),
+  },
+  async (args) => {
+    try {
+      const result = await pplxProResearch(args.question, args.system_prompt);
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `pplx_pro_research failed: ${e.message}` }] };
+    }
+  },
+);
+
+server.tool(
+  "pplx_deep_research",
+  "Deep research via Perplexity sonar-deep-research (async). Performs 20-50 automated searches. " +
+  "Use for mandatory stage validation and comprehensive fact-checking. Expensive — use sparingly.",
+  {
+    question: z.string().describe("Deep research question"),
+    timeout_ms: z.number().optional().describe("Timeout in ms (default 10 min)"),
+  },
+  async (args) => {
+    try {
+      const result = await pplxDeepResearch(args.question, { timeout_ms: args.timeout_ms });
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: `pplx_deep_research failed: ${e.message}` }] };
+    }
+  },
+);
+
+// ── Start ───────────────────────────────────────────────────────────
 
 const transport = new StdioServerTransport();
 await server.connect(transport);

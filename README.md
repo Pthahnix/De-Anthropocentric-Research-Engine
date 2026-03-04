@@ -1,91 +1,117 @@
-# NEOCORTICA
+# Neocortica
 
-![NEOCORTICA](./assets/cover.png)
+Vibe researching toolkit — AI-powered academic research automation, from literature discovery to experiment execution.
 
-> **Note:** This project is currently a personal demo / prototype and is not ready for general use. The backend service and API keys are private, so cloning this repo alone won't give you a working setup. Feel free to browse the code for reference or inspiration.
+> [!NOTE]
+> This is a work-in-progress personal project, under active development.
 
-An MCP (Model Context Protocol) server for reading and analyzing arXiv papers with AI. Works with Claude Code and other MCP-compatible clients.
+## What It Does
 
-## Prerequisites
+- Search and filter academic papers from Google Scholar
+- Deep reference exploration via Semantic Scholar citation graphs
+- Convert arXiv papers, PDFs, and web pages to AI-readable markdown
+- Web search via Brave Search API for non-academic sources
+- Full-text caching for offline access and repeated queries
+- Perplexity-powered search, Q&A, and deep research (optional)
+- GPU experiment execution via RunPod with Supervisor HTTP service (pod provisioning, remote training, result retrieval)
+- Five-stage research pipeline: survey → gaps → ideas → design → execution
 
-- Node.js >= 18
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (or any MCP-compatible client)
+## How It Works
 
-## Setup
+Most academic AI tools only read abstracts to triage papers. Neocortica downloads the full paper text, converts it to markdown, and lets AI evaluate based on complete methodology, experiments, and discussion.
 
-### 1. Clone and install
+Three-layer architecture: atomic API wrappers (`utils/`) → pipeline orchestration (`tools/`) → MCP server registration (`mcp_server.ts`).
+
+## Research Pipeline (v0.7.0)
+
+Five-stage iterative pipeline: Topic → Literature Survey → Gap Analysis → Idea Generation → Experiment Design → Experiment Execution
+
+Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomous gap discovery and dynamic stopping conditions. Stage 5 dispatches the experiment to a GPU pod via the Supervisor HTTP service.
+
+**Key Features**:
+
+- 6 parallel searches per iteration (3 acd_search + 3 web_search)
+- Three-pass reading protocol (High/Medium/Low rating)
+- State inheritance between stages (knowledge + papersRead)
+- Zero external validation cost (removed Perplexity dependencies)
+- Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
+- Supervisor-mediated experiment execution: local CC → HTTP API → remote CC on RunPod pod
+- Checkpoint-based phase control with continue/revise/abort feedback
+
+## Quick Start
 
 ```bash
-git clone https://github.com/Pthahnix/NEOCORTICA_MCP.git
-cd NEOCORTICA_MCP
 npm install
 ```
 
-### 2. Configure environment
+Set up `.env`:
 
 ```bash
-cp .env.example .env
+DIR_CACHE=.cache/
+TOKEN_MINERU=your-mineru-token
+TOKEN_APIFY=your-apify-token
+TOKEN_BRAVE=your-brave-token
+EMAIL_UNPAYWALL=your-email
+API_KEY_PERPLEXITY=your-perplexity-key  # optional
+API_KEY_RUNPOD=your-runpod-key          # optional, for experiment execution
 ```
 
-Edit `.env` with your credentials:
-
-```env
-API_KEY_NEOCORTICA='your_api_secret'
-BASE_URL_NEOCORTICA='https://neocortica-railway-production.up.railway.app'
-```
-
-### 3. Configure MCP
-
-The repo includes a `.mcp.json` that Claude Code picks up automatically when you open the project directory. No extra configuration needed — just `cd` into the project and start Claude Code:
+### MCP Server
 
 ```bash
-cd NEOCORTICA_MCP
-claude
+npm run mcp
 ```
 
-Claude Code will detect the `.mcp.json` and register the `neocortica` MCP server.
-
-If you want to use it from a different project directory, copy the MCP config into that project's `.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "neocortica": {
-      "command": "npx",
-      "args": ["tsx", "src/mcp_server.ts"],
-      "cwd": "/absolute/path/to/NEOCORTICA_MCP"
-    }
-  }
-}
-```
-
-## Usage
-
-The repo includes a `/neocortica` slash command (in `.claude/commands/neocortica.md`). In Claude Code:
-
-```bash
-/neocortica 2205.14135
-```
-
-```bash
-/neocortica 2205.14135 What novel methods does this paper propose?
-```
-
-```bash
-/neocortica https://arxiv.org/abs/2205.14135
-```
-
-You can also call the MCP tools directly without the slash command — just ask Claude to use `paper_reading` or `paper_searching`.
+The `.mcp.json` config is included — Claude Code will auto-discover all tools.
 
 ## Tools
 
 | Tool | Description |
 | ---- | ----------- |
-| `paper_reading` | Fetch + AI analysis of an arXiv paper. This is the primary tool. |
-| `paper_searching` | Fetch raw markdown of an arXiv paper without AI analysis. |
+| `paper_content` | Convert a paper to markdown (arXiv URL, PDF, or title → smart routing) |
+| `acd_search` | Academic search via Google Scholar → fetch full text → cache |
+| `dfs_search` | Deep reference exploration via DFS (Semantic Scholar references) |
+| `web_search` | Search the web via Brave Search API |
+| `web_content` | Fetch a web page as markdown and cache it |
+| `pplx_search` | Quick search via Perplexity Search API (optional) |
+| `pplx_ask` | Grounded Q&A via Perplexity Sonar (optional) |
+| `pplx_pro_research` | Multi-step research via sonar-pro (optional) |
+| `pplx_deep_research` | Deep research via sonar-deep-research (optional) |
 
-## Quick Start Test
+## Architecture
 
-```bash
-/neocortica arxiv:2601.03267, Analyze the key contributions, methodology, and limitations of this paper. Highlight what makes it significant in the context of prior work.
 ```
+MCP Client (Claude Code — local)
+    │
+    ├── mcp_server.ts ─── tool registration (Neocortica tools)
+    │       │
+    │       ├── tools/markdown.ts   → paper_content
+    │       ├── tools/academic.ts   → acd_search, dfs_search
+    │       ├── tools/web.ts        → web_search, web_content
+    │       └── tools/perplexity.ts → pplx_search, pplx_ask,
+    │               │                  pplx_pro_research, pplx_deep_research
+    │               │
+    │               ├── utils/arxiv.ts      → arxiv2md.org, arXiv API
+    │               ├── utils/ss.ts         → Semantic Scholar
+    │               ├── utils/unpaywall.ts  → Unpaywall
+    │               ├── utils/pdf.ts        → MinerU cloud API
+    │               ├── utils/apify.ts      → Apify (Google Scholar)
+    │               ├── utils/brave.ts      → Brave Search API
+    │               ├── utils/web.ts        → Apify rag-web-browser
+    │               ├── utils/perplexity.ts → Perplexity API
+    │               └── utils/markdown.ts   → local file I/O
+    │
+    ├── @runpod/mcp-server ─── GPU pod lifecycle (create/start/stop/delete)
+    │
+    └── Supervisor (src/supervisor/) ─── HTTP service on RunPod pod
+            │
+            ├── POST /task ──→ write task file → spawn remote CC
+            ├── GET  /task/:id/status ──→ poll execution state
+            ├── GET  /task/:id/report ──→ fetch checkpoint reports
+            ├── POST /task/:id/feedback ──→ continue/revise/abort
+            └── GET  /task/:id/files/*path ──→ download results
+```
+
+## License
+
+[Apache-2.0 License](LICENSE)
