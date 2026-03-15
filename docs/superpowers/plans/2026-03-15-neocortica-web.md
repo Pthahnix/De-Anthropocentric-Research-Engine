@@ -166,13 +166,47 @@ Create `D:\NEOCORTICA-WEB\.mcp.example.json`:
 }
 ```
 
-- [ ] **Step 8: Install dependencies**
+- [ ] **Step 8: Write `CLAUDE.md`**
+
+Create `D:\NEOCORTICA-WEB\CLAUDE.md`:
+
+```markdown
+# neocortica-web
+
+Lightweight MCP server for web page fetching and caching via Apify rag-web-browser.
+
+## Architecture
+
+2 tools: `web_fetching` (URL → Apify REST API → markdown → cache) and `web_content` (read cached markdown).
+
+## Development
+
+- Node.js ESM, TypeScript, `@modelcontextprotocol/sdk`
+- Tests: Node.js built-in `test` module, files in `.test/` mirroring `src/`
+- Test artifact prefix: `zztest_`, cleanup in `afterEach`
+- Gate rule: ALL tests must pass before next component
+
+## Commands
+
+```bash
+npm run mcp    # Start MCP server
+npm test       # Run all tests
+npm run build  # TypeScript compile
+```
+
+## Environment
+
+- `APIFY_TOKEN` — Apify API authentication (required)
+- `NEOCORTICA_CACHE` — Cache directory (default: `.cache`)
+```
+
+- [ ] **Step 9: Install dependencies**
 
 ```bash
 cd D:/NEOCORTICA-WEB && npm install
 ```
 
-- [ ] **Step 9: Commit scaffold**
+- [ ] **Step 10: Commit scaffold**
 
 ```bash
 cd D:/NEOCORTICA-WEB
@@ -1601,9 +1635,9 @@ server.tool(
     try {
       const result = webContent(args);
       if (!result) {
-        return { content: [{ type: "text" as const, text: JSON.stringify({ error: "Page not found in cache." }) }] };
+        return { content: [{ type: "text" as const, text: "Page not found in cache." }] };
       }
-      return { content: [{ type: "text" as const, text: JSON.stringify({ content: result.content }) }] };
+      return { content: [{ type: "text" as const, text: result.content }] };
     } catch (e: any) {
       return { isError: true, content: [{ type: "text" as const, text: `web_content failed: ${e.message}` }] };
     }
