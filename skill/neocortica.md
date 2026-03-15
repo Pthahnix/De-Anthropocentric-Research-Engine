@@ -38,7 +38,7 @@ Automatically determine mode from user input:
 | **research** | "research", "find ideas", "gap", "innovation" | "I want to research efficient LLM inference" |
 | **web** | Non-academic content | "How to use LangChain" |
 | **hybrid** | Mixed academic + non-academic | "How to build a RAG system from scratch" |
-| **execute** | "执行实验", "run experiment", "execute", has completed Experiment Plan | "帮我跑这个实验" |
+| **execute** | "run experiment", "execute", has completed Experiment Plan | "Run this experiment for me" |
 
 When uncertain, ask the user to confirm. Prefer deeper modes (survey > quick, research > survey).
 

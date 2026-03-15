@@ -39,9 +39,9 @@ Select top 3-5 gaps from Stage 2 ranked list. Transform into solution-seeking qu
 
 ```typescript
 gaps = [
-  "如何解决 [Gap 1 title]？",
-  "如何解决 [Gap 2 title]？",
-  "如何解决 [Gap 3 title]？"
+  "How to solve [Gap 1 title]?",
+  "How to solve [Gap 2 title]?",
+  "How to solve [Gap 3 title]?"
 ]
 knowledge = [...] // Inherited from Stages 1-2
 papersRead = Set(...) // Inherited from Stages 1-2
@@ -86,7 +86,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
      - Keep only new papers
 
   4. Log to diary
-     - "第 {iteration+1} 轮 SEARCH: 针对'{currentGap}'，搜索解决方案和创新方法，找到 X 篇新论文"
+     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for solutions and innovative methods, found X new papers"
 
   // ===== READ Phase =====
   5. Priority Ranking
@@ -113,7 +113,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
      - papersRead.add(all read papers' normalizedTitle)
 
   9. Log to diary
-     - "第 {iteration+1} 轮 READ: 阅读了 K 篇论文，累计已读 {papersRead.size} 篇，重点关注创新方法和技术组合"
+     - "Round {iteration+1} READ: read K papers, total read {papersRead.size}, focusing on innovative methods and technique combinations"
 
   // ===== REFLECT Phase =====
   10. Idea Generation
@@ -141,7 +141,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
           * noProgressCount++
 
   13. Log to diary
-      - "第 {iteration+1} 轮 REFLECT: {progressAssessment}，生成 X 个候选 idea，其中 Y 个通过新颖性预检"
+      - "Round {iteration+1} REFLECT: {progressAssessment}, generated X candidate ideas, Y passed novelty pre-check"
 
   // ===== EVALUATE Phase =====
   14. Idea Scoring
@@ -153,7 +153,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   15. Idea Validation
       - Load prompt/evaluate-answer.md
-      - Input: "该 idea 是否可行且具有足够的证据支撑？"
+      - Input: "Is this idea feasible and supported by sufficient evidence?"
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
 
   16. Update Ideas
@@ -175,19 +175,19 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
           * Keep currentGap in queue for more exploration
 
   17. Log to diary
-      - IF idea added: "第 {iteration+1} 轮 EVALUATE: 确认 idea '{title}'（总分: {totalScore}/50）"
-      - ELSE: "第 {iteration+1} 轮 EVALUATE: 当前 idea 质量不足或证据不够，继续搜索"
+      - IF idea added: "Round {iteration+1} EVALUATE: confirmed idea '{title}' (total score: {totalScore}/50)"
+      - ELSE: "Round {iteration+1} EVALUATE: current idea quality insufficient or evidence lacking, continuing search"
 
   // ===== Stop Condition Check =====
   18. Check Termination
       - IF ideas.length >= MIN_IDEAS_TARGET AND gaps.length == 0:
-          * STOP: "已生成足够数量的高质量 idea"
+          * STOP: "generated sufficient high-quality ideas"
       - IF noProgressCount >= NO_PROGRESS_THRESHOLD:
-          * STOP: "连续 3 轮无新 idea 生成"
+          * STOP: "no new ideas generated for 3 consecutive rounds"
       - IF ideas.length >= MIN_IDEAS_TARGET AND iteration >= 3:
-          * STOP: "已达到 idea 目标且完成初步探索"
+          * STOP: "reached idea target and completed initial exploration"
       - IF iteration >= MAX_ITERATIONS:
-          * STOP: "达到最大迭代次数"
+          * STOP: "reached max iterations"
 
   19. Increment
       - iteration++
@@ -222,12 +222,12 @@ After loop terminates and ranking complete, produce:
 ```markdown
 ## Research Ideas: [topic]
 
-### 执行摘要
-- 总迭代轮数: {iteration}
-- 总阅读论文数: {papersRead.size} (含 Stages 1-2)
-- 候选 gap 数: {initial gaps.length}
-- 生成的 idea 数: {ideas.length}
-- 停止原因: [达到目标 / 无新发现 / 达到上限]
+### Executive Summary
+- Total iterations: {iteration}
+- Total papers read: {papersRead.size} (including Stages 1-2)
+- Candidate gaps: {initial gaps.length}
+- Ideas generated: {ideas.length}
+- Stop reason: [reached target / no new findings / reached limit]
 
 ### All Ideas (ranked by total score)
 
@@ -260,12 +260,12 @@ After loop terminates and ranking complete, produce:
 ### Discarded Ideas
 [Brief list of ideas that scored < 25, with one-line reason]
 
-### 研究日志
+### Research Diary
 {diary[0]}
 {diary[1]}
 ...
 
-### 未解决的 Gap
+### Unresolved Gaps
 [List remaining gaps that didn't yield viable ideas]
 ```
 

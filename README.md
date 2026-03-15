@@ -38,16 +38,53 @@ Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomou
 - Supervisor-mediated experiment execution: local CC → HTTP API → remote CC on RunPod pod
 - Checkpoint-based phase control with continue/revise/abort feedback
 
+## Prerequisites
+
+### Required MCP Servers
+
+Neocortica depends on the following external MCP servers. Install them before use:
+
+| MCP Server | Package / Source | Purpose | API Key Required |
+|---|---|---|---|
+| **neocortica-scholar** | [Neocortica-Scholar](https://github.com/Pthahnix/Neocortica-Scholar) | Academic paper pipeline (search, fetch, read, references) | MinerU token, OpenAI-compatible API key |
+| **apify** | `@apify/actors-mcp-server` (`npm install -g @apify/actors-mcp-server`) | Google Scholar search + web page scraping | [Apify API token](https://console.apify.com/account#/integrations) |
+| **brave-search** | `@brave/brave-search-mcp-server` (`npm install -g @brave/brave-search-mcp-server`) | Web search API | [Brave Search API key](https://brave.com/search/api/) |
+| **runpod** | `@runpod/mcp-server` (`npm install -g @runpod/mcp-server`) | GPU pod lifecycle (create/start/stop/delete) | [RunPod API key](https://www.runpod.io/console/user/settings) |
+| **railway** | `@railway/mcp-server` (`npm install -g @railway/mcp-server`) | Deployment platform | [Railway API token](https://railway.app/account/tokens) |
+
+### neocortica-scholar Setup
+
+Clone and install the academic paper MCP server:
+
+```bash
+git clone https://github.com/Pthahnix/Neocortica-Scholar.git
+cd Neocortica-Scholar
+npm install
+```
+
+Required environment variables for neocortica-scholar (set in `.mcp.json`):
+
+| Variable | Description | How to Get |
+|---|---|---|
+| `MINERU_TOKEN` | MinerU API token for PDF → markdown conversion | [MinerU](https://mineru.net/) |
+| `EMAIL` | Email for Unpaywall API (polite pool) | Your email |
+| `NEOCORTICA_CACHE` | Cache directory path | e.g., `.cache` |
+| `OPENAI_API_KEY` | OpenAI-compatible API key (for AI paper reading) | [OpenRouter](https://openrouter.ai/) or any OpenAI-compatible provider |
+| `OPENAI_BASE_URL` | API base URL | e.g., `https://openrouter.ai/api/v1` |
+| `OPENAI_MODEL` | Model name for paper reading agent | e.g., `openai/gpt-oss-120b` |
+
 ## Quick Start
 
-The `.mcp.json` config is included — Claude Code will auto-discover all tools from external MCP servers.
-
-Set up `.env`:
+1. Install prerequisites above
+2. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths
+3. Set up `.env`:
 
 ```bash
 DIR_CACHE=.cache/
 API_KEY_RUNPOD=your-runpod-key          # optional, for experiment execution
 ```
+
+4. Claude Code will auto-discover all tools from the configured MCP servers.
 
 ## Tools
 

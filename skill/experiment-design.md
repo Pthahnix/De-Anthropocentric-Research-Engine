@@ -39,10 +39,10 @@ experimentPlan: ExperimentPlan  // Accumulating experiment design
 
 ```typescript
 gaps = [
-  "如何评估该 idea 的效果？",
-  "需要哪些 baseline 对比？",
-  "需要哪些数据集？",
-  "实验设置的关键参数是什么？"
+  "How to evaluate the effectiveness of this idea?",
+  "What baselines are needed for comparison?",
+  "What datasets are needed?",
+  "What are the key parameters for experimental setup?"
 ]
 knowledge = [...] // Inherited from Stages 1-3
 papersRead = Set(...) // Inherited from Stages 1-3
@@ -96,7 +96,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
      - Keep only new papers
 
   4. Log to diary
-     - "第 {iteration+1} 轮 SEARCH: 针对'{currentGap}'，搜索实验设置和评估方法，找到 X 篇新论文"
+     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for experimental setups and evaluation methods, found X new papers"
 
   // ===== READ Phase =====
   5. Priority Ranking
@@ -123,7 +123,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
      - papersRead.add(all read papers' normalizedTitle)
 
   9. Log to diary
-     - "第 {iteration+1} 轮 READ: 阅读了 K 篇论文，累计已读 {papersRead.size} 篇，重点关注实验设置和评估方法"
+     - "Round {iteration+1} READ: read K papers, total read {papersRead.size}, focusing on experimental setups and evaluation methods"
 
   // ===== REFLECT Phase =====
   10. Experiment Component Discovery
@@ -153,14 +153,14 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
           * noProgressCount++
 
   13. Log to diary
-      - "第 {iteration+1} 轮 REFLECT: {progressAssessment}，发现 X 个数据集、Y 个 baseline、Z 个评估指标"
+      - "Round {iteration+1} REFLECT: {progressAssessment}, discovered X datasets, Y baselines, Z evaluation metrics"
 
   // ===== EVALUATE Phase =====
   14. Completeness Check
       - Load prompt/evaluate-answer.md
       - Input: currentGap, experimentPlan, knowledge
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
-      - Question format: "基于已读论文，实验设计的'{currentGap}'是否已经完整？"
+      - Question format: "Based on papers read, is the experiment design for '{currentGap}' complete?"
 
   15. Update Experiment Plan
       - IF canAnswer == true:
@@ -170,19 +170,19 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
           * Keep currentGap in queue for more investigation
 
   16. Log to diary
-      - IF component complete: "第 {iteration+1} 轮 EVALUATE: '{currentGap}'已完整（置信度: {confidence}）"
-      - ELSE: "第 {iteration+1} 轮 EVALUATE: '{currentGap}'仍需补充，原因: {missingInfo}"
+      - IF component complete: "Round {iteration+1} EVALUATE: '{currentGap}' complete (confidence: {confidence})"
+      - ELSE: "Round {iteration+1} EVALUATE: '{currentGap}' still needs supplementation, reason: {missingInfo}"
 
   // ===== Stop Condition Check =====
   17. Check Termination
       - IF gaps.length == 0:
-          * STOP: "所有实验设计组件已完整"
+          * STOP: "all experiment design components complete"
       - IF noProgressCount >= NO_PROGRESS_THRESHOLD:
-          * STOP: "连续 3 轮无新发现"
-      - IF experimentPlan 所有必需字段已填充 AND iteration >= 2:
-          * STOP: "实验设计已完整"
+          * STOP: "no new findings for 3 consecutive rounds"
+      - IF all required fields of experimentPlan are filled AND iteration >= 2:
+          * STOP: "experiment design complete"
       - IF iteration >= MAX_ITERATIONS:
-          * STOP: "达到最大迭代次数"
+          * STOP: "reached max iterations"
 
   18. Increment
       - iteration++
@@ -225,12 +225,12 @@ After loop terminates and plan finalized, produce:
 ```markdown
 ## Experiment Plan: [idea title]
 
-### 执行摘要
-- 总迭代轮数: {iteration}
-- 总阅读论文数: {papersRead.size} (含 Stages 1-3)
-- 初始问题数: 4
-- 已完成组件: {completed components}
-- 停止原因: [设计完整 / 无新发现 / 达到上限]
+### Executive Summary
+- Total iterations: {iteration}
+- Total papers read: {papersRead.size} (including Stages 1-3)
+- Initial questions: 4
+- Completed components: {completed components}
+- Stop reason: [design complete / no new findings / reached limit]
 
 ### Hypothesis
 [One clear sentence: what we're testing and expected outcome]
@@ -291,12 +291,12 @@ After loop terminates and plan finalized, produce:
 
 #### Risk 2: ...
 
-### 研究日志
+### Research Diary
 {diary[0]}
 {diary[1]}
 ...
 
-### 未解决问题
+### Unresolved Questions
 [List remaining gaps in experiment design, if any]
 ```
 
