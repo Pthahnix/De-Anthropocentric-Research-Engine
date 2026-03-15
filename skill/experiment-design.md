@@ -15,7 +15,8 @@ Design an experiment plan using iterative loop engine. This is Stage 4 of the re
 
 - Completed idea generation with selected idea
 - Prompts: `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, brave_web_search
+- Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
+- Tools (direct): paper_content, paper_reference (neocortica-scholar)
 
 ## Overview
 
@@ -32,6 +33,7 @@ diary: string[]             // Narrative log of each iteration
 iteration: number           // Current iteration count
 noProgressCount: number     // Consecutive iterations without new findings
 papersRead: Set<string>     // normalizedTitle of papers already read (inherited)
+urlsVisited: Set<string>    // URLs of web pages already fetched (inherited)
 experimentPlan: ExperimentPlan  // Accumulating experiment design
 ```
 
@@ -46,6 +48,7 @@ gaps = [
 ]
 knowledge = [...] // Inherited from Stages 1-3
 papersRead = Set(...) // Inherited from Stages 1-3
+urlsVisited = Set(...) // Inherited from Stages 1-3
 experimentPlan = {
   hypothesis: "",
   method: "",
@@ -82,21 +85,21 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Baseline query: "baseline methods comparison [idea topic]"
        * Setup query: "experimental setup datasets [idea topic]"
 
-  2. Parallel Search
-     - google-scholar-scraper × 3 (one per query, focus on Experiments/Evaluation sections)
-     - brave_web_search × 3 (one per query, target: GitHub repos with experiment code, Papers With Code)
-     - Total: 6 searches in parallel
+  2. Execute acd-searching pipeline
+     - Input: queries (3 from step 1), papersRead
+     - Output: PaperMeta[] (focus on Experiments/Evaluation sections)
 
-  3. Enrich & Fetch
-     - For Scholar results: paper_searching per result (sequential)
-     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+  3. Execute web-searching pipeline
+     - Input: queries (3 from step 1), maxResultsPerQuery=3, urlsVisited
+     - Output: WebMeta[] (target: GitHub repos with experiment code, Papers With Code)
 
-  4. Deduplication
-     - Filter out papers in papersRead
-     - Keep only new papers
+  4. Merge & Deduplication
+     - Keep PaperMeta[] and WebMeta[] as separate collections
+     - Filter out papers/pages already processed
+     - Add new URLs to urlsVisited
 
-  4. Log to diary
-     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for experimental setups and evaluation methods, found X new papers"
+  5. Log to diary
+     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for experimental setups and evaluation methods, found X new papers + Y new web pages"
 
   // ===== READ Phase =====
   5. Priority Ranking
@@ -112,6 +115,13 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Medium: Pass 1 → Pass 2, extract Experiments
        * Low: Pass 1 only
      - Extract: datasets used, baselines compared, metrics reported, ablation studies, hyperparameters
+
+  6b. Read Web Pages (if any)
+      - For each WebMeta with markdownPath:
+        * Read content, extract segments relevant to currentGap
+        * Rate: High (directly relevant) / Medium (provides context) / Low (tangential)
+      - Web pages do not go through three-pass reading — summarize key points
+      - Focus on: experiment code repos, benchmark implementations, dataset documentation
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper with detailed experiments found:
