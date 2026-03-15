@@ -31,8 +31,9 @@ Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomou
 
 - 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search)
 - Two-step enrich pipeline: paper_searching → paper_fetching
+- Web page pipeline: brave_web_search → web_fetching → web_content
 - Three-pass reading protocol (High/Medium/Low rating)
-- State inheritance between stages (knowledge + papersRead)
+- State inheritance between stages (knowledge + papersRead + urlsVisited)
 - Zero external validation cost
 - Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
 - Supervisor-mediated experiment execution: local CC → HTTP API → remote CC on RunPod pod
@@ -47,6 +48,7 @@ Neocortica depends on the following external MCP servers. Install them before us
 | MCP Server | Package / Source | Purpose | API Key Required |
 |---|---|---|---|
 | **neocortica-scholar** | [Neocortica-Scholar](https://github.com/Pthahnix/Neocortica-Scholar) | Academic paper pipeline (search, fetch, read, references) | MinerU token, OpenAI-compatible API key |
+| **neocortica-web** | [Neocortica-Web](https://github.com/Pthahnix/Neocortica-Web) | Web page fetching and caching (fetch, read) | Apify API token |
 | **apify** | `@apify/actors-mcp-server` (`npm install -g @apify/actors-mcp-server`) | Google Scholar search + web page scraping | [Apify API token](https://console.apify.com/account#/integrations) |
 | **brave-search** | `@brave/brave-search-mcp-server` (`npm install -g @brave/brave-search-mcp-server`) | Web search API | [Brave Search API key](https://brave.com/search/api/) |
 | **runpod** | `@runpod/mcp-server` (`npm install -g @runpod/mcp-server`) | GPU pod lifecycle (create/start/stop/delete) | [RunPod API key](https://www.runpod.io/console/user/settings) |
@@ -73,6 +75,23 @@ Required environment variables for neocortica-scholar (set in `.mcp.json`):
 | `OPENAI_BASE_URL` | API base URL | e.g., `https://openrouter.ai/api/v1` |
 | `OPENAI_MODEL` | Model name for paper reading agent | e.g., `openai/gpt-oss-120b` |
 
+### neocortica-web Setup
+
+Clone and install the web page MCP server:
+
+```bash
+git clone https://github.com/Pthahnix/Neocortica-Web.git
+cd Neocortica-Web
+npm install
+```
+
+Required environment variables for neocortica-web (set in `.mcp.json`):
+
+| Variable | Description | How to Get |
+|---|---|---|
+| `NEOCORTICA_CACHE` | Cache directory path (shared with neocortica-scholar) | e.g., `.cache` |
+| `APIFY_TOKEN` | Apify API token (for rag-web-browser) | [Apify](https://console.apify.com/account#/integrations) |
+
 ## Quick Start
 
 1. Install prerequisites above
@@ -97,6 +116,13 @@ API_KEY_RUNPOD=your-runpod-key          # optional, for experiment execution
 | `paper_content` | Read cached paper markdown (local only, no network) |
 | `paper_reference` | Get paper references via Semantic Scholar API |
 | `paper_reading` | AI three-pass reading (Keshav method) via LLM agent |
+
+### neocortica-web (Web Page Pipeline)
+
+| Tool | Description |
+| ---- | ----------- |
+| `web_fetching` | Fetch web page as markdown via Apify rag-web-browser (cache-first) |
+| `web_content` | Read cached web page markdown (local only, no network) |
 
 ### apify (Google Scholar + Web Scraping)
 
@@ -128,6 +154,10 @@ MCP Client (Claude Code — local)
     │       ├── paper_content      → read cached markdown
     │       ├── paper_reference    → Semantic Scholar references
     │       └── paper_reading      → AI three-pass reading
+    │
+    ├── neocortica-web MCP ─── web page pipeline
+    │       ├── web_fetching       → fetch web page as markdown (cache-first)
+    │       └── web_content        → read cached web page markdown
     │
     ├── @apify/actors-mcp-server ─── Google Scholar + web scraping
     │       ├── google-scholar-scraper → search Google Scholar

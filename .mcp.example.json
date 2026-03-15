@@ -12,6 +12,14 @@
         "OPENAI_MODEL": "openai/gpt-oss-120b"
       }
     },
+    "neocortica-web": {
+      "command": "npx",
+      "args": ["--prefix", "/path/to/neocortica-web", "tsx", "/path/to/neocortica-web/src/mcp_server.ts"],
+      "env": {
+        "NEOCORTICA_CACHE": ".cache",
+        "APIFY_TOKEN": "your-apify-token"
+      }
+    },
     "runpod": {
       "command": "npx",
       "args": ["-y", "@runpod/mcp-server@latest"],
