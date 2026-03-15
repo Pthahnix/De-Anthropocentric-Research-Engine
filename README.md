@@ -175,6 +175,16 @@ MCP Client (Claude Code — local)
             └── GET  /task/:id/files/*path ──→ download results
 ```
 
+## Roadmap
+
+### Transport MCP — Remote Agent Communication
+
+The next major milestone is a **Transport MCP Server** that enables local Claude Code to spawn and communicate with remote Claude Code instances running on RunPod GPU pods. This replaces the current Supervisor HTTP polling model with a real-time, bidirectional messaging layer powered by RabbitMQ.
+
+The goal: your local Claude Code acts as a team leader, dispatching experiment tasks to remote GPU workers through familiar agent-to-agent APIs (`spawn_teammate`, `send_message`, `read_inbox`). The transport layer handles all the networking transparently — local and remote agents communicate as if they were on the same machine.
+
+This unlocks the full Stage 5 (Experiment Execution) of the research pipeline: automated GPU provisioning, remote code implementation, training runs, and result collection — all orchestrated from your local environment with human-in-the-loop checkpoints at critical phases.
+
 ## License
 
 [Apache-2.0 License](LICENSE)
