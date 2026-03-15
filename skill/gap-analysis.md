@@ -13,7 +13,7 @@ Identify research gaps using iterative loop engine. This is Stage 2 of the resea
 
 - Completed literature survey with rated and read papers
 - Prompts: `prompt/gap-discovery.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: acd_search, web_search, dfs_search, paper_content
+- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, brave_web_search
 
 ## Overview
 
@@ -71,11 +71,15 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Practical query: "real-world deployment practical challenges [topic]"
 
   2. Parallel Search
-     - acd_search × 3 (one per query)
-     - web_search × 3 (one per query, target: GitHub issues, workshop papers, blog posts discussing limitations)
+     - google-scholar-scraper × 3 (one per query)
+     - brave_web_search × 3 (one per query, target: GitHub issues, workshop papers, blog posts discussing limitations)
      - Total: 6 searches in parallel
 
-  3. Deduplication
+  3. Enrich & Fetch
+     - For Scholar results: paper_searching per result (sequential)
+     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+
+  4. Deduplication
      - Filter out papers in papersRead
      - Keep only new papers
 
@@ -98,7 +102,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper found AND papersRead.size < MIN_PAPERS_TARGET:
-       * dfs_search(depth=1, breadth=5) on papers that explicitly discuss limitations
+       * paper_reference on papers that explicitly discuss limitations
+       * paper_searching → paper_fetching on discovered references
        * Add discovered papers to search results for next iteration
 
   8. Update State
@@ -198,7 +203,7 @@ score = feasibility_score × 0.4 + impact_score × 0.4 + novelty_score × 0.2
   * Trigger "deep dive mode":
     - Focus on Limitations/Future Work sections exclusively
     - Lower confidence threshold for gap identification
-    - Force dfs_search on all papers discussing limitations
+    - Force paper_reference on all papers discussing limitations
 
 ## Output Format
 

@@ -15,7 +15,7 @@ Design an experiment plan using iterative loop engine. This is Stage 4 of the re
 
 - Completed idea generation with selected idea
 - Prompts: `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: acd_search, web_search, dfs_search, paper_content
+- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, brave_web_search
 
 ## Overview
 
@@ -83,11 +83,15 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Setup query: "experimental setup datasets [idea topic]"
 
   2. Parallel Search
-     - acd_search × 3 (one per query, focus on Experiments/Evaluation sections)
-     - web_search × 3 (one per query, target: GitHub repos with experiment code, Papers With Code)
+     - google-scholar-scraper × 3 (one per query, focus on Experiments/Evaluation sections)
+     - brave_web_search × 3 (one per query, target: GitHub repos with experiment code, Papers With Code)
      - Total: 6 searches in parallel
 
-  3. Deduplication
+  3. Enrich & Fetch
+     - For Scholar results: paper_searching per result (sequential)
+     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+
+  4. Deduplication
      - Filter out papers in papersRead
      - Keep only new papers
 
@@ -111,7 +115,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper with detailed experiments found:
-       * dfs_search(depth=1, breadth=5) to find follow-up works with improved setups
+       * paper_reference to find follow-up works with improved setups
+       * paper_searching → paper_fetching on discovered references
        * Add discovered papers to search results for next iteration
 
   8. Update State
@@ -207,7 +212,7 @@ After loop terminates, finalize experimentPlan:
   * Trigger "deep dive mode":
     - Focus searches on missing components
     - Lower confidence threshold
-    - Force dfs_search on papers with detailed experiments
+    - Force paper_reference on papers with detailed experiments
 
 ### Unrealistic Resource Estimates
 - Cross-check resource estimates against multiple papers

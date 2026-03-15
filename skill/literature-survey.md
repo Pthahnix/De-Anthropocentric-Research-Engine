@@ -8,7 +8,7 @@ $ARGUMENTS — research topic or question
 
 ## Prerequisites
 
-- Neocortica MCP tools available (acd_search, web_search, dfs_search, paper_content, web_content)
+- Neocortica-Scholar MCP (paper_searching, paper_fetching, paper_content, paper_reference, paper_reading) + Brave Search MCP (brave_web_search) + Apify MCP (marco.gullo/google-scholar-scraper, apify/rag-web-browser)
 - Prompts: `prompt/paper-rating.md`, `prompt/paper-reading.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
 
 ## Overview
@@ -65,11 +65,15 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Application query (context): use cases/scenarios
 
   2. Parallel Search
-     - acd_search × 3 (one per query)
-     - web_search × 3 (one per query)
+     - google-scholar-scraper × 3 (one per query)
+     - brave_web_search × 3 (one per query)
      - Total: 6 searches in parallel
 
-  3. Deduplication
+  3. Enrich & Fetch
+     - For Scholar results: paper_searching per result (sequential, avoid rate limits)
+     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+
+  4. Deduplication
      - Filter out papers in papersRead
      - Keep only new papers
 
@@ -95,7 +99,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper found AND papersRead.size < MIN_PAPERS_TARGET:
-       * dfs_search(depth=1, breadth=5) on top 1-2 High papers
+       * paper_reference on top 1-2 High papers
+       * paper_searching → paper_fetching on discovered references
        * Add discovered papers to search results for next iteration
 
   8. Update State
@@ -172,7 +177,7 @@ END LOOP
   * Trigger "expansion mode":
     - Broaden search queries (add synonyms)
     - Lower paper filtering threshold
-    - Force dfs_search on all High papers
+    - Force paper_reference on all High papers
 
 ### Diary Length Control
 - Keep detailed logs for last 5 iterations only

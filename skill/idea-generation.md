@@ -13,7 +13,7 @@ Generate and evaluate research ideas using iterative loop engine. This is Stage 
 
 - Completed gap analysis with ranked gaps
 - Prompts: `prompt/idea-scoring.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: web_search, acd_search, dfs_search, paper_content
+- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, paper_reading, brave_web_search
 
 ## Overview
 
@@ -73,11 +73,15 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Innovation query: "novel [gap topic] recent advances breakthroughs"
 
   2. Parallel Search
-     - acd_search × 3 (one per query, focus on methods/solutions)
-     - web_search × 3 (one per query, target: GitHub repos, blog posts, workshop papers with novel approaches)
+     - google-scholar-scraper × 3 (one per query, focus on methods/solutions)
+     - brave_web_search × 3 (one per query, target: GitHub repos, blog posts, workshop papers with novel approaches)
      - Total: 6 searches in parallel
 
-  3. Deduplication
+  3. Enrich & Fetch
+     - For Scholar results: paper_searching per result (sequential)
+     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+
+  4. Deduplication
      - Filter out papers in papersRead
      - Keep only new papers
 
@@ -101,7 +105,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper with novel method found:
-       * dfs_search(depth=1, breadth=5) to find follow-up works
+       * paper_reference to find follow-up works
+       * paper_searching → paper_fetching on discovered references
        * Add discovered papers to search results for next iteration
 
   8. Update State
@@ -124,7 +129,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   11. Novelty Pre-Check (for each idea candidate)
       - Search papersRead: does any paper already implement this?
-      - Search web_search results: any GitHub repos with this approach?
+      - Search brave_web_search results: any GitHub repos with this approach?
       - IF close match found: mark as "extension" not "novel"
       - IF no match: mark as "potentially novel"
 
@@ -202,7 +207,7 @@ After loop terminates, rank ideas by totalScore descending. Select Top 3 for det
 - Idea deduplication: similar ideas (edit distance < 5) → merge or keep higher scored one
 
 ### False Novelty Claims
-- Novelty pre-check against papersRead and web_search results
+- Novelty pre-check against papersRead and brave_web_search results
 - Require >= 2 papers as evidence for feasibility
 - Conservative novelty scoring: most ideas should score 4-6, not 8-10
 
