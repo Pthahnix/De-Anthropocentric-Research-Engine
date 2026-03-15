@@ -13,7 +13,8 @@ Generate and evaluate research ideas using iterative loop engine. This is Stage 
 
 - Completed gap analysis with ranked gaps
 - Prompts: `prompt/idea-scoring.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, paper_reading, brave_web_search
+- Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
+- Tools (direct): paper_content, paper_reference, paper_reading (neocortica-scholar)
 
 ## Overview
 
@@ -30,6 +31,7 @@ diary: string[]             // Narrative log of each iteration
 iteration: number           // Current iteration count
 noProgressCount: number     // Consecutive iterations without new findings
 papersRead: Set<string>     // normalizedTitle of papers already read (inherited)
+urlsVisited: Set<string>    // URLs of web pages already fetched (inherited)
 ideas: Idea[]               // Generated and validated research ideas
 ```
 
@@ -45,6 +47,7 @@ gaps = [
 ]
 knowledge = [...] // Inherited from Stages 1-2
 papersRead = Set(...) // Inherited from Stages 1-2
+urlsVisited = Set(...) // Inherited from Stages 1-2
 ideas = []
 iteration = 0
 noProgressCount = 0
@@ -72,21 +75,21 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Transfer query: "similar problems [adjacent field] techniques"
        * Innovation query: "novel [gap topic] recent advances breakthroughs"
 
-  2. Parallel Search
-     - google-scholar-scraper × 3 (one per query, focus on methods/solutions)
-     - brave_web_search × 3 (one per query, target: GitHub repos, blog posts, workshop papers with novel approaches)
-     - Total: 6 searches in parallel
+  2. Execute acd-searching pipeline
+     - Input: queries (3 from step 1), papersRead
+     - Output: PaperMeta[] (focus on methods/solutions)
 
-  3. Enrich & Fetch
-     - For Scholar results: paper_searching per result (sequential)
-     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+  3. Execute web-searching pipeline
+     - Input: queries (3 from step 1), maxResultsPerQuery=3, urlsVisited
+     - Output: WebMeta[] (target: GitHub repos, blog posts, workshop papers with novel approaches)
 
-  4. Deduplication
-     - Filter out papers in papersRead
-     - Keep only new papers
+  4. Merge & Deduplication
+     - Keep PaperMeta[] and WebMeta[] as separate collections
+     - Filter out papers/pages already processed
+     - Add new URLs to urlsVisited
 
-  4. Log to diary
-     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for solutions and innovative methods, found X new papers"
+  5. Log to diary
+     - "Round {iteration+1} SEARCH: targeting '{currentGap}', searched for solutions and innovative methods, found X new papers + Y new web pages"
 
   // ===== READ Phase =====
   5. Priority Ranking
@@ -102,6 +105,13 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Medium: Pass 1 → Pass 2, extract Methods
        * Low: Pass 1 only
      - Extract: novel techniques, method combinations, cross-domain transfers
+
+  6b. Read Web Pages (if any)
+      - For each WebMeta with markdownPath:
+        * Read content, extract segments relevant to currentGap
+        * Rate: High (directly relevant) / Medium (provides context) / Low (tangential)
+      - Web pages do not go through three-pass reading — summarize key points
+      - Focus on: novel approaches, GitHub repos with implementations, cross-domain techniques
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper with novel method found:
@@ -129,7 +139,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   11. Novelty Pre-Check (for each idea candidate)
       - Search papersRead: does any paper already implement this?
-      - Search brave_web_search results: any GitHub repos with this approach?
+      - Search web-searching pipeline results: any GitHub repos with this approach?
       - IF close match found: mark as "extension" not "novel"
       - IF no match: mark as "potentially novel"
 
@@ -207,7 +217,7 @@ After loop terminates, rank ideas by totalScore descending. Select Top 3 for det
 - Idea deduplication: similar ideas (edit distance < 5) → merge or keep higher scored one
 
 ### False Novelty Claims
-- Novelty pre-check against papersRead and brave_web_search results
+- Novelty pre-check against papersRead and web-searching pipeline results
 - Require >= 2 papers as evidence for feasibility
 - Conservative novelty scoring: most ideas should score 4-6, not 8-10
 
