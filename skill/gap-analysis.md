@@ -13,7 +13,8 @@ Identify research gaps using iterative loop engine. This is Stage 2 of the resea
 
 - Completed literature survey with rated and read papers
 - Prompts: `prompt/gap-discovery.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
-- Tools: google-scholar-scraper (Apify), paper_searching, paper_fetching, paper_content, paper_reference, brave_web_search
+- Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
+- Tools (direct): paper_content, paper_reference, paper_reading (neocortica-scholar)
 
 ## Overview
 
@@ -30,6 +31,7 @@ diary: string[]             // Narrative log of each iteration
 iteration: number           // Current iteration count
 noProgressCount: number     // Consecutive iterations without new findings
 papersRead: Set<string>     // normalizedTitle of papers already read (inherited from Stage 1)
+urlsVisited: Set<string>    // URLs of web pages already fetched (inherited from Stage 1)
 identifiedGaps: Gap[]       // Validated research gaps
 ```
 
@@ -43,6 +45,7 @@ gaps = [
 ]
 knowledge = [...] // Inherited from Stage 1
 papersRead = Set(...) // Inherited from Stage 1
+urlsVisited = Set(...) // Inherited from Stage 1
 identifiedGaps = []
 iteration = 0
 noProgressCount = 0
@@ -70,21 +73,21 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Unsolved query: "unsolved open problems future work [topic]"
        * Practical query: "real-world deployment practical challenges [topic]"
 
-  2. Parallel Search
-     - google-scholar-scraper × 3 (one per query)
-     - brave_web_search × 3 (one per query, target: GitHub issues, workshop papers, blog posts discussing limitations)
-     - Total: 6 searches in parallel
+  2. Execute acd-searching pipeline
+     - Input: queries (3 from step 1), papersRead
+     - Output: PaperMeta[]
 
-  3. Enrich & Fetch
-     - For Scholar results: paper_searching per result (sequential)
-     - For those with arxivUrl/oaPdfUrl: paper_fetching (sequential)
+  3. Execute web-searching pipeline
+     - Input: queries (3 from step 1), maxResultsPerQuery=3, urlsVisited
+     - Output: WebMeta[] (target: GitHub issues, workshop papers, blog posts discussing limitations)
 
-  4. Deduplication
-     - Filter out papers in papersRead
-     - Keep only new papers
+  4. Merge & Deduplication
+     - Keep PaperMeta[] and WebMeta[] as separate collections
+     - Filter out papers/pages already processed
+     - Add new URLs to urlsVisited
 
-  4. Log to diary
-     - "Round {iteration+1} SEARCH: targeting '{currentGap}', executed 6 searches, found X new papers"
+  5. Log to diary
+     - "Round {iteration+1} SEARCH: targeting '{currentGap}', found X new papers + Y new web pages"
 
   // ===== READ Phase =====
   5. Priority Ranking
@@ -99,6 +102,13 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
        * Medium: Pass 1 → Pass 2, extract Limitations
        * Low: Pass 1 only
      - Extract segments discussing problems, challenges, limitations
+
+  6b. Read Web Pages (if any)
+      - For each WebMeta with markdownPath:
+        * Read content, extract segments relevant to currentGap
+        * Rate: High (directly relevant) / Medium (provides context) / Low (tangential)
+      - Web pages do not go through three-pass reading — summarize key points
+      - Focus on: limitation discussions, open problems, practical deployment challenges
 
   7. Reference Expansion (conditional)
      - IF any High-rated paper found AND papersRead.size < MIN_PAPERS_TARGET:
