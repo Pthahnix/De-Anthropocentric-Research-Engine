@@ -1,4 +1,4 @@
-# Neocortica v1.0.0
+# Neocortica v1.0.1
 
 Vibe researching toolkit — AI-powered academic research automation, from literature discovery to experiment execution.
 
@@ -12,14 +12,15 @@ Vibe researching toolkit — AI-powered academic research automation, from liter
 - Convert arXiv papers, PDFs, and web pages to AI-readable markdown
 - Web search via Brave Search API for non-academic sources
 - Full-text caching for offline access and repeated queries
+- Review-driven quality loop: independent CC process reviews research outputs, scores each stage, and selectively re-runs stages until quality threshold is met
 - GPU experiment execution on remote pods via session sharing (export session → transfer → resume on GPU pod)
-- Five-stage research pipeline: survey → gaps → ideas → design → execution
+- Five-stage research pipeline: survey → gaps → ideas → review loop → design → execution
 
 ## How It Works
 
 Most academic AI tools only read abstracts to triage papers. Neocortica downloads the full paper text, converts it to markdown, and lets AI evaluate based on complete methodology, experiments, and discussion.
 
-Multi-MCP architecture: research skills orchestrate external MCP servers for academic search, web search, and GPU execution. Stage 5 uses session sharing to hand off full research context to remote GPU pods.
+Multi-MCP architecture: research skills orchestrate external MCP servers for academic search, web search, and GPU execution. Stages 1-3 (survey, gap, idea) run in a review loop — after each pass, a separate Claude Code process (`claude -p`) independently reviews the outputs with web search verification, then selectively triggers re-runs of weak stages. Stage 5 uses session sharing to hand off full research context to remote GPU pods.
 
 ## Research Pipeline
 
@@ -179,6 +180,10 @@ MCP Client (Claude Code — local)
 ```
 
 ## Roadmap
+
+### Review-Driven Research Loop — COMPLETED (v1.0.1)
+
+Independent Claude Code process reviews Stage 1-3 outputs (survey, gap analysis, idea generation) with web search verification, scores each stage 1-10, and selectively re-runs stages that need improvement. Loops until quality threshold (score >= 8/10, no critical issues) or 7 rounds max.
 
 ### Session Sharing — Distributed Experiment Execution
 
