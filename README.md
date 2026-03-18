@@ -23,17 +23,21 @@ Multi-MCP architecture: research skills orchestrate external MCP servers for aca
 
 ## Research Pipeline
 
-Five-stage iterative pipeline: Topic → Literature Survey → Gap Analysis → Idea Generation → Experiment Design → Experiment Execution
+Five-stage iterative pipeline with review-driven quality loop: Topic → Literature Survey → Gap Analysis → Idea Generation → Review Loop → Experiment Design → Experiment Execution
+
+Stages 1-3 are wrapped in a review loop: after each full pass, an independent Claude Code process reviews the outputs with web search verification, scores each stage (1-10), and selectively triggers re-runs of stages that need improvement. The loop continues until quality threshold is met (score >= 8/10, no critical issues) or 7 rounds max.
 
 Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomous gap discovery and dynamic stopping conditions. Stage 5 exports the full session (with all accumulated research context) to a remote GPU pod via session sharing, where it resumes and executes the experiment autonomously.
 
 **Key Features**:
 
+- Review-driven loop: independent CC process (`claude -p`) reviews Stage 1-3 outputs with web search verification
+- Selective redo: only re-runs stages that need improvement, with reduced iteration limits in hot loop
 - 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search)
 - Two-step enrich pipeline: paper_searching → paper_fetching
 - Web page pipeline: brave_web_search → web_fetching → web_content
 - Three-pass reading protocol (High/Medium/Low rating)
-- State inheritance between stages (knowledge + papersRead + urlsVisited)
+- State inheritance between stages and across review rounds (knowledge + papersRead + urlsVisited)
 - Zero external validation cost
 - Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
 - Session sharing for experiment execution: export full research context → transfer to GPU pod → resume
