@@ -22,6 +22,9 @@ For each issue found, classify severity:
 
 Return a JSON object:
 {
+  "score": 7,
+  "verdict": "PASS | REVISE | FAIL",
+  "suggestions": ["Concrete improvement direction 1", "Concrete improvement direction 2"],
   "issues": [
     {
       "severity": "CRITICAL | WARNING | INFO",
@@ -36,3 +39,18 @@ Return a JSON object:
   "overall_assessment": "Summary paragraph",
   "confidence": 0.0-1.0
 }
+
+### Scoring Rubric
+- 9-10: Top-venue quality, nearly flawless coverage
+- 7-8: Solid survey, minor gaps that don't affect core understanding
+- 5-6: Clear deficiencies in coverage or accuracy
+- 3-4: Major problems — key areas missing or significant errors
+- 1-2: Fundamental errors in understanding the field
+
+### Verdict Rules
+- PASS: score >= 8 AND no CRITICAL issues
+- REVISE: score >= 5
+- FAIL: score < 5
+
+### Suggestions
+Provide 2-5 concrete, actionable improvement directions. Each suggestion should be specific enough to guide a targeted follow-up search (e.g., "Search for recent work on efficient attention mechanisms post-2024" not "Improve coverage").
