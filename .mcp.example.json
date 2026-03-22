@@ -2,11 +2,11 @@
   "mcpServers": {
     "neocortica-scholar": {
       "command": "npx",
-      "args": ["--prefix", "/path/to/neocortica-scholar", "tsx", "/path/to/neocortica-scholar/src/mcp_server.ts"],
+      "args": ["--prefix", "packages/scholar", "tsx", "packages/scholar/src/mcp_server.ts"],
       "env": {
         "MINERU_TOKEN": "your-mineru-token",
         "EMAIL": "your-email@example.com",
-        "NEOCORTICA_CACHE": ".cache",
+        "NEOCORTICA_CACHE": "/absolute/path/to/neocortica/.cache",
         "OPENAI_API_KEY": "your-openai-compatible-api-key",
         "OPENAI_BASE_URL": "https://openrouter.ai/api/v1",
         "OPENAI_MODEL": "openai/gpt-oss-120b"
@@ -14,10 +14,10 @@
     },
     "neocortica-web": {
       "command": "npx",
-      "args": ["--prefix", "/path/to/neocortica-web", "tsx", "/path/to/neocortica-web/src/mcp_server.ts"],
+      "args": ["--prefix", "packages/web", "tsx", "packages/web/src/mcp_server.ts"],
       "env": {
-        "NEOCORTICA_CACHE": ".cache",
-        "APIFY_TOKEN": "your-apify-token"
+        "APIFY_TOKEN": "your-apify-token",
+        "NEOCORTICA_CACHE": "/absolute/path/to/neocortica/.cache"
       }
     },
     "runpod": {
@@ -46,6 +46,17 @@
       "args": ["-y", "@railway/mcp-server@latest"],
       "env": {
         "RAILWAY_API_TOKEN": "your-railway-api-token"
+      }
+    },
+    "session-credentials": {
+      "command": "echo",
+      "args": ["credential-store-only"],
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+        "ANTHROPIC_AUTH_TOKEN": "your-anthropic-api-key",
+        "ANTHROPIC_MODEL": "claude-sonnet-4-6",
+        "GITHUB_PAT": "your-github-pat",
+        "HF_TOKEN": "your-huggingface-token"
       }
     }
   }
