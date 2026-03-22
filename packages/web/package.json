@@ -1,0 +1,20 @@
+{
+  "name": "@neocortica/web",
+  "version": "0.1.0",
+  "description": "MCP server for web page fetching and caching via Apify rag-web-browser",
+  "type": "module",
+  "scripts": {
+    "mcp": "tsx src/mcp_server.ts",
+    "test": "tsx --test .test/*.test.ts .test/**/*.test.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -3,11 +3,9 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
     "strict": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "skipLibCheck": true
-  },
-  "include": ["src"]
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true
+  }
 }

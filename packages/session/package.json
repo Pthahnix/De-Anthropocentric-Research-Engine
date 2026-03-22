@@ -1,0 +1,13 @@
+{
+  "name": "@neocortica/session",
+  "version": "2.0.0",
+  "description": "Git-based context transfer — scripts for pod provisioning",
+  "type": "module",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

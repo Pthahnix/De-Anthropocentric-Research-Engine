@@ -1,21 +1,13 @@
 {
   "name": "neocortica",
-  "version": "1.0.1",
+  "version": "2.0.0",
+  "private": true,
   "description": "Vibe researching toolkit — AI-powered academic research automation",
-  "main": "index.js",
-  "scripts": {
-    "build:supervisor": "cd src/supervisor && npm install && npx tsc",
-    "docker:build": "npm run build:supervisor && docker build -t neocortica-pod .",
-    "docker:push": "docker push neocortica-pod:latest"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
-  "devDependencies": {
-    "@types/node": "^25.3.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "test": "npm test -w packages/scholar -w packages/web",
+    "build": "npm run build --workspaces --if-present"
   },
-  "dependencies": {}
+  "license": "Apache-2.0"
 }
