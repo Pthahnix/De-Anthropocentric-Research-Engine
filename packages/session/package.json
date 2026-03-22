@@ -1,0 +1,6 @@
+{
+  "name": "@neocortica/session",
+  "version": "2.0.0",
+  "description": "Git-based context transfer — scripts for pod provisioning",
+  "license": "Apache-2.0"
+}
