@@ -1,4 +1,4 @@
-# Neocortica v1.0.1
+# Neocortica v2.0.0
 
 Vibe researching toolkit — AI-powered academic research automation, from literature discovery to experiment execution.
 
@@ -13,14 +13,34 @@ Vibe researching toolkit — AI-powered academic research automation, from liter
 - Web search via Brave Search API for non-academic sources
 - Full-text caching for offline access and repeated queries
 - Review-driven quality loop: independent CC process reviews research outputs, scores each stage, and selectively re-runs stages until quality threshold is met
-- GPU experiment execution on remote pods via session sharing (export session → transfer → resume on GPU pod)
+- GPU experiment execution on remote pods via Git-based context transfer (push research context to GitHub, clone on pod)
+- Dual pod target support: RunPod GPU pods and remote SSH servers
 - Five-stage research pipeline: survey → gaps → ideas → review loop → design → execution
 
 ## How It Works
 
 Most academic AI tools only read abstracts to triage papers. Neocortica downloads the full paper text, converts it to markdown, and lets AI evaluate based on complete methodology, experiments, and discussion.
 
-Multi-MCP architecture: research skills orchestrate external MCP servers for academic search, web search, and GPU execution. Stages 1-3 (survey, gap, idea) run in a review loop — after each pass, a separate Claude Code process (`claude -p`) independently reviews the outputs with web search verification, then selectively triggers re-runs of weak stages. Stage 5 uses session sharing to hand off full research context to remote GPU pods.
+Multi-MCP monorepo architecture: research skills orchestrate MCP servers (packaged as workspace modules) for academic search, web search, and GPU execution. Stages 1-3 (survey, gap, idea) run in a review loop — after each pass, a separate Claude Code process (`claude -p`) independently reviews the outputs with web search verification, then selectively triggers re-runs of weak stages. Stage 5 uses Git-based context transfer to deploy full research context to remote GPU pods.
+
+## Monorepo Structure
+
+v2.0.0 consolidates all MCP servers into a single npm workspaces monorepo:
+
+```
+neocortica/
+├── packages/
+│   ├── scholar/          # Academic paper MCP (search, fetch, read, references)
+│   ├── web/              # Web page MCP (fetch, cache)
+│   └── session/          # Git-based context transfer (scripts for pod provisioning)
+├── skill/                # Research workflow SOPs
+├── pipeline/             # Fixed tool-orchestration workflows
+├── prompt/               # LLM prompt templates
+├── package.json          # Root workspace config
+└── .mcp.json             # MCP server configuration (gitignored)
+```
+
+The original standalone repos ([Neocortica-Scholar](https://github.com/Pthahnix/Neocortica-Scholar), [Neocortica-Web](https://github.com/Pthahnix/Neocortica-Web)) are preserved for independent development, but the monorepo is the primary workspace.
 
 ## Research Pipeline
 
@@ -28,7 +48,7 @@ Five-stage iterative pipeline with review-driven quality loop: Topic → Literat
 
 Stages 1-3 are wrapped in a review loop: after each full pass, an independent Claude Code process reviews the outputs with web search verification, scores each stage (1-10), and selectively triggers re-runs of stages that need improvement. The loop continues until quality threshold is met (score >= 8/10, no critical issues) or 7 rounds max.
 
-Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomous gap discovery and dynamic stopping conditions. Stage 5 exports the full session (with all accumulated research context) to a remote GPU pod via session sharing, where it resumes and executes the experiment autonomously.
+Each stage (1-4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomous gap discovery and dynamic stopping conditions. Stage 5 deploys the full research context to a remote GPU pod via Git-based context transfer, where a fresh CC instance reads CLAUDE.md + MEMORY and executes the experiment autonomously.
 
 **Key Features**:
 
@@ -41,74 +61,85 @@ Each stage (1–4) uses SEARCH→READ→REFLECT→EVALUATE cycles with autonomou
 - State inheritance between stages and across review rounds (knowledge + papersRead + urlsVisited)
 - Zero external validation cost
 - Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
-- Session sharing for experiment execution: export full research context → transfer to GPU pod → resume
-- Checkpoint-based phase control via round-trip session export/import
+- Git-based context transfer: MEMORY → git push → pod git clone → CC reads context → executes experiment
+- Dual pod targets: RunPod GPU pods and remote SSH servers
 
 ## Prerequisites
 
 ### Required MCP Servers
 
-Neocortica depends on the following external MCP servers. Install them before use:
+Neocortica uses a mix of local workspace packages and external npm MCP servers:
 
-| MCP Server | Package / Source | Purpose | API Key Required |
+| MCP Server | Source | Purpose | API Key Required |
 |---|---|---|---|
-| **neocortica-scholar** | [Neocortica-Scholar](https://github.com/Pthahnix/Neocortica-Scholar) | Academic paper pipeline (search, fetch, read, references) | MinerU token, OpenAI-compatible API key |
-| **neocortica-web** | [Neocortica-Web](https://github.com/Pthahnix/Neocortica-Web) | Web page fetching and caching (fetch, read) | Apify API token |
+| **neocortica-scholar** | `packages/scholar` (workspace) | Academic paper pipeline (search, fetch, read, references) | MinerU token, OpenAI-compatible API key |
+| **neocortica-web** | `packages/web` (workspace) | Web page fetching and caching (fetch, read) | Apify API token |
+| **neocortica-session** | `packages/session` (workspace) | Git-based context transfer scripts | — |
 | **apify** | `@apify/actors-mcp-server` (`npm install -g @apify/actors-mcp-server`) | Google Scholar search + web page scraping | [Apify API token](https://console.apify.com/account#/integrations) |
 | **brave-search** | `@brave/brave-search-mcp-server` (`npm install -g @brave/brave-search-mcp-server`) | Web search API | [Brave Search API key](https://brave.com/search/api/) |
 | **runpod** | `@runpod/mcp-server` (`npm install -g @runpod/mcp-server`) | GPU pod lifecycle (create/start/stop/delete) | [RunPod API key](https://www.runpod.io/console/user/settings) |
 | **railway** | `@railway/mcp-server` (`npm install -g @railway/mcp-server`) | Deployment platform | [Railway API token](https://railway.app/account/tokens) |
 
-### neocortica-scholar Setup
+## Quick Start
 
-Clone and install the academic paper MCP server:
+1. Clone and install (all workspace packages are installed automatically):
 
 ```bash
-git clone https://github.com/Pthahnix/Neocortica-Scholar.git
-cd Neocortica-Scholar
+git clone https://github.com/Pthahnix/Neocortica.git
+cd Neocortica
 npm install
 ```
 
-Required environment variables for neocortica-scholar (set in `.mcp.json`):
+2. Install external MCP servers:
+
+```bash
+npm install -g @apify/actors-mcp-server @brave/brave-search-mcp-server @runpod/mcp-server @railway/mcp-server
+```
+
+3. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths.
+
+4. Set up `.env` (for pod provisioning via session-teleport):
+
+```bash
+ANTHROPIC_BASE_URL=https://your-api-provider.com
+ANTHROPIC_AUTH_TOKEN=your-token
+ANTHROPIC_MODEL=your-model
+```
+
+5. Claude Code will auto-discover all tools from the configured MCP servers.
+
+### neocortica-scholar Configuration
+
+Required environment variables (set in `.mcp.json` under the `neocortica-scholar` server entry):
 
 | Variable | Description | How to Get |
 |---|---|---|
 | `MINERU_TOKEN` | MinerU API token for PDF → markdown conversion | [MinerU](https://mineru.net/) |
 | `EMAIL` | Email for Unpaywall API (polite pool) | Your email |
-| `NEOCORTICA_CACHE` | Cache directory path | e.g., `.cache` |
+| `NEOCORTICA_CACHE` | Cache directory path (**must be an absolute path**) | e.g., `D:/NEOCORTICA/.cache` |
 | `OPENAI_API_KEY` | OpenAI-compatible API key (for AI paper reading) | [OpenRouter](https://openrouter.ai/) or any OpenAI-compatible provider |
 | `OPENAI_BASE_URL` | API base URL | e.g., `https://openrouter.ai/api/v1` |
 | `OPENAI_MODEL` | Model name for paper reading agent | e.g., `openai/gpt-oss-120b` |
 
-### neocortica-web Setup
+### neocortica-web Configuration
 
-Clone and install the web page MCP server:
-
-```bash
-git clone https://github.com/Pthahnix/Neocortica-Web.git
-cd Neocortica-Web
-npm install
-```
-
-Required environment variables for neocortica-web (set in `.mcp.json`):
+Required environment variables (set in `.mcp.json` under the `neocortica-web` server entry):
 
 | Variable | Description | How to Get |
 |---|---|---|
-| `NEOCORTICA_CACHE` | Cache directory path (shared with neocortica-scholar) | e.g., `.cache` |
+| `NEOCORTICA_CACHE` | Cache directory path, shared with neocortica-scholar (**must be an absolute path**) | e.g., `D:/NEOCORTICA/.cache` |
 | `APIFY_TOKEN` | Apify API token (for rag-web-browser) | [Apify](https://console.apify.com/account#/integrations) |
 
-## Quick Start
+### neocortica-session Configuration
 
-1. Install prerequisites above
-2. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths
-3. Set up `.env`:
+For Git-based context transfer to remote pods. Credentials are stored in `.mcp.json` under the `neocortica-session` server entry:
 
-```bash
-DIR_CACHE=.cache/
-API_KEY_RUNPOD=your-runpod-key          # optional, for experiment execution
-```
-
-4. Claude Code will auto-discover all tools from the configured MCP servers.
+| Variable | Description |
+|---|---|
+| `RUNPOD_API_KEY` | RunPod API key (for RunPod pod targets) |
+| `REMOTE_HOST` | SSH hostname/IP (for remote server targets) |
+| `REMOTE_USER` | SSH username (for remote server targets) |
+| `HF_TOKEN` | Hugging Face token (passed to pod for model downloads) |
 
 ## Tools
 
@@ -153,30 +184,51 @@ API_KEY_RUNPOD=your-runpod-key          # optional, for experiment execution
 ```
 MCP Client (Claude Code — local)
     │
-    ├── neocortica-scholar MCP ─── academic paper pipeline
-    │       ├── paper_searching    → enrich Scholar results (arXiv, SS, Unpaywall)
-    │       ├── paper_fetching     → fetch full text as markdown
-    │       ├── paper_content      → read cached markdown
-    │       ├── paper_reference    → Semantic Scholar references
-    │       └── paper_reading      → AI three-pass reading
-    │
-    ├── neocortica-web MCP ─── web page pipeline
-    │       ├── web_fetching       → fetch web page as markdown (cache-first)
-    │       └── web_content        → read cached web page markdown
+    │  ┌─ Monorepo Packages ──────────────────────────────┐
+    │  │                                                   │
+    ├──┤  packages/scholar ─── academic paper pipeline     │
+    │  │    ├── paper_searching  → enrich Scholar results  │
+    │  │    ├── paper_fetching   → fetch full text         │
+    │  │    ├── paper_content    → read cached markdown    │
+    │  │    ├── paper_reference  → Semantic Scholar refs   │
+    │  │    └── paper_reading    → AI three-pass reading   │
+    │  │                                                   │
+    ├──┤  packages/web ─── web page pipeline               │
+    │  │    ├── web_fetching     → fetch page as markdown  │
+    │  │    └── web_content      → read cached markdown    │
+    │  │                                                   │
+    ├──┤  packages/session ─── context transfer scripts    │
+    │  │    └── scripts/         → pod provisioning        │
+    │  └───────────────────────────────────────────────────┘
     │
     ├── @apify/actors-mcp-server ─── Google Scholar + web scraping
-    │       ├── google-scholar-scraper → search Google Scholar
-    │       └── rag-web-browser        → fetch web pages as markdown
     │
     ├── @brave/brave-search-mcp-server ─── web search
     │
     ├── @runpod/mcp-server ─── GPU pod lifecycle
     │
-    └── Session Sharing ─── distributed experiment execution
-            ├── Export session (full Stages 1-4 context)
-            ├── Transfer to RunPod GPU pod
-            ├── Resume on remote CC (with all research knowledge)
-            └── Export results back on completion
+    └── Git-based Context Transfer ─── distributed experiment execution
+            ├── Local: MEMORY → git push → GitHub
+            ├── Pod: git clone → deploy-context.sh → CC reads CLAUDE.md + MEMORY
+            ├── Pod: experiment outputs → git push → GitHub
+            └── Local: git pull → CC digests results
+```
+
+### Three-Layer Architecture
+
+```
+┌──────────────────────────────────────────────────────┐
+│  SKILL LAYER (complex orchestration)                 │
+│  skill/*.md — iteration loops, state management,     │
+│  gap discovery, stopping conditions                  │
+├──────────────────────────────────────────────────────┤
+│  PIPELINE LAYER (fixed workflows)                    │
+│  pipeline/*.md — tool orchestration, batching,       │
+│  error handling                                      │
+├──────────────────────────────────────────────────────┤
+│  TOOL LAYER (MCP tools, atomic operations)           │
+│  packages/scholar, packages/web, apify, brave, etc.  │
+└──────────────────────────────────────────────────────┘
 ```
 
 ## Roadmap
@@ -185,26 +237,20 @@ MCP Client (Claude Code — local)
 
 Independent Claude Code process reviews Stage 1-3 outputs (survey, gap analysis, idea generation) with web search verification, scores each stage 1-10, and selectively re-runs stages that need improvement. Loops until quality threshold (score >= 8/10, no critical issues) or 7 rounds max.
 
-### Session Sharing — Distributed Experiment Execution
+### Git-based Context Transfer — COMPLETED (v1.1.0)
 
-**Strategic pivot** (2026-03-16): replacing the custom HTTP relay protocol with session sharing for Stage 5 experiment execution.
+Replaced session export/import with Git-based context transfer. CLAUDE.md + MEMORY are the durable research context — pushed to GitHub, cloned on the pod. A fresh CC instance reads the context files and executes experiments autonomously. Experiment outputs return as structured files via git push/pull.
 
-The key insight: Claude Code's native work unit is the **session**. Instead of building a custom protocol that spawns a fresh CC process and loses all context, we export the full session — including all knowledge accumulated across Stages 1-4 — and resume it on a remote GPU pod. The remote CC "remembers everything" and executes the experiment with full research context.
+### Monorepo Consolidation — COMPLETED (v2.0.0)
 
-Inspired by [cc-go-on](https://github.com/Johnixr/cc-go-on) (session export/encrypt/share/resume for AI coding assistants).
+Consolidated all MCP servers (neocortica-scholar, neocortica-web, neocortica-session) into a single npm workspaces monorepo. Added dual pod target support (RunPod GPU pods + remote SSH servers). Original standalone repos preserved for independent development.
 
-**Flow**:
-```
-Local CC (Stages 1-4 complete)
-    → Export session (tar.gz + encrypt)
-    → Transfer to RunPod GPU pod
-    → Remote CC imports + resumes with full context
-    → Executes experiment autonomously
-    → Exports results session back
-    → Local CC imports results
-```
+### Next
 
-This approach reduces code complexity by 90%+, preserves full research context, and aligns with CC's native architecture rather than fighting it.
+- End-to-end test: run full research-loop on a real topic to validate review mechanism
+- End-to-end test: run full Stage 5 with real GPU pod (session-teleport → experiment → session-return)
+- Adversarial Debate: Proposer-Critic-Judge architecture for idea validation
+- Evolutionary Generation: MAP-Elites quality-diversity algorithm for idea evolution
 
 ## License
 
