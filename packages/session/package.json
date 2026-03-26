@@ -1,5 +1,5 @@
 {
-  "name": "@neocortica/session",
+  "name": "@dare/session",
   "version": "2.0.0",
   "description": "Git-based context transfer — scripts for pod provisioning",
   "type": "module",

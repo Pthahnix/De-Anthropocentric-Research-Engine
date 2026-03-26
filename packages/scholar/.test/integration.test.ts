@@ -10,7 +10,7 @@ import { resolve } from "path";
 
 /**
  * Live integration tests — require network + valid API keys.
- * Uses real NEOCORTICA_CACHE from .env so results are visible on disk.
+ * Uses real DARE_CACHE from .env so results are visible on disk.
  * Run with: npx tsx --test .test/integration.test.ts
  */
 
@@ -73,7 +73,7 @@ describe("integration: paper_fetching + paper_content", () => {
 
 describe("integration: paper_fetching with local PDFs", () => {
   it("converts all local PDFs in .cache/pdf", async () => {
-    const pdfDir = resolve(process.env.NEOCORTICA_CACHE || ".cache", "pdf");
+    const pdfDir = resolve(process.env.DARE_CACHE || ".cache", "pdf");
     let files: string[];
     try {
       files = readdirSync(pdfDir).filter((f) => f.endsWith(".pdf") && !f.startsWith("zztest_"));

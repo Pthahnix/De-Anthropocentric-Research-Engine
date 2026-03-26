@@ -1,5 +1,5 @@
 {
-  "name": "@neocortica/web",
+  "name": "@dare/web",
   "version": "0.1.0",
   "description": "MCP server for web page fetching and caching via Apify rag-web-browser",
   "type": "module",

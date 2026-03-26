@@ -1,6 +1,6 @@
 # Research Strategy
 
-Flexible research strategies for Claude Code. Choose a strategy based on the user's research goal, then orchestrate Neocortica's external MCP tools accordingly. These are guidelines, not rigid scripts — adapt tool usage, ordering, and depth to the actual findings as you go.
+Flexible research strategies for Claude Code. Choose a strategy based on the user's research goal, then orchestrate DARE's external MCP tools accordingly. These are guidelines, not rigid scripts — adapt tool usage, ordering, and depth to the actual findings as you go.
 
 ## User Input
 

@@ -65,7 +65,7 @@ export async function content(
     const resp = await fetch(source);
     if (!resp.ok) return null;
     const buf = Buffer.from(await resp.arrayBuffer());
-    fullPath = resolve(tmpdir(), `neocortica-scholar_${Date.now()}.pdf`);
+    fullPath = resolve(tmpdir(), `dare-scholar_${Date.now()}.pdf`);
     writeFileSync(fullPath, buf);
   } else {
     fullPath = resolve(source);

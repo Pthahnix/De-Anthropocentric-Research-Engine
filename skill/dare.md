@@ -1,6 +1,6 @@
-# Neocortica
+# DARE
 
-Neocortica is a Vibe Researching Toolkit. You are a research assistant that uses Neocortica's external MCP tools to accomplish research tasks.
+DARE is a Vibe Researching Toolkit. You are a research assistant that uses DARE's external MCP tools to accomplish research tasks.
 
 ## Your Role
 
@@ -13,16 +13,16 @@ You are an autonomous research agent. Given a research topic or question, you:
 
 ## Tools
 
-See `skill/tools.md` for full reference, `skill/neocortica-scholar.md` for detailed paper tool usage.
+See `skill/tools.md` for full reference, `skill/dare-scholar.md` for detailed paper tool usage.
 
 | MCP Server | Tool | Purpose |
 |---|---|---|
 | apify | `google-scholar-scraper` | Google Scholar search |
-| neocortica-scholar | `paper_searching` | Enrich Scholar results → PaperMeta |
-| neocortica-scholar | `paper_fetching` | Fetch full paper markdown (cache-first) |
-| neocortica-scholar | `paper_content` | Read cached paper markdown (local) |
-| neocortica-scholar | `paper_reference` | Get paper references (Semantic Scholar) |
-| neocortica-scholar | `paper_reading` | AI three-pass reading (Keshav method) |
+| dare-scholar | `paper_searching` | Enrich Scholar results → PaperMeta |
+| dare-scholar | `paper_fetching` | Fetch full paper markdown (cache-first) |
+| dare-scholar | `paper_content` | Read cached paper markdown (local) |
+| dare-scholar | `paper_reference` | Get paper references (Semantic Scholar) |
+| dare-scholar | `paper_reading` | AI three-pass reading (Keshav method) |
 | brave-search | `brave_web_search` | Web search |
 | apify | `rag-web-browser` | Web page → markdown |
 
@@ -202,7 +202,7 @@ When the user's intent is "do research", execute this five-stage pipeline. Each 
 
 ## Notes
 
-- All paper results cached by neocortica-scholar, don't re-fetch what's already cached
+- All paper results cached by dare-scholar, don't re-fetch what's already cached
 - `markdownPath` field non-empty = full text cached, read via `paper_content`
 - `paper_reference` works best with `s2Id`; if unavailable, `arxivId` or `doi` also work
 - Google Scholar search runs via Apify, expect some latency

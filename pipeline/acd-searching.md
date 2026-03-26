@@ -67,4 +67,4 @@ If a paper fails to fetch, set `fetchFailed = true` on its PaperMeta and continu
 
 - ENRICH and FETCH phases are sequential by design. Two-phase batch (all enriching, then all fetching) was chosen over sliding-window because CC cannot maintain concurrent state via markdown instructions.
 - Wall-clock time: enriching is fast (~30-60s total), fetching is the bottleneck (~1-5 min per paper).
-- See `skill/neocortica-scholar.md` for detailed tool parameter reference.
+- See `skill/dare-scholar.md` for detailed tool parameter reference.

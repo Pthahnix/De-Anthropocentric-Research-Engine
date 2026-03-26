@@ -6,7 +6,7 @@ import "dotenv/config";
 import { saveMarkdown, saveMeta, loadMeta, loadMarkdownPath } from "../../src/utils/cache.js";
 import type { PaperMeta } from "../../src/types.js";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 /** Clean up test files after each test. */
 function cleanupTestFiles(normalizedTitles: string[]) {

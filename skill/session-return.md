@@ -58,7 +58,7 @@ NO cleanup action. Inform user:
 
 > Remote server cleanup is your responsibility. Stop CC manually on the remote machine if needed.
 
-The remote server is not managed by Neocortica — it existed before session-teleport and will continue to exist after. Do not attempt to shut down or modify the remote machine.
+The remote server is not managed by DARE — it existed before session-teleport and will continue to exist after. Do not attempt to shut down or modify the remote machine.
 
 ## Golden Rule
 

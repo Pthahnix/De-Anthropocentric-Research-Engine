@@ -1,23 +1,23 @@
 {
   "mcpServers": {
-    "neocortica-scholar": {
+    "dare-scholar": {
       "command": "npx",
       "args": ["--prefix", "packages/scholar", "tsx", "packages/scholar/src/mcp_server.ts"],
       "env": {
         "MINERU_TOKEN": "your-mineru-token",
         "EMAIL": "your-email@example.com",
-        "NEOCORTICA_CACHE": "/absolute/path/to/neocortica/.cache",
+        "DARE_CACHE": "/absolute/path/to/dare/.cache",
         "OPENAI_API_KEY": "your-openai-compatible-api-key",
         "OPENAI_BASE_URL": "https://openrouter.ai/api/v1",
         "OPENAI_MODEL": "openai/gpt-oss-120b"
       }
     },
-    "neocortica-web": {
+    "dare-web": {
       "command": "npx",
       "args": ["--prefix", "packages/web", "tsx", "packages/web/src/mcp_server.ts"],
       "env": {
         "APIFY_TOKEN": "your-apify-token",
-        "NEOCORTICA_CACHE": "/absolute/path/to/neocortica/.cache"
+        "DARE_CACHE": "/absolute/path/to/dare/.cache"
       }
     },
     "runpod": {
@@ -41,14 +41,7 @@
         "BRAVE_API_KEY": "your-brave-api-key"
       }
     },
-    "railway": {
-      "command": "npx",
-      "args": ["-y", "@railway/mcp-server@latest"],
-      "env": {
-        "RAILWAY_API_TOKEN": "your-railway-api-token"
-      }
-    },
-    "neocortica-session": {
+    "dare-session": {
       "command": "echo",
       "args": ["credential-store-only"],
       "env": {

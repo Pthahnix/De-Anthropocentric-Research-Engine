@@ -6,7 +6,7 @@ import { webFetching } from "../src/tools/web_fetching.js";
 import { webContent } from "../src/tools/web_content.js";
 import { normUrl } from "../src/utils/misc.js";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 function cleanupTestFiles(normalizedUrls: string[]) {
   for (const nu of normalizedUrls) {

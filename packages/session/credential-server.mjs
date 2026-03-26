@@ -53,7 +53,7 @@ function handleMessage(msg) {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: {},
-        serverInfo: { name: 'neocortica-session', version: '2.0.0' },
+        serverInfo: { name: 'dare-session', version: '2.0.0' },
       },
     });
   } else if (msg.method === 'notifications/initialized') {

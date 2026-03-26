@@ -9,7 +9,7 @@ import { urlToId, idToUrl, parseEntry } from "../../src/utils/arxiv.js";
 import { mapPaper } from "../../src/utils/ss.js";
 import type { PaperMeta } from "../../src/types.js";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 function cleanupTestFiles(normalizedTitles: string[]) {
   for (const nt of normalizedTitles) {
