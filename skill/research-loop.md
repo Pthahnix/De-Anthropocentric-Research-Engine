@@ -1,6 +1,6 @@
 # Research Loop
 
-Outer orchestration skill for Neocortica's Stage 1-3 research pipeline with review-driven iterative refinement.
+Outer orchestration skill for DARE's Stage 1-3 research pipeline with review-driven iterative refinement.
 
 Encapsulates: literature-survey → gap-analysis → idea-generation → review → selective redo loop.
 

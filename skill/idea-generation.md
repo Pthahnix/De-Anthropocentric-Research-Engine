@@ -14,7 +14,7 @@ Generate and evaluate research ideas using iterative loop engine. This is Stage 
 - Completed gap analysis with ranked gaps
 - Prompts: `prompt/idea-scoring.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
-- Tools (direct): paper_content, paper_reference, paper_reading (neocortica-scholar)
+- Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
 
 ## Overview
 

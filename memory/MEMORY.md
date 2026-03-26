@@ -1,21 +1,25 @@
-# Neocortica Project Memory
+# DARE Project Memory
 
 ## Project Identity
-- **Name**: Neocortica (migrated from Prometheus)
-- **Purpose**: AI-powered academic research automation toolkit with four-dimensional architecture
-- **Architecture**: Monorepo (v2.0.0) — npm workspaces with `packages/scholar`, `packages/web`, `packages/session`. Root holds orchestration (skills, pipelines, prompts).
-- **Version History**: v0.8.0 (multi-MCP) → v0.9.0 (pipeline layer + scholar) → v1.0.0 (web integration, full pipeline) → v1.0.1 (research review loop) → v1.1.0 (Git-based context transfer) → v2.0.0 (monorepo + dual pod + HF_TOKEN)
+- **Name**: DARE — De-Anthropocentric Research Engine (formerly Neocortica, migrated from Prometheus)
+- **Full Name**: De-Anthropocentric Research Engine
+- **Tagline**: "Human-centered AI-assisted research can no longer sustain the next leap of our civilization. It's time to decenter the human. It's time to DARE."
+- **Chinese Tagline**: "以人类为中心的 AI 辅助科研模式，已不足以支撑文明创造更大的辉煌。是时候去人类中心主义了。是时候 DARE 了。"
+- **Purpose**: De-anthropocentric research engine — AI leads the research, human leads the direction
+- **Architecture**: Monorepo — npm workspaces with `packages/scholar`, `packages/web`, `packages/session`. Root holds orchestration (skills, pipelines, prompts).
+- **Version History**: v0.8.0 (multi-MCP) → v0.9.0 (pipeline layer + scholar) → v1.0.0 (web integration, full pipeline, rebrand to DARE)
 - **Unique Positioning**: Only open-source system combining Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution
+- **GitHub**: https://github.com/Pthahnix/De-Anthropocentric-Research-Engine
 
 ## Core Components
 
-### 1. Monorepo Structure (v2.0.0)
+### 1. Monorepo Structure
 ```
-neocortica/
+dare/
 ├── packages/
-│   ├── scholar/     # @neocortica/scholar — academic paper MCP (5 tools, 153 tests)
-│   ├── web/         # @neocortica/web — web page MCP (2 tools)
-│   └── session/     # @neocortica/session — pod provisioning scripts (no TS)
+│   ├── scholar/     # @dare/scholar — academic paper MCP (5 tools, 153 tests)
+│   ├── web/         # @dare/web — web page MCP (2 tools)
+│   └── session/     # @dare/session — pod provisioning scripts (no TS)
 ├── skill/           # Research workflow SOPs
 ├── pipeline/        # Fixed tool-orchestration workflows
 ├── prompt/          # LLM prompt templates (root-level, NOT paper-reading which is in packages/scholar)
@@ -23,25 +27,24 @@ neocortica/
 └── output/          # Gitignored, research outputs
 ```
 
-### 2. Three-Layer Architecture (v0.9.0 — Pipeline Layer)
+### 2. Three-Layer Architecture
 ```
 Skill (WHEN/WHY) → Pipeline (HOW) → Tool (WHAT)
 ```
 - **Pipelines** (`pipeline/*.md`): Fixed tool-orchestration workflows, registered in `.claude/commands/`
   - `acd-searching.md`: SEARCH (google-scholar-scraper parallel) → ENRICH (paper_searching sequential) → FETCH (paper_fetching sequential)
-  - `web-searching.md`: DISCOVER (brave_web_search parallel) → EXTRACT (web_fetching sequential via neocortica-web MCP)
+  - `web-searching.md`: DISCOVER (brave_web_search parallel) → EXTRACT (web_fetching sequential via dare-web MCP)
 - **Skills** reference pipelines instead of inlining tool call sequences
 - `pipeline/*.md` is source of truth, `.claude/commands/` contains copies for CC registration
 - State inheritance includes `urlsVisited` (web pages) alongside `papersRead` (papers) and `knowledge`
 
-### 3. MCP Servers (v2.0.0 — monorepo packages)
-- **neocortica-scholar** (`packages/scholar`): `paper_searching`, `paper_fetching`, `paper_content`, `paper_reference`, `paper_reading`
-- **neocortica-web** (`packages/web`): `web_fetching`, `web_content`
-- **neocortica-session** (`packages/session`): Virtual credential store in `.mcp.json` + pod provisioning shell scripts
+### 3. MCP Servers
+- **dare-scholar** (`packages/scholar`): `paper_searching`, `paper_fetching`, `paper_content`, `paper_reference`, `paper_reading`
+- **dare-web** (`packages/web`): `web_fetching`, `web_content`
+- **dare-session** (`packages/session`): Virtual credential store in `.mcp.json` + pod provisioning shell scripts
 - **apify** (`@apify/actors-mcp-server`): `google-scholar-scraper`, `rag-web-browser`
 - **brave-search** (`@brave/brave-search-mcp-server`): `brave_web_search`
 - **runpod** (`@runpod/mcp-server`): pod lifecycle
-- **railway** (`@railway/mcp-server`): deployment
 
 ### 4. Research Skills (`skill/*.md`)
 Five-stage research pipeline with iterative loop engines + review-driven outer loop:
@@ -82,15 +85,15 @@ END LOOP
 - **Medium**: Pass 1 → Pass 2 (skip details)
 - **Low**: Pass 1 only (skim)
 
-### neocortica-session — v3 Monorepo + Dual Pod (2026-03-22)
+### dare-session — Git-based Context Transfer
 Git-based context transfer with dual pod targets (RunPod + Remote SSH).
 - **Approach**: CLAUDE.md + MEMORY are durable context; push to GitHub, git clone on pod
 - **Skills**: `skill/session-teleport.md` (Phase 0-4, dual pod), `skill/session-return.md` (pod-type-aware cleanup), `skill/experiment-output.md`
 - **Scripts**: `packages/session/scripts/` — 5 atomic shell scripts (install-node, create-cc-user, install-cc, setup-env, deploy-context)
 - **Dual pod**: RunPod (ephemeral, auto-create/delete) vs Remote (persistent, user-managed)
-- **Credentials**: `.mcp.json` `neocortica-session` virtual entry holds ANTHROPIC_BASE_URL, ANTHROPIC_AUTH_TOKEN, ANTHROPIC_MODEL, GITHUB_PAT, HF_TOKEN
+- **Credentials**: `.mcp.json` `dare-session` entry holds ANTHROPIC_BASE_URL, ANTHROPIC_AUTH_TOKEN, ANTHROPIC_MODEL, GITHUB_PAT, HF_TOKEN
 - **Context flow**: Local MEMORY → memory/ → git push → pod git clone → CC reads CLAUDE.md + MEMORY
-- **CC project hash**: non-alphanum → `-` (e.g., `D:\NEOCORTICA` → `D--NEOCORTICA`, `/workspace/repo` → `-workspace-repo`)
+- **CC project hash**: non-alphanum → `-` (e.g., `D:\DARE` → `D--DARE`, `/workspace/repo` → `-workspace-repo`)
 
 ## Development Methodology (User Preference — MANDATORY)
 - **Incremental development with carpet-bombing tests**
@@ -101,75 +104,63 @@ Git-based context transfer with dual pod targets (RunPod + Remote SSH).
 - **Gate rule**: ALL prior tests must pass before writing new code — no exceptions
 - Test files: `.test/` directory mirroring `src/` for scholar and web packages
 
-## Active Sub-Projects
-- **Monorepo v2.0.0**: Consolidation of scholar + web + session into packages/ — **COMPLETED** (2026-03-22, branch `feat/monorepo-v2`)
-- **neocortica-scholar** (`D:\NEOCORTICA-SCHOLAR`): Original standalone repo — **PRESERVED** for independent development
-- **neocortica-web** (`D:\NEOCORTICA-WEB`): Original standalone repo — **PRESERVED** for independent development
-- **neocortica-session** (`D:\NEOCORTICA-SESSION`): Original standalone repo — **PRESERVED** for independent development
-
 ## Repo Hygiene
-- `.mcp.json` holds all credentials: MCP server tokens + `neocortica-session` virtual entry for pod provisioning (gitignored)
+- `.mcp.json` holds all credentials: MCP server tokens + `dare-session` entry for pod provisioning (gitignored)
 - `.env` is local notes file only, NOT read by any skill or script
 - `docs/` gitignored, removed from remote tracking (local-only specs/plans)
 - `CLAUDE.md` gitignored (local-only)
-- Original standalone repos preserved at `D:\NEOCORTICA-SCHOLAR`, `D:\NEOCORTICA-WEB`, `D:\NEOCORTICA-SESSION` — used for isolated development before updating monorepo
-- `NEOCORTICA_CACHE` must be absolute path in `.mcp.json` (e.g., `D:/NEOCORTICA/.cache`) to prevent cache splitting when `npx --prefix` changes CWD
+- `DARE_CACHE` must be absolute path in `.mcp.json` (e.g., `D:/DARE/.cache`) to prevent cache splitting when `npx --prefix` changes CWD
 
 ## File Conventions
 - Output filenames: lowercase, non-alphanum → `_`, no trailing `_`
-- Cache: managed by neocortica-scholar and neocortica-web via `NEOCORTICA_CACHE` env var, subdirs `markdown/`, `paper/`, `web/`
+- Cache: managed by dare-scholar and dare-web via `DARE_CACHE` env var, subdirs `markdown/`, `paper/`, `web/`
 - Prompts: `prompt/<name>.md` (root) + `packages/scholar/prompt/paper-reading.md` (scholar-internal)
 - Skills: `skill/<name>.md` - research SOPs (mirrored in `.claude/commands/` for CC, both gitignored-safe)
 - Pipelines: `pipeline/<name>.md` - fixed tool workflows (source of truth; copies in `.claude/commands/`)
 - Output: `output/` - research loop outputs. Gitignored, regenerated per session
 
 ## External Dependencies
-- **MCP Servers**: `@apify/actors-mcp-server`, `@brave/brave-search-mcp-server`, `@runpod/mcp-server`, `@railway/mcp-server`, neocortica-scholar (packages/scholar), neocortica-web (packages/web)
-- **APIs** (via neocortica-scholar): MinerU (PDF OCR), arXiv2md, Semantic Scholar, Unpaywall
+- **MCP Servers**: `@apify/actors-mcp-server`, `@brave/brave-search-mcp-server`, `@runpod/mcp-server`, dare-scholar (packages/scholar), dare-web (packages/web)
+- **APIs** (via dare-scholar): MinerU (PDF OCR), arXiv2md, Semantic Scholar, Unpaywall
 - **APIs** (via apify/brave): Google Scholar (Apify actor), Brave Search, rag-web-browser (Apify actor)
-- **APIs** (via neocortica-web): Apify rag-web-browser REST API (web page → markdown)
+- **APIs** (via dare-web): Apify rag-web-browser REST API (web page → markdown)
 - **Environment**: Node.js ESM, `tsx` for TS execution, npm workspaces
 
 ## Important Notes
-- Original standalone repos preserved for independent dev/refactoring before updating monorepo
-- Project name is now **Neocortica** everywhere in active code
+- Project name is now **DARE** (De-Anthropocentric Research Engine) everywhere in active code
+- Formerly known as Neocortica (renamed 2026-03-26)
 - Experiment execution costs real money - RunPod cleanup is mandatory, Remote cleanup is user's responsibility
-- **Complete vision** (v1.0.0+): Four-dimensional architecture
+- **Complete vision**: Four-dimensional architecture
   1. **Deep Research**: 10-round iterative literature survey with dynamic stopping
   2. **Adversarial Debate**: Proposer-Critic-Judge architecture for idea validation
   3. **Evolutionary Generation**: MAP-Elites quality-diversity algorithm for idea evolution
-  4. **Distributed Execution**: Git-based context transfer, dual pod (RunPod + Remote) — **COMPLETED** (v2.0.0)
+  4. **Distributed Execution**: Git-based context transfer, dual pod (RunPod + Remote) — **COMPLETED**
 
 ## Next Milestone
-- MCP server live test: verify scholar and web servers start correctly with monorepo relative paths
-- End-to-end test: run full research-loop on a real topic to validate review mechanism
 - End-to-end test: run full Stage 5 with real GPU pod (session-teleport → experiment → session-return)
 - Then: Adversarial Debate or Evolutionary Generation
 
-## Competitive Analysis (updated 2026-03-05)
-
-### Documents
-- `.context/neocortica-analysis/2026-03-04-competitive-analysis.md` — v1, 60+ products, uses Neocortica's own 4-dim framework (biased)
-- `.context/neocortica-analysis/2026-03-05-competitive-analysis-v2.md` — v2, objective reassessment with neutral industry criteria
+## Competitive Analysis (updated 2026-03-26)
 
 ### Honest Current Status
 - **Tier 3**: Functional software with runnable pipeline, but NO validated scientific output yet
-- 1/4 planned dimensions implemented (Deep Research pipeline), Distributed Execution completed (v2.0.0)
+- 1/4 planned dimensions implemented (Deep Research pipeline), Distributed Execution completed
 - Debate, Evolution — design docs only, no code
 
 ### Key Competitors (realistic threat assessment)
-| Competitor | Threat Level | Reason |
-|---|---|---|
-| Google AI Co-Scientist | Low (short-term) | Closed-source, limited partners only. Has debate+evolution+distributed natively. Existential threat if opened |
-| Sakana AI Scientist v2 | Medium | Open-source, but different direction (idea→paper automation, not iterative research assistance) |
-| OpenAI Deep Research | Low | Synthesis only, not discovery. Different track |
-| AlphaEvolve/FunSearch | Low | Code/algorithm domain only, not research ideas |
-| New entrants | Biggest unknown | No significant open-source competitor has appeared since Sakana v2 |
+| Competitor | Stars | Threat Level | Reason |
+|---|---|---|---|
+| gpt-researcher | ~25.7k | Low | Web research only, not scientific discovery |
+| deep-research | ~18.3k | Low | Minimal implementation, report generator |
+| AI-Scientist (Sakana) | ~12.3k | Medium | Different direction (paper automation vs research assistance) |
+| paper-qa (FutureHouse) | ~8.3k | Medium | Science RAG, not full pipeline. Well-funded (Eric Schmidt) |
+| AI-Researcher (HKUDS) | ~4.8k | Medium | Claims Co-Scientist alternative, NeurIPS 2025 |
+| Google AI Co-Scientist | n/a | High (long-term) | Closed-source. Existential threat if opened |
 
 ### Window of Opportunity
 - **Estimated: 6-12 months** before a serious open-source competitor or Google opening Co-Scientist
-- Open-source scientific agent space is moving slower than expected
 - No one else is building debate + evolution for research agents in the open
+- "De-anthropocentric" positioning is unique — no competitor frames research this way
 
 ## Developer Profile & Velocity
 - **Solo amateur developer**, built entire project from zero idea to current state in **~2 weeks**
@@ -179,8 +170,7 @@ Git-based context transfer with dual pod targets (RunPod + Remote SSH).
 ## User Profile
 - [user_profile.md](user_profile.md) — DL background (NLP/LLM, GNN, multimodal, Agent/MCP), entering AI+Bio, 3x5090 + cloud GPU
 
-## Research Context Documents
-- `docs/superpowers/specs/2026-03-22-neocortica-2.0-design.md` - v2.0.0 monorepo + dual pod design spec
-- `docs/superpowers/plans/2026-03-22-neocortica-2.0.md` - v2.0.0 implementation plan (11 tasks, all completed)
-- `docs/superpowers/specs/2026-03-16-session-sharing-design.md` - Session sharing design spec (v1.1.0)
-- `docs/superpowers/plans/2026-03-16-session-sharing.md` - Session sharing implementation plan (12 tasks, all completed)
+## Naming History
+- **Prometheus** → **Neocortica** → **DARE** (De-Anthropocentric Research Engine)
+- Renamed to DARE on 2026-03-26 for discoverability + philosophical positioning
+- GitHub: `Pthahnix/De-Anthropocentric-Research-Engine`

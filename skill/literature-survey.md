@@ -9,7 +9,7 @@ $ARGUMENTS — research topic or question
 ## Prerequisites
 
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
-- Tools (direct): paper_content, paper_reference, paper_reading (neocortica-scholar)
+- Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
 - Prompts: `prompt/paper-rating.md`, `prompt/paper-reading.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
 
 ## Overview

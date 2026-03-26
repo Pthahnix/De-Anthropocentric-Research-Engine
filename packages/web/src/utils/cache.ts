@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import type { WebMeta } from "../types.js";
 
 function cacheDir(): string {
-  return resolve(process.env.NEOCORTICA_CACHE || ".cache");
+  return resolve(process.env.DARE_CACHE || ".cache");
 }
 
 /** Ensure CACHE/web/ directory exists. Returns the web cache path. */

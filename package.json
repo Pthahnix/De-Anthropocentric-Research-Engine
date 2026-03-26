@@ -1,8 +1,8 @@
 {
-  "name": "neocortica",
+  "name": "dare",
   "version": "2.0.0",
   "private": true,
-  "description": "Vibe researching toolkit — AI-powered academic research automation",
+  "description": "DARE — De-Anthropocentric Research Engine",
   "type": "module",
   "workspaces": ["packages/*"],
   "scripts": {

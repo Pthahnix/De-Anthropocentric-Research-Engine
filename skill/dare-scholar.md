@@ -1,4 +1,4 @@
-# Neocortica-Scholar MCP Tools Usage Guide
+# DARE-Scholar MCP Tools Usage Guide
 
 ## Overview
 

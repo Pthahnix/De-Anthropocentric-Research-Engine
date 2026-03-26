@@ -13,7 +13,7 @@ Execute an experiment on a remote GPU pod via Supervisor architecture. This is S
 - Bash tool available for curl commands
 - Prompts: `prompt/hardware-estimation.md`, `prompt/experiment-task.md`
 - Environment: `API_KEY_RUNPOD` set in .env
-- Pre-built Docker image: `neocortica-pod:latest` (built via `npm run docker:build`)
+- Pre-built Docker image: `dare-pod:latest` (built via `npm run docker:build`)
 
 ## Overview
 
@@ -90,8 +90,8 @@ GPU Configuration Estimate:
 ## Phase 2: Pod Provisioning
 
 1. Call RunPod MCP `create-pod`:
-   - name: `neocortica-<experimentName>`
-   - imageName: `neocortica-pod:latest`
+   - name: `dare-<experimentName>`
+   - imageName: `dare-pod:latest`
    - gpuTypeIds: from hardware estimate (RunPod gpuTypeId string)
    - gpuCount: from hardware estimate
    - volumeInGb: from hardware estimate diskEstimate_GB

@@ -4,7 +4,7 @@ import { normTitle } from "./misc.js";
 import type { PaperMeta } from "../types.js";
 
 function cacheDir(): string {
-  return resolve(process.env.NEOCORTICA_CACHE || ".cache");
+  return resolve(process.env.DARE_CACHE || ".cache");
 }
 
 function ensureDirs(): { markdown: string; paper: string } {

@@ -9,7 +9,7 @@ import { paperFetching } from "../../src/tools/paper_fetching.js";
 import type { PaperMeta } from "../../src/types.js";
 
 const originalFetch = global.fetch;
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 /** Build a ZIP buffer containing a single .md file with the given content. */
 function buildMdZip(mdContent: string): Buffer {

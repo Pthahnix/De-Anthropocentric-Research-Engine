@@ -14,7 +14,7 @@ Identify research gaps using iterative loop engine. This is Stage 2 of the resea
 - Completed literature survey with rated and read papers
 - Prompts: `prompt/gap-discovery.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
-- Tools (direct): paper_content, paper_reference, paper_reading (neocortica-scholar)
+- Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
 
 ## Overview
 

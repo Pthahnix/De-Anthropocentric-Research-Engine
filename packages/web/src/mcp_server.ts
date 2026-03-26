@@ -6,7 +6,7 @@ import { webContent } from "./tools/web_content.js";
 import type { ProgressCallback } from "./utils/apify.js";
 
 const server = new McpServer({
-  name: "neocortica-web",
+  name: "dare-web",
   version: "0.1.0",
 });
 

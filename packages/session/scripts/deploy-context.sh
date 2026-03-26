@@ -27,7 +27,7 @@ fi
 
 # Compute project hash: replace non-alphanumeric chars with '-'
 # CC uses the absolute workspace path to compute the hash
-# e.g., /workspace/neocortica → -workspace-neocortica
+# e.g., /workspace/dare → -workspace-dare
 PROJECT_HASH=$(echo "$REPO_DIR" | sed 's/[^a-zA-Z0-9]/-/g')
 MEMORY_TARGET="/home/cc/.claude/projects/$PROJECT_HASH/memory"
 

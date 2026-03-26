@@ -1,4 +1,4 @@
-# Neocortica-Web MCP Tools Usage Guide
+# DARE-Web MCP Tools Usage Guide
 
 ## Overview
 
@@ -96,4 +96,4 @@ web_content({ normalizedUrl: "example_com_llm_guide" })
 1. **Sequential processing**: Fetch pages one at a time to respect Apify compute limits
 2. **Caching**: `web_fetching` auto-caches on success AND failure; subsequent calls return instantly
 3. **Failure = problematic page**: `fetchFailed` usually means anti-scrape or timeout — no need to retry repeatedly
-4. **Cache location**: `NEOCORTICA_CACHE/web/` shared with neocortica-scholar's `markdown/` and `paper/` dirs
+4. **Cache location**: `DARE_CACHE/web/` shared with dare-scholar's `markdown/` and `paper/` dirs

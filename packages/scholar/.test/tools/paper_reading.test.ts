@@ -4,7 +4,7 @@ import { writeFileSync, readFileSync, unlinkSync, mkdirSync } from "fs";
 import { resolve } from "path";
 import "dotenv/config";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 describe("paper_reading", () => {
   const testFiles: string[] = [];

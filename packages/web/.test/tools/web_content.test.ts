@@ -5,7 +5,7 @@ import { resolve } from "path";
 import { webContent } from "../../src/tools/web_content.js";
 import { saveMarkdown } from "../../src/utils/cache.js";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 function cleanupTestFiles(normalizedUrls: string[]) {
   for (const nu of normalizedUrls) {

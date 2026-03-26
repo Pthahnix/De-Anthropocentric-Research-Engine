@@ -1,12 +1,12 @@
-# Neocortica — Tool Reference
+# DARE — Tool Reference
 
 Research toolkit using external MCP servers for academic search, web retrieval, and GPU pod management.
 
 ## MCP Servers & Tools
 
-### neocortica-scholar (Academic Paper Pipeline)
+### dare-scholar (Academic Paper Pipeline)
 
-See `/neocortica-scholar` skill for detailed usage guide.
+See `/dare-scholar` skill for detailed usage guide.
 
 | Tool | Purpose |
 |------|---------|
@@ -79,7 +79,7 @@ ScholarItem {
 
 ## Cache
 
-Managed by neocortica-scholar via `NEOCORTICA_CACHE` env var:
+Managed by dare-scholar via `DARE_CACHE` env var:
 - `markdown/` — paper full-text (.md)
 - `paper/` — paper metadata (.json)
 

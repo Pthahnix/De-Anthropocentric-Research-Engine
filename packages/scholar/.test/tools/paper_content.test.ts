@@ -6,7 +6,7 @@ import "dotenv/config";
 import { paperContent } from "../../src/tools/paper_content.js";
 import { saveMarkdown } from "../../src/utils/cache.js";
 
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 function cleanupTestFiles(normalizedTitles: string[]) {
   for (const nt of normalizedTitles) {

@@ -7,7 +7,7 @@ import { paperReference, extractReferenceTitles } from "../../src/tools/paper_re
 import type { PaperMeta } from "../../src/types.js";
 
 const originalFetch = global.fetch;
-const cacheDir = process.env.NEOCORTICA_CACHE || ".cache";
+const cacheDir = process.env.DARE_CACHE || ".cache";
 
 describe("paper_reference", () => {
   const testFiles: string[] = [];

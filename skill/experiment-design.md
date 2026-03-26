@@ -16,7 +16,7 @@ Design an experiment plan using iterative loop engine. This is Stage 4 of the re
 - Completed idea generation with selected idea
 - Prompts: `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
-- Tools (direct): paper_content, paper_reference (neocortica-scholar)
+- Tools (direct): paper_content, paper_reference (dare-scholar)
 
 ## Overview
 

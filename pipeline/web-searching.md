@@ -1,6 +1,6 @@
 # Web Searching Pipeline (web-searching)
 
-Fixed workflow for searching the web via Brave Search and extracting full page content via neocortica-web MCP.
+Fixed workflow for searching the web via Brave Search and extracting full page content via dare-web MCP.
 
 ## Input
 
@@ -50,9 +50,9 @@ Returns `WebMeta` with `markdownPath` on success, `fetchFailed: true` on failure
 ## Notes
 
 - DISCOVER phase uses Brave Search (fast, independent index, <1s per query) via existing brave-search MCP.
-- EXTRACT phase uses neocortica-web's `web_fetching` tool (internally calls Apify rag-web-browser REST API, auto-caches to `CACHE/web/`).
+- EXTRACT phase uses dare-web's `web_fetching` tool (internally calls Apify rag-web-browser REST API, auto-caches to `CACHE/web/`).
 - Sequential EXTRACT processing due to Apify compute constraints. Typical: 16-31s per page.
 - Cache path convention: `CACHE/web/{normalizedUrl}.md` (normalized via `normUrl()`).
 - To read cached content later: use `web_content({ url })` or `web_content({ normalizedUrl })`.
 
-> **Migration complete** (2026-03-15): Migrated from interim version (direct `rag-web-browser` + manual Write) to neocortica-web MCP tools (`web_fetching` with auto-cache). DISCOVER phase still uses `brave_web_search` via existing brave-search MCP.
+> **Migration complete** (2026-03-15): Migrated from interim version (direct `rag-web-browser` + manual Write) to dare-web MCP tools (`web_fetching` with auto-cache). DISCOVER phase still uses `brave_web_search` via existing brave-search MCP.
