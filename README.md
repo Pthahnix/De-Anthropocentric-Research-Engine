@@ -1,14 +1,12 @@
-# DARE — De-Anthropocentric Research Engine v1.0.0
+# 🧬 DARE — De-Anthropocentric Research Engine
 
-> **Human-centered AI-assisted research can no longer sustain the next leap of our civilization. It's time to decenter the human. It's time to DARE.**
->
-> 以人类为中心的 AI 辅助科研模式，已不足以支撑文明创造更大的辉煌。是时候去人类中心主义了。是时候 DARE 了。
+> **Human-centered AI-assisted research can no longer sustain the next great leaps of our civilization. What we need is not just more tools, but an AI researcher that thinks and acts independently — a new entity to replace the human role in science. This is DARE.**
+
+🚧 *Personal side project. Actively under development.*
 
 DARE is not a tool that helps you do research. It *is* the researcher. You set the direction — DARE searches, reads, discovers gaps, generates ideas, designs experiments, and executes them on GPUs. Autonomously. Iteratively. Without asking for permission.
 
-This is not "AI-assisted research." This is research, de-anthropocentrized.
-
-## What It Does
+## 🔬 What It Does
 
 - **Autonomous literature survey** — searches Google Scholar, downloads full papers (not just abstracts), reads them cover-to-cover with a three-pass protocol
 - **Gap discovery** — identifies what the field is missing, not what you tell it to find
@@ -17,10 +15,14 @@ This is not "AI-assisted research." This is research, de-anthropocentrized.
 - **Experiment design & execution** — designs experiments and runs them on remote GPU pods, autonomously
 - **Deep reference exploration** — traces citation graphs via Semantic Scholar
 - **Full-text caching** — every paper and web page converted to markdown, cached locally for offline access
+- **Dual pod targets** — supports both RunPod GPU pods and remote SSH servers for experiment execution
+- **Git-based context transfer** — research context (CLAUDE.md + MEMORY) pushed to GitHub, cloned on pod, executed by a fresh AI instance
 
-## Five-Stage Pipeline
+## 🔄 Five-Stage Pipeline
 
-```
+Five-stage iterative pipeline with review-driven quality loop:
+
+```text
 You ask a question
     ↓
 ┌─────────────────────────────────────────────────┐
@@ -40,7 +42,39 @@ Results returned via git
 
 Each stage runs SEARCH → READ → REFLECT → EVALUATE cycles with autonomous gap discovery and dynamic stopping. No human in the loop.
 
-## Quick Start
+**Key features of the pipeline:**
+
+- 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search)
+- Two-step enrich pipeline: `paper_searching` → `paper_fetching`
+- Web page pipeline: `brave_web_search` → `web_fetching` → `web_content`
+- Three-pass reading protocol (High / Medium / Low rating)
+- State inheritance between stages and across review rounds (knowledge + papersRead + urlsVisited)
+- Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
+- Zero external validation cost — review loop uses a separate `claude -p` process
+
+## 🧠 How It Actually Works
+
+Most "AI research tools" read abstracts, summarize them, and call it a day. DARE downloads the full paper — methodology, experiments, discussion, appendices — converts it to markdown, and has AI evaluate it with a three-pass reading protocol (skim → comprehend → critique).
+
+The review loop is the key innovation: after Stages 1-3, an independent Claude Code process (`claude -p`) reviews all outputs with web search verification, scores each stage 1-10, and selectively re-runs stages that fall below threshold. Only weak stages are re-run, with reduced iteration limits in hot loop. This continues until score ≥ 8/10 with no critical issues, or 7 rounds max.
+
+Stage 5 deploys the full research context to a remote GPU pod via Git — CLAUDE.md + MEMORY are pushed to GitHub, cloned on the pod, and a fresh AI instance executes the experiment with zero human supervision. Experiment outputs return as structured files via git push/pull.
+
+```text
+Git-based Context Transfer (Stage 5):
+
+  Local: MEMORY → git push → GitHub
+      ↓
+  Pod: git clone → deploy-context.sh → CC reads CLAUDE.md + MEMORY
+      ↓
+  Pod: experiment outputs → git push → GitHub
+      ↓
+  Local: git pull → CC digests results
+```
+
+## 🚀 Quick Start
+
+1. Clone and install (all workspace packages are installed automatically):
 
 ```bash
 git clone https://github.com/Pthahnix/De-Anthropocentric-Research-Engine.git
@@ -48,19 +82,21 @@ cd De-Anthropocentric-Research-Engine
 npm install
 ```
 
-Install external MCP servers:
+1. Install external MCP servers:
 
 ```bash
 npm install -g @apify/actors-mcp-server @brave/brave-search-mcp-server @runpod/mcp-server
 ```
 
-Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys. Claude Code will auto-discover all tools.
+1. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths.
 
-## Architecture
+1. Claude Code will auto-discover all tools from the configured MCP servers.
+
+## 🏗️ Architecture
 
 Three-layer architecture: **Skills** (when/why) orchestrate **Pipelines** (how) which call **Tools** (what).
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  SKILL LAYER — orchestration & decision-making   │
 │  Iteration loops, gap discovery, stopping logic  │
@@ -73,76 +109,135 @@ Three-layer architecture: **Skills** (when/why) orchestrate **Pipelines** (how) 
 └──────────────────────────────────────────────────┘
 ```
 
-### MCP Servers
-
-| Server | Purpose |
-|---|---|
-| **dare-scholar** | Academic paper pipeline — search, fetch, read, reference tracing |
-| **dare-web** | Web page fetching and caching |
-| **dare-session** | Git-based context transfer to remote GPU pods |
-| **apify** | Google Scholar search + web page scraping |
-| **brave-search** | Web search API |
-| **runpod** | GPU pod lifecycle management |
-
-### Monorepo Structure
-
+```text
+MCP Client (Claude Code — local)
+    │
+    │  ┌─ Monorepo Packages ──────────────────────────────┐
+    │  │                                                   │
+    ├──┤  packages/scholar ─── academic paper pipeline     │
+    │  │    ├── paper_searching  → enrich Scholar results  │
+    │  │    ├── paper_fetching   → fetch full text         │
+    │  │    ├── paper_content    → read cached markdown    │
+    │  │    ├── paper_reference  → Semantic Scholar refs   │
+    │  │    └── paper_reading    → AI three-pass reading   │
+    │  │                                                   │
+    ├──┤  packages/web ─── web page pipeline               │
+    │  │    ├── web_fetching     → fetch page as markdown  │
+    │  │    └── web_content      → read cached markdown    │
+    │  │                                                   │
+    ├──┤  packages/session ─── context transfer scripts    │
+    │  │    └── scripts/         → pod provisioning        │
+    │  └───────────────────────────────────────────────────┘
+    │
+    ├── @apify/actors-mcp-server ─── Google Scholar + web scraping
+    │
+    ├── @brave/brave-search-mcp-server ─── web search
+    │
+    ├── @runpod/mcp-server ─── GPU pod lifecycle
+    │
+    └── Git-based Context Transfer ─── distributed experiment execution
 ```
+
+### 🔌 MCP Servers
+
+| Server | Source | Purpose |
+| --- | --- | --- |
+| **dare-scholar** | `packages/scholar` (workspace) | Academic paper pipeline — search, fetch, read, reference tracing |
+| **dare-web** | `packages/web` (workspace) | Web page fetching and caching |
+| **dare-session** | `packages/session` (workspace) | Git-based context transfer to remote GPU pods |
+| **apify** | `@apify/actors-mcp-server` (npm) | Google Scholar search + web page scraping |
+| **brave-search** | `@brave/brave-search-mcp-server` (npm) | Web search API |
+| **runpod** | `@runpod/mcp-server` (npm) | GPU pod lifecycle management |
+
+### 🔧 Tools
+
+#### dare-scholar (Academic Paper Pipeline)
+
+| Tool | Description |
+| --- | --- |
+| `paper_searching` | Enrich Google Scholar results into PaperMeta (arXiv, Semantic Scholar, Unpaywall) |
+| `paper_fetching` | Fetch full paper as markdown (cache-first, multi-source fallback) |
+| `paper_content` | Read cached paper markdown (local only, no network) |
+| `paper_reference` | Get paper references via Semantic Scholar API |
+| `paper_reading` | AI three-pass reading (Keshav method) via LLM agent |
+
+#### dare-web (Web Page Pipeline)
+
+| Tool | Description |
+| --- | --- |
+| `web_fetching` | Fetch web page as markdown via Apify rag-web-browser (cache-first) |
+| `web_content` | Read cached web page markdown (local only, no network) |
+
+#### External Tools
+
+| Tool | Server | Description |
+| --- | --- | --- |
+| `google-scholar-scraper` | apify | Search Google Scholar for papers |
+| `rag-web-browser` | apify | Fetch web page as markdown |
+| `brave_web_search` | brave-search | Web search via Brave Search API |
+| `create-pod` / `start-pod` / `stop-pod` / `delete-pod` | runpod | GPU pod lifecycle management |
+
+### 📦 Monorepo Structure
+
+```text
 dare/
 ├── packages/
-│   ├── scholar/     # dare-scholar MCP server
-│   ├── web/         # dare-web MCP server
-│   └── session/     # Pod provisioning scripts
-├── skill/           # Research workflow SOPs
-├── pipeline/        # Fixed tool-orchestration workflows
-├── prompt/          # LLM prompt templates
-└── .mcp.json        # MCP server configuration (gitignored)
+│   ├── scholar/          # dare-scholar MCP server (5 tools, 153 tests)
+│   ├── web/              # dare-web MCP server (2 tools)
+│   └── session/          # Git-based context transfer (pod provisioning scripts)
+├── skill/                # Research workflow SOPs
+├── pipeline/             # Fixed tool-orchestration workflows
+├── prompt/               # LLM prompt templates
+├── package.json          # Root workspace config
+└── .mcp.json             # MCP server configuration (gitignored)
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 ### dare-scholar
 
 | Variable | Description |
-|---|---|
-| `MINERU_TOKEN` | [MinerU](https://mineru.net/) API token for PDF → markdown |
-| `EMAIL` | Email for Unpaywall API |
-| `DARE_CACHE` | Cache directory (**absolute path**) |
+| --- | --- |
+| `MINERU_TOKEN` | [MinerU](https://mineru.net/) API token for PDF → markdown conversion |
+| `EMAIL` | Email for Unpaywall API (polite pool) |
+| `DARE_CACHE` | Cache directory (**must be an absolute path**) |
 | `OPENAI_API_KEY` | OpenAI-compatible API key for AI paper reading |
 | `OPENAI_BASE_URL` | API base URL (e.g., `https://openrouter.ai/api/v1`) |
-| `OPENAI_MODEL` | Model for paper reading agent |
+| `OPENAI_MODEL` | Model name for paper reading agent |
 
 ### dare-web
 
 | Variable | Description |
-|---|---|
-| `DARE_CACHE` | Cache directory, shared with dare-scholar (**absolute path**) |
-| `APIFY_TOKEN` | [Apify](https://console.apify.com/account#/integrations) API token |
+| --- | --- |
+| `DARE_CACHE` | Cache directory, shared with dare-scholar (**must be an absolute path**) |
+| `APIFY_TOKEN` | [Apify](https://console.apify.com/account#/integrations) API token for rag-web-browser |
 
 ### dare-session
 
 | Variable | Description |
-|---|---|
+| --- | --- |
 | `RUNPOD_API_KEY` | RunPod API key (for GPU pod targets) |
 | `REMOTE_HOST` | SSH hostname/IP (for remote server targets) |
 | `REMOTE_USER` | SSH username (for remote server targets) |
-| `HF_TOKEN` | Hugging Face token (for model downloads on pod) |
+| `HF_TOKEN` | Hugging Face token (passed to pod for model downloads) |
 
-## How It Actually Works
+## 🗺️ Roadmap
 
-Most "AI research tools" read abstracts, summarize them, and call it a day. DARE downloads the full paper — methodology, experiments, discussion, appendices — converts it to markdown, and has AI evaluate it with a three-pass reading protocol (skim → comprehend → critique).
+### Completed
 
-The review loop is the key innovation: after Stages 1-3, an independent Claude Code process reviews all outputs with web search verification, scores each stage 1-10, and selectively re-runs stages that fall below threshold. This continues until score ≥ 8/10 with no critical issues, or 7 rounds max.
+- ✅ **Review-Driven Research Loop** — Independent `claude -p` process reviews Stage 1-3 outputs with web search verification, selective redo of weak stages
+- ✅ **Git-based Context Transfer** — Replaced session export/import with Git-based context transfer for distributed experiment execution
+- ✅ **Monorepo Consolidation** — All MCP servers consolidated into npm workspaces monorepo with dual pod target support
+- ✅ **End-to-End Pipeline Validation** — Full research pipeline validated on real topic (survey → gap analysis → idea generation → review → experiment design)
 
-Stage 5 deploys the full research context to a remote GPU pod via Git — CLAUDE.md + MEMORY are pushed to GitHub, cloned on the pod, and a fresh AI instance executes the experiment with zero human supervision.
+### Next
 
-## Roadmap
-
-- [ ] End-to-end GPU experiment execution test
+- [ ] End-to-end test: run full Stage 5 with real GPU pod (session-teleport → experiment → session-return)
 - [ ] **Adversarial Debate** — Proposer-Critic-Judge architecture for idea validation
 - [ ] **Evolutionary Generation** — MAP-Elites quality-diversity algorithm for idea evolution
 
-The end goal: a four-dimensional research engine combining Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution. No other open-source system attempts this.
+The end goal: a four-dimensional research engine combining **Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution**. No other open-source system attempts this.
 
-## License
+## 📄 License
 
 [Apache-2.0](LICENSE)
