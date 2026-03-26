@@ -56,126 +56,106 @@ See `skill/research.md` for details. Summary:
 
 ## Research Mode (Full Pipeline)
 
-When the user's intent is "do research", execute this five-stage pipeline. Each stage's output feeds the next.
+When the user's intent is "do research", execute the full pipeline below. The pipeline has five phases: **Brainstorming → Research Loop → User Confirmation → Spec Writing → Implementation Planning**.
 
-### Stage 1: Literature Survey
+> **Dependency**: This mode uses the `superpowers` brainstorming and writing-plans skills as bookends around DARE's autonomous research core.
 
-**Goal**: Comprehensive understanding of the field. Produce reading notes and a domain landscape.
+### Phase 0: Brainstorming (Requirement Clarification)
 
-**Steps**:
+**Goal**: Turn a vague research topic into a precise, well-scoped research direction before committing to the full research loop.
 
-1. **Decompose the topic** into 2-3 search angles:
-   - Core: the topic itself, most direct query
-   - Methods: key techniques/approaches in this area
-   - Adjacent: related domains or downstream applications
+**Procedure** (adapted from superpowers brainstorming skill — stop BEFORE writing spec):
 
-2. **Parallel search**:
-   - `google-scholar-scraper` × 2-3 (one per angle)
-   - `brave_web_search` × 1 (topic + "survey" or "awesome" or "workshop")
-   - Enrich Scholar results: `paper_searching` per result (sequential)
-   - Fetch full text: `paper_fetching` for those with arxivUrl/oaPdfUrl (sequential)
-   - Deduplicate by `normalizedTitle`
+1. **Explore project context** — check existing files, docs, recent commits, any prior research output in `output/`
+2. **Ask clarifying questions** — one at a time, multiple choice preferred:
+   - What is the user's goal? (publish paper, build system, explore field, etc.)
+   - What constraints exist? (timeline, compute budget, domain expertise, target venue)
+   - What does success look like?
+   - What is in scope vs. out of scope?
+   - Any prior knowledge or strong opinions on approaches?
+3. **Propose 2-3 research directions** — with trade-offs and your recommendation:
+   - Each direction: 1-2 sentence description + why it's worth pursuing + key risks
+   - Lead with recommended direction and explain why
+4. **User selects direction** — confirm the chosen direction
 
-3. **Rate papers** (quick judgment per paper):
-   - **High**: Core paper, directly relevant, high citation/age ratio, top venue, novel method → three-pass reading + trace citations
-   - **Medium**: Useful context or technique → two-pass reading
-   - **Low**: Tangential, redundant → abstract only or skip
+**Output**: A `researchBrief` capturing:
+- Clarified research question
+- Chosen direction + rationale
+- Constraints and success criteria
+- Scope boundaries (in/out)
 
-4. **Three-pass reading** (execute based on rating):
-   - Pass 1 (Bird's eye): Title, abstract, intro/conclusion, scan figures → category, context, contributions, quality
-   - Pass 2 (Detailed): Key arguments, method core, experiment design, mark unknowns → method summary, key results, related work
-   - Pass 3 (Reconstruct, High only): Rebuild paper's reasoning from scratch → hidden assumptions, experimental flaws, improvement directions
-   - Read via `paper_content({ normalizedTitle })`, or use `paper_reading` for AI-assisted analysis
+**STOP here.** Do NOT write a spec document. Do NOT invoke writing-plans. The `researchBrief` feeds into Phase 1 as the scoping input for the research loop.
 
-5. **Citation expansion**: For top 2-3 High papers, `paper_reference` → `paper_searching` → `paper_fetching`. Rate and read newly discovered papers too
+### Phase 1: Research Loop (Autonomous Research)
 
-6. **Output**: Reading notes per paper + domain landscape (major threads, key debates, development trajectory)
+**Goal**: Execute DARE's core research pipeline with the clarified direction from Phase 0.
 
-**Decision points**:
-- Found < 5 relevant papers → broaden queries, try synonyms
-- Found > 30 papers → tighten queries, raise rating threshold
-- A subfield emerges as critical → add focused `google-scholar-scraper` search
+**Procedure**: Execute `skill/research-loop.md` with:
+- **topic** = the clarified research question from Phase 0's `researchBrief`
+- The `researchBrief` (direction, constraints, scope) is passed as additional context to guide search angles, gap prioritization, and idea generation
 
-### Stage 2: Gap Analysis
+This runs the full iterative loop:
+- Stage 1: Literature Survey (up to 50+ papers)
+- Stage 2: Gap Analysis (30 papers deep)
+- Stage 3: Idea Generation (3+ novel ideas)
+- Review loop: independent AI reviews, selective redo, up to 7 rounds, score ≥ 8/10 to pass
 
-**Goal**: Discover research gaps, contradictions, and opportunities from reading notes.
+See `skill/research-loop.md` for the complete procedure (cold start, hot loop, state injection, stopping conditions).
 
-**Steps**:
+**Output**: `output/survey.md`, `output/gaps.md`, `output/ideas.md`, review scores
 
-1. **Method comparison matrix**: Organize all papers' methods, datasets, metrics, results, limitations into a comparison table
+### Phase 2: User Confirmation
 
-2. **Contradiction detection**: Find conflicting conclusions across papers on the same problem, citing specific papers and passages
+**Goal**: Present research findings to the user and get approval before proceeding to spec.
 
-3. **Blank identification**:
-   - Directions mentioned in "future work" but not yet pursued
-   - Dataset/scenario gaps (method tested on X but not Y)
-   - Method combination blanks (A + B never tried together)
-   - Scale gaps (only tested small-scale or only large-scale)
+**Procedure**:
 
-4. **Trend analysis**: What's heating up in the last 1-2 years, what's cooling down, where are new problems emerging
+1. **Present summary**: Research loop final score, key findings from survey, top gaps, top-ranked ideas with scores
+2. **User decision gate**:
+   - **Approve** → proceed to Phase 3
+   - **Request changes** → re-enter Phase 1 with adjusted focus (or adjust the `researchBrief` and re-run)
+   - **Abort** → stop here, research outputs remain in `output/` for reference
 
-5. **Validate gaps**: For each gap, quick `google-scholar-scraper` → `paper_searching` to confirm it's genuinely unexplored. Discard already-addressed or infeasible gaps
+### Phase 3: Write Spec
 
-6. **Rank**: Sort by feasibility × potential impact × novelty
+**Goal**: Synthesize the brainstorming requirements and research findings into a complete design spec document.
 
-**Output**: Ranked gap list, each with type, description, evidence, feasibility assessment
+**Procedure**:
 
-**Decision points**:
-- Too few gaps → survey may have been too narrow, go back to Stage 1
-- Too many gaps → focus on Top 5-7
-- A gap needs more evidence → targeted search or `paper_reference`
+1. **Fuse two sources** into a unified spec:
+   - **From Phase 0 (Brainstorming)**: research question, chosen direction, constraints, success criteria, scope
+   - **From Phase 1 (Research Loop)**: literature landscape, key gaps, top-ranked ideas, supporting evidence, review scores
+2. **Spec structure** (adapt sections to complexity):
+   - Problem Statement (from brainstorming clarification)
+   - Research Context (from literature survey)
+   - Identified Gaps (from gap analysis)
+   - Proposed Approach (from top-ranked idea + user direction)
+   - Technical Design (architecture, method, key components)
+   - Evaluation Plan (datasets, baselines, metrics, ablation studies)
+   - Resource Estimate (GPU type, training time, storage)
+   - Risks and Limitations (from review feedback + known limitations)
+3. **Write to file**: `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+4. **Spec self-review** (fix inline):
+   - Placeholder scan: any TBD, TODO, incomplete sections?
+   - Internal consistency: does architecture match feature descriptions?
+   - Scope check: focused enough for a single implementation plan?
+   - Ambiguity check: could any requirement be interpreted two ways?
+5. **Commit** the spec to git
+6. **User review gate**: "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we proceed to implementation planning."
+   - If user requests changes → revise and re-run self-review
+   - If user approves → proceed to Phase 4
 
-### Stage 3: Idea Generation
+### Phase 4: Implementation Planning
 
-**Goal**: Generate, evaluate, and rank research ideas from gaps.
+**Goal**: Create a detailed implementation plan from the approved spec.
 
-**Steps**:
+**Procedure**: Invoke the `superpowers` **writing-plans** skill with the spec from Phase 3. This is the terminal state of the research pipeline — writing-plans handles everything from here.
 
-1. **Select top gaps**: Focus on the top 3-5 ranked gaps
-
-2. **Generate ideas**: 2-3 concrete ideas per gap. Must be specific and actionable, not vague directions. Generation strategies:
-   - Combination: merge strengths of two existing methods
-   - Transfer: apply a technique from another field
-   - Inversion: challenge an assumption everyone makes
-   - Scale: apply existing method at new scale/domain
-   - Simplification: achieve similar results with a simpler approach
-
-3. **Five-dimension scoring** (per idea, 1-10):
-   - Novelty: how different from existing work
-   - Feasibility: technical viability + resource requirements
-   - Impact: effect on the field if successful
-   - Clarity: how well-defined and executable the idea is
-   - Evidence: how much existing work supports this direction
-
-4. **Rank and recommend**: Sort by total score, present Top 3 with rationale
-
-**Output**: Scored idea cards + Top 3 recommendations
-
-**Decision points**:
-- All ideas score < 25/50 → gaps may be too hard, revisit Stage 2
-- Ideas cluster around one gap → that gap is most fertile, focus there
-- User has domain expertise → present ideas and ask for feedback before finalizing
-
-### Stage 4: Experiment Design (Skeleton)
-
-**Goal**: Design an experiment plan for the selected idea.
-
-**Steps**:
-
-1. **Research question**: Formalize the idea into a testable hypothesis
-2. **Method design**: Core algorithm/architecture, key design choices
-3. **Evaluation plan**: Datasets, baselines, metrics, ablation studies
-4. **Resource estimate**: GPU type, training time, storage requirements
-
-> Resource estimates feed into Stage 5 (Experiment Execution) for automatic GPU provisioning via RunPod.
-
-**Output**: Experiment plan document
-
-### Stage 5: Experiment Execution
+### Stage 5: Experiment Execution (On-Demand)
 
 **Goal**: Execute the experiment on a remote GPU pod and collect results.
 
-**Prerequisite**: Completed Experiment Plan from Stage 4. User must explicitly confirm execution (real money involved).
+**Prerequisite**: Completed implementation plan from Phase 4. User must explicitly confirm execution (real money involved).
 
 **Procedure**: See `skill/experiment-execution.md` for the full 7-phase SOP:
 1. Hardware estimation → user confirms budget
