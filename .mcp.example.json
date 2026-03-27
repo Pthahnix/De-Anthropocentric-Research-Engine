@@ -2,7 +2,7 @@
   "mcpServers": {
     "dare-scholar": {
       "command": "npx",
-      "args": ["--prefix", "packages/scholar", "tsx", "packages/scholar/src/mcp_server.ts"],
+      "args": ["--prefix", "/absolute/path/to/dare/packages/scholar", "tsx", "/absolute/path/to/dare/packages/scholar/src/mcp_server.ts"],
       "env": {
         "MINERU_TOKEN": "your-mineru-token",
         "EMAIL": "your-email@example.com",
@@ -14,7 +14,7 @@
     },
     "dare-web": {
       "command": "npx",
-      "args": ["--prefix", "packages/web", "tsx", "packages/web/src/mcp_server.ts"],
+      "args": ["--prefix", "/absolute/path/to/dare/packages/web", "tsx", "/absolute/path/to/dare/packages/web/src/mcp_server.ts"],
       "env": {
         "APIFY_TOKEN": "your-apify-token",
         "DARE_CACHE": "/absolute/path/to/dare/.cache"
@@ -28,7 +28,7 @@
       }
     },
     "apify": {
-      "command": "npx.cmd",
+      "command": "npx",
       "args": ["-y", "@apify/actors-mcp-server", "--tools", "fetch-actor-details,get-dataset-items,get-dataset-schema,marco.gullo/google-scholar-scraper,apify/rag-web-browser"],
       "env": {
         "APIFY_TOKEN": "your-apify-token"
