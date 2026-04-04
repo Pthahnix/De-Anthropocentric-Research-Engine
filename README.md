@@ -185,7 +185,7 @@ dare/
 │   ├── scholar/          # dare-scholar MCP server (5 tools, 153 tests)
 │   ├── web/              # dare-web MCP server (2 tools)
 │   └── session/          # Git-based context transfer (pod provisioning scripts)
-├── skill/                # Research workflow SOPs
+├── skills/               # Research workflow SOPs (directory-per-skill)
 ├── pipeline/             # Fixed tool-orchestration workflows
 ├── prompt/               # LLM prompt templates
 ├── package.json          # Root workspace config
@@ -229,12 +229,6 @@ dare/
 - ✅ **Git-based Context Transfer** — Replaced session export/import with Git-based context transfer for distributed experiment execution
 - ✅ **Monorepo Consolidation** — All MCP servers consolidated into npm workspaces monorepo with dual pod target support
 - ✅ **End-to-End Pipeline Validation** — Full research pipeline validated on real topic (survey → gap analysis → idea generation → review → experiment design)
-
-### Next
-
-- [ ] End-to-end test: run full Stage 5 with real GPU pod (session-teleport → experiment → session-return)
-- [ ] **Adversarial Debate** — Proposer-Critic-Judge architecture for idea validation
-- [ ] **Evolutionary Generation** — MAP-Elites quality-diversity algorithm for idea evolution
 
 The end goal: a four-dimensional research engine combining **Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution**. No other open-source system attempts this.
 
