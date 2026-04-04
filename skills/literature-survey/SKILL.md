@@ -1,3 +1,12 @@
+---
+name: Literature Survey
+description: >
+  Autonomously discover and synthesize domain knowledge through iterative SEARCH→READ→REFLECT→EVALUATE
+  loops. Builds a comprehensive literature foundation by searching academic papers and web sources,
+  reading them deeply, discovering new knowledge gaps, and evaluating coverage.
+  Stage 1 of the DARE research pipeline. Use when you need to survey a research field.
+---
+
 # Literature Survey
 
 Comprehensive literature review using iterative loop engine. This is Stage 1 of the research pipeline.
@@ -250,7 +259,7 @@ After loop terminates, produce:
 
 ## Next Stage
 
-Pass the full output (knowledge + papersRead + diary) to **Gap Analysis** (skill/gap-analysis.md).
+Pass the full output (knowledge + papersRead + diary) to **Gap Analysis** (skills/gap-analysis/SKILL.md).
 
 ## Key Differences from Previous Version
 

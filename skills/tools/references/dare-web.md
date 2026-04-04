@@ -1,3 +1,8 @@
+---
+name: DARE-Web Tools
+description: Detailed usage guide for the dare-web MCP tools (web_fetching, web_content).
+---
+
 # DARE-Web MCP Tools Usage Guide
 
 ## Overview

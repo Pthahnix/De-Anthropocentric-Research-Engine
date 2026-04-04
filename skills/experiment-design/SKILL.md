@@ -1,8 +1,17 @@
+---
+name: Experiment Design
+description: >
+  Design rigorous experiments from research ideas through iterative refinement.
+  Produces complete experiment plans with hypotheses, datasets, baselines, metrics,
+  ablation studies, and resource estimates. Stage 4 of the DARE research pipeline.
+  Use when you have validated research ideas and need to design experiments.
+---
+
 # Experiment Design
 
 Design an experiment plan using iterative loop engine. This is Stage 4 of the research pipeline.
 
-> **Status**: Active. Outputs feed into Stage 5 (Experiment Execution) via `skill/experiment-execution.md`.
+> **Status**: Active. Outputs feed into Stage 5 (Experiment Execution) via `skills/experiment-execution/SKILL.md`.
 
 ## Input
 
@@ -320,7 +329,7 @@ After loop terminates and plan finalized, produce:
 
 After this stage produces an Experiment Plan, the user may proceed to:
 
-**Stage 5: Experiment Execution** → `skill/experiment-execution.md`
+**Stage 5: Experiment Execution** → `skills/experiment-execution/SKILL.md`
 
 This stage takes the Experiment Plan as input and executes it on a RunPod GPU pod. It requires explicit user confirmation (real compute costs involved).
 

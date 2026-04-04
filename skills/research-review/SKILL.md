@@ -1,3 +1,12 @@
+---
+name: Research Review
+description: >
+  Independent academic-style review of research outputs (survey, gaps, ideas).
+  Scores on a 1-10 scale across factual accuracy, coverage, fairness, and novelty.
+  Drives the selective redo mechanism in the research loop.
+  Use when evaluating research quality within the DARE pipeline.
+---
+
 # Research Review
 
 Single-shot academic review of Stage 1-3 research outputs. Invokes an independent Claude Code process (`claude -p`) to critically evaluate literature survey, gap analysis, and idea generation outputs.
@@ -68,11 +77,11 @@ Format:
 
 ### 6. Return Result
 
-Return the parsed review JSON to the caller (research-loop.md or human operator).
+Return the parsed review JSON to the caller (skills/research-loop/SKILL.md or human operator).
 
 ## Standalone Usage
 
-This skill can be invoked independently (not just from research-loop.md):
+This skill can be invoked independently (not just from skills/research-loop/SKILL.md):
 
 ```
 /research-review

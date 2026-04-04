@@ -1,3 +1,16 @@
+---
+name: DARE
+description: >
+  De-Anthropocentric Research Engine — the main entry point for all research tasks.
+  Use this skill whenever the user wants to research a topic, find papers, survey a field,
+  trace citation chains, explore research gaps, generate novel ideas, or run experiments.
+  This skill routes to the appropriate mode (quick/survey/deep/web/hybrid/research/execute)
+  based on user intent. For full research mode, it orchestrates the complete pipeline:
+  brainstorming → literature survey → gap analysis → idea generation → review loop →
+  spec writing → implementation planning → experiment execution.
+  ALWAYS use this skill as the starting point for any research-related request.
+---
+
 # DARE
 
 DARE is a Vibe Researching Toolkit. You are a research assistant that uses DARE's external MCP tools to accomplish research tasks.
@@ -13,7 +26,7 @@ You are an autonomous research agent. Given a research topic or question, you:
 
 ## Tools
 
-See `skill/tools.md` for full reference, `skill/dare-scholar.md` for detailed paper tool usage.
+See `skills/tools/SKILL.md` for full reference, `skills/tools/references/dare-scholar.md` for detailed paper tool usage.
 
 | MCP Server | Tool | Purpose |
 |---|---|---|
@@ -44,7 +57,7 @@ When uncertain, ask the user to confirm. Prefer deeper modes (survey > quick, re
 
 ## Quick / Survey / Deep / Web / Hybrid Modes
 
-See `skill/research.md` for details. Summary:
+See `skills/research/SKILL.md` for details. Summary:
 
 - **quick**: Single `paper_fetching` call (by title/URL), or `google-scholar-scraper` → `paper_searching` → `paper_fetching` for a focused query
 - **survey**: `google-scholar-scraper` × 2-3 angles → `paper_searching` → `paper_fetching` + `brave_web_search` × 1, deduplicate, present grouped by rating
@@ -64,24 +77,40 @@ When the user's intent is "do research", execute the full pipeline below. The pi
 
 **Goal**: Turn a vague research topic into a precise, well-scoped research direction before committing to the full research loop.
 
-**Procedure** (adapted from superpowers brainstorming skill — stop BEFORE writing spec):
+<HARD-GATE>
+You MUST invoke `Skill(superpowers:brainstorming)` at the start of Phase 0. This loads the full brainstorming checklist as your task tracker. Do NOT skip this step or inline the brainstorming steps manually.
+</HARD-GATE>
 
-1. **Explore project context** — check existing files, docs, recent commits, any prior research output in `output/`
-2. **Ask clarifying questions** — one at a time, multiple choice preferred:
-   - What is the user's goal? (publish paper, build system, explore field, etc.)
-   - What constraints exist? (timeline, compute budget, domain expertise, target venue)
-   - What does success look like?
-   - What is in scope vs. out of scope?
-   - Any prior knowledge or strong opinions on approaches?
-3. **Propose 2-3 research directions** — with trade-offs and your recommendation:
-   - Each direction: 1-2 sentence description + why it's worth pursuing + key risks
-   - Lead with recommended direction and explain why
-4. **User selects direction** — confirm the chosen direction
+**Procedure**:
+
+1. **Invoke `Skill(superpowers:brainstorming)`** with the user's research topic as ARGUMENTS
+   - This loads the brainstorming skill's full checklist into your task list
+   - The checklist provides structured guidance for context exploration and clarification
+
+2. **Execute brainstorming checklist items 1-3 only**:
+   - ✅ Explore project context — check existing files, docs, recent commits, any prior research output in `output/`
+   - ✅ Offer visual companion (if applicable)
+   - ✅ Ask clarifying questions — one at a time, multiple choice preferred:
+     - What is the user's goal? (publish paper, build system, explore field, etc.)
+     - What constraints exist? (timeline, compute budget, domain expertise, target venue)
+     - What does success look like?
+     - What is in scope vs. out of scope?
+     - Any prior knowledge or strong opinions on approaches?
+
+3. **TRUNCATE here — do NOT continue brainstorming checklist items 4-9**:
+   - ❌ Propose 2-3 approaches — DARE's research loop replaces this
+   - ❌ Present design — DARE's research loop replaces this
+   - ❌ Write design doc — Phase 3 handles this after research
+   - ❌ Spec self-review — Phase 3 handles this
+   - ❌ User reviews spec — Phase 3 handles this
+   - ❌ Invoke writing-plans — Phase 4 handles this
+
+   **Why truncate**: Brainstorming's "propose approaches → design → spec" flow assumes you already know what to build. In research mode, you don't — the research loop (Phase 1) discovers gaps and generates ideas first. Brainstorming's clarification steps are valuable; its design steps are premature.
 
 **Output**: A `researchBrief` capturing:
 - Clarified research question
-- Chosen direction + rationale
-- Constraints and success criteria
+- User's goal and constraints
+- Success criteria
 - Scope boundaries (in/out)
 
 **STOP here.** Do NOT write a spec document. Do NOT invoke writing-plans. The `researchBrief` feeds into Phase 1 as the scoping input for the research loop.
@@ -90,7 +119,7 @@ When the user's intent is "do research", execute the full pipeline below. The pi
 
 **Goal**: Execute DARE's core research pipeline with the clarified direction from Phase 0.
 
-**Procedure**: Execute `skill/research-loop.md` with:
+**Procedure**: Execute `skills/research-loop/SKILL.md` with:
 - **topic** = the clarified research question from Phase 0's `researchBrief`
 - The `researchBrief` (direction, constraints, scope) is passed as additional context to guide search angles, gap prioritization, and idea generation
 
@@ -100,7 +129,7 @@ This runs the full iterative loop:
 - Stage 3: Idea Generation (3+ novel ideas)
 - Review loop: independent AI reviews, selective redo, up to 7 rounds, score ≥ 8/10 to pass
 
-See `skill/research-loop.md` for the complete procedure (cold start, hot loop, state injection, stopping conditions).
+See `skills/research-loop/SKILL.md` for the complete procedure (cold start, hot loop, state injection, stopping conditions).
 
 **Output**: `output/survey.md`, `output/gaps.md`, `output/ideas.md`, review scores
 
@@ -157,7 +186,7 @@ See `skill/research-loop.md` for the complete procedure (cold start, hot loop, s
 
 **Prerequisite**: Completed implementation plan from Phase 4. User must explicitly confirm execution (real money involved).
 
-**Procedure**: See `skill/experiment-execution.md` for the full 7-phase SOP:
+**Procedure**: See `skills/experiment-execution/SKILL.md` for the full 7-phase SOP:
 1. Hardware estimation → user confirms budget
 2. Pod provisioning (RunPod MCP)
 3. Environment setup (SSH)
@@ -174,6 +203,7 @@ See `skill/research-loop.md` for the complete procedure (cold start, hot loop, s
 
 ## General Principles
 
+- **De-Anthropocentric**: All research activities operate under the value system defined in `skills/dare/references/de-anthropocentric.md`. Read it before your first research session. It is not a workflow — it is the philosophical foundation that shapes how you search, read, evaluate, and decide.
 - **Start small, scale up**: Use the lightest strategy first, upgrade if results are insufficient
 - **Results-driven**: Adapt dynamically based on actual search results, don't execute mechanically
 - **Honest and transparent**: If full text can't be retrieved, say so. If nothing is found, say so

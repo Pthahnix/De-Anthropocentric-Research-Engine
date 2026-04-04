@@ -1,3 +1,12 @@
+---
+name: Research Loop
+description: >
+  Orchestrates the iterative research pipeline: literature survey → gap analysis → idea generation,
+  wrapped in a review-driven quality loop. Runs autonomous rounds of research with independent
+  AI review, selective redo based on feedback, and user briefing between rounds.
+  Use this skill when executing the full DARE research pipeline (Stages 1-3).
+---
+
 # Research Loop
 
 Outer orchestration skill for DARE's Stage 1-3 research pipeline with review-driven iterative refinement.
@@ -54,7 +63,7 @@ Execute each stage fully with default iteration limits. State flows forward: sur
 
 ### Step 1: Literature Survey
 
-Execute `skill/literature-survey.md` with topic = $ARGUMENTS.
+Execute `skills/literature-survey/SKILL.md` with topic = $ARGUMENTS.
 - MAX_ITERATIONS = COLD_SURVEY_ITERS (10)
 - Initialize: knowledge=[], papersRead=Set(), urlsVisited=Set()
 - After completion: write output to `{PROJECT_ROOT}/output/survey.md`
@@ -62,7 +71,7 @@ Execute `skill/literature-survey.md` with topic = $ARGUMENTS.
 
 ### Step 2: Gap Analysis
 
-Execute `skill/gap-analysis.md`.
+Execute `skills/gap-analysis/SKILL.md`.
 - MAX_ITERATIONS = COLD_GAP_ITERS (6)
 - Inherit: knowledge, papersRead, urlsVisited from Step 1
 - After completion: write output to `{PROJECT_ROOT}/output/gaps.md`
@@ -70,7 +79,7 @@ Execute `skill/gap-analysis.md`.
 
 ### Step 3: Idea Generation
 
-Execute `skill/idea-generation.md`.
+Execute `skills/idea-generation/SKILL.md`.
 - MAX_ITERATIONS = COLD_IDEA_ITERS (5)
 - Inherit: all state from Steps 1-2
 - After completion: write output to `{PROJECT_ROOT}/output/ideas.md`
@@ -78,7 +87,7 @@ Execute `skill/idea-generation.md`.
 
 ### Step 4: First Review
 
-Execute `skill/research-review.md` (see that skill for full procedure).
+Execute `skills/research-review/SKILL.md` (see that skill for full procedure).
 - Write review to `{PROJECT_ROOT}/output/review-round-0.md`
 - Append to reviewHistory
 
@@ -94,14 +103,14 @@ ELSE:
 
 ## Phase 2: Hot Loop (Round 1 — MAX_ROUNDS-1)
 
-Iteratively improve based on review feedback. Each round: selective redo → review → check stop.
+Iteratively improve based on review feedback. Each round: read review → **brief user on strategy** → selective redo → review → check stop.
 
 ### State Injection Mechanism
 
 Stage skills are self-contained SOPs that initialize their own state. In hot loop rounds, prepend a **preamble** to override initialization:
 
 ```markdown
-## Continuation Context (injected by research-loop.md)
+## Continuation Context (injected by research-loop)
 
 This is a HOT LOOP iteration (Round {N}). Do NOT start from scratch.
 
@@ -148,12 +157,27 @@ WHILE round < MAX_ROUNDS:
   actions = prevReview.next_actions
   directions = actions.focus_directions
 
-  // 2. Selective Redo
+  // 2. Round Briefing (user confirmation)
+  //    Present review analysis and proposed strategy to user before executing.
+  //    This ensures the user stays in the loop on research direction.
+  Present to user:
+    - Previous round score: prevReview.overall_score / 10
+    - Key issues from review (CRITICAL first, then IMPORTANT)
+    - Which stages will be redone and why
+    - Proposed focus for this round (from directions)
+    - Estimated scope (e.g., "redo survey with 3 focused iterations on X")
+  
+  Wait for user confirmation:
+    - User approves → proceed with proposed strategy
+    - User adjusts → modify redo targets / focus directions accordingly
+    - User aborts → STOP the loop, output current best results
+
+  // 3. Selective Redo
   redoCount = 0
 
   IF actions.redo_survey:
     iters = (prevReview.stages.survey.score < 5) ? COLD_SURVEY_ITERS : HOT_SURVEY_ITERS
-    Execute literature-survey.md WITH preamble
+    Execute literature-survey WITH preamble
       - Inject: survey-related directions as initial gaps
       - Override: MAX_ITERATIONS = iters
     Write output to {PROJECT_ROOT}/output/survey.md
@@ -161,7 +185,7 @@ WHILE round < MAX_ROUNDS:
 
   IF actions.redo_gap:
     iters = (prevReview.stages.gap.score < 5) ? COLD_GAP_ITERS : HOT_GAP_ITERS
-    Execute gap-analysis.md WITH preamble
+    Execute gap-analysis WITH preamble
       - Inject: gap-related directions + CRITICAL gap issues as correction tasks
       - Override: MAX_ITERATIONS = iters
     Write output to {PROJECT_ROOT}/output/gaps.md
@@ -169,14 +193,14 @@ WHILE round < MAX_ROUNDS:
 
   IF actions.redo_idea:
     iters = (prevReview.stages.idea.score < 5) ? COLD_IDEA_ITERS : HOT_IDEA_ITERS
-    Execute idea-generation.md WITH preamble
+    Execute idea-generation WITH preamble
       - Inject: idea-related directions
       - Override: MAX_ITERATIONS = iters
       - If gap was just redone, use new gap ranking
     Write output to {PROJECT_ROOT}/output/ideas.md
     redoCount++
 
-  // 3. No-Redo Fallback
+  // 4. No-Redo Fallback
   IF redoCount == 0:
     // Reviewer said nothing needs redo but score < threshold
     lowestStage = stage with min(score) from prevReview
@@ -184,12 +208,12 @@ WHILE round < MAX_ROUNDS:
     Force redo of lowestStage using logic above
     redoCount = 1
 
-  // 4. Review
-  Execute skill/research-review.md
+  // 5. Review
+  Execute skills/research-review/SKILL.md
   reviewHistory.push(result)
   Write {PROJECT_ROOT}/output/review-round-{round}.md
 
-  // 5. Feedback Deduplication
+  // 6. Feedback Deduplication
   IF round >= 2:
     For each issue in current review:
       Match against previous review issues by `claim` field
@@ -200,7 +224,7 @@ WHILE round < MAX_ROUNDS:
         Add to knownLimitations
         LOG: "Accepted as known limitation: {claim}"
 
-  // 6. Stop Conditions
+  // 7. Stop Conditions
   IF result.overall_score >= SCORE_THRESHOLD AND !result.has_critical:
     STOP: "Review passed (score: {score}, round: {round})"
     BREAK
@@ -209,7 +233,7 @@ WHILE round < MAX_ROUNDS:
     STOP: "Reached maximum round limit ({MAX_ROUNDS})"
     BREAK
 
-  // 7. Progress Detection
+  // 8. Progress Detection
   IF round >= 3:
     last2scores = [reviewHistory[round-1].overall_score, reviewHistory[round-2].overall_score]
     IF result.overall_score <= min(last2scores):
@@ -254,5 +278,5 @@ When the loop terminates (pass or max rounds), present to the user:
 - Each stage's output file is overwritten each round — review-round-N.md files serve as the audit trail
 - State (knowledge, papersRead, urlsVisited) is append-only — never loses data across rounds
 - The orchestrator writes stage outputs to files after capturing from conversation, to manage context window
-- If `claude -p` fails for review, see `skill/research-review.md` for error handling procedure
+- If `claude -p` fails for review, see `skills/research-review/SKILL.md` for error handling procedure
 - This skill can be interrupted and resumed — the output/ directory preserves all state

@@ -1,3 +1,11 @@
+---
+name: DARE Tool Reference
+description: >
+  Quick reference for all DARE MCP tools, pipelines, and data types.
+  Covers dare-scholar (paper pipeline), dare-web (web pipeline), apify, brave-search,
+  and runpod tools. Use when you need to look up tool names, parameters, or usage patterns.
+---
+
 # DARE — Tool Reference
 
 Research toolkit using external MCP servers for academic search, web retrieval, and GPU pod management.
@@ -6,7 +14,7 @@ Research toolkit using external MCP servers for academic search, web retrieval, 
 
 ### dare-scholar (Academic Paper Pipeline)
 
-See `/dare-scholar` skill for detailed usage guide.
+See `skills/tools/references/dare-scholar.md` for detailed usage guide.
 
 | Tool | Purpose |
 |------|---------|

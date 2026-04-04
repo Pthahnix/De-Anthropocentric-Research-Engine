@@ -1,3 +1,13 @@
+---
+name: Experiment Execution
+description: >
+  Execute experiments on remote GPU pods (RunPod) with full lifecycle management.
+  7-phase SOP: hardware estimation → pod provisioning → environment setup →
+  code implementation → experiment run → result collection → cleanup.
+  Stage 5 of the DARE research pipeline. Use when you have an approved experiment plan
+  and the user wants to run it. Involves real compute costs — never auto-triggered.
+---
+
 # Experiment Execution
 
 Execute an experiment on a remote GPU pod via Supervisor architecture. This is Stage 5 of the research pipeline.

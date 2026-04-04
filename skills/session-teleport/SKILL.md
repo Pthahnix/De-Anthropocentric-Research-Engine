@@ -1,3 +1,11 @@
+---
+name: Session Teleport
+description: >
+  Git-based context transfer SOP for deploying research context to remote pods.
+  Pushes CLAUDE.md, memory, and experiment code to GitHub, then provisions a remote
+  Claude Code session on RunPod. Use when you need to run experiments on remote GPU hardware.
+---
+
 # Session Teleport — Git-based Context Transfer SOP
 
 Orchestrates deploying a CC research context to a remote GPU pod (RunPod or user-managed Remote server) via Git. No session JSONL transfer — CLAUDE.md + MEMORY provide equivalent durable context.
@@ -153,7 +161,7 @@ ssh -p <port> <user>@<host> "bash /tmp/deploy-context.sh '<REPO_HTTPS_URL>' /wor
 Repo URL **must** be HTTPS format for PAT credential store to work.
 
 - If any provision step fails:
-  - **RunPod**: inform user, suggest `session-return` for cleanup
+  - **RunPod**: inform user, suggest `skills/session-return/SKILL.md` for cleanup
   - **Remote**: inform user, retry the failed step
 
 ## Phase 4: Handoff
@@ -170,7 +178,7 @@ Pod ready. Connect:
 No tmux, no auto-start. User connects and starts CC themselves.
 CC reads CLAUDE.md from repo root and MEMORY from `~/.claude/projects/<hash>/memory/` automatically.
 
-For RunPod: remind user to run `session-return` when done to avoid ongoing charges.
+For RunPod: remind user to run `skills/session-return/SKILL.md` when done to avoid ongoing charges.
 
 ## Error Recovery Matrix
 
@@ -179,5 +187,5 @@ For RunPod: remind user to run `session-return` when done to avoid ongoing charg
 | 0 | User cancels | Stop | Stop |
 | 1 | Pod creation / SSH fails | Stop (no cleanup) | Troubleshoot connection |
 | 2 | Git push fails | Fix locally, retry | Fix locally, retry |
-| 3 | Provision fails | Suggest session-return | Inform user, retry step |
+| 3 | Provision fails | Suggest skills/session-return/SKILL.md | Inform user, retry step |
 | 4 | User can't connect | Troubleshoot SSH | Troubleshoot SSH |

@@ -1,3 +1,12 @@
+---
+name: Idea Generation
+description: >
+  Generate novel research ideas by synthesizing identified gaps with existing literature.
+  Produces scored, validated ideas with feasibility analysis and novelty assessment.
+  Stage 3 of the DARE research pipeline. Use when you need to generate research ideas
+  from identified gaps.
+---
+
 # Idea Generation
 
 Generate and evaluate research ideas using iterative loop engine. This is Stage 3 of the research pipeline.
@@ -287,7 +296,7 @@ After loop terminates and ranking complete, produce:
 
 ## Next Stage
 
-Pass the top-ranked idea (or user-selected idea) + full knowledge + papersRead to **Experiment Design** (skill/experiment-design.md).
+Pass the top-ranked idea (or user-selected idea) + full knowledge + papersRead to **Experiment Design** (skills/experiment-design/SKILL.md).
 
 ## Key Differences from Previous Version
 

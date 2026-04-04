@@ -1,3 +1,8 @@
+---
+name: DARE-Scholar Tools
+description: Detailed usage guide for the dare-scholar MCP tools (paper_searching, paper_fetching, paper_content, paper_reference, paper_reading).
+---
+
 # DARE-Scholar MCP Tools Usage Guide
 
 ## Overview

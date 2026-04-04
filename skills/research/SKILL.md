@@ -1,3 +1,12 @@
+---
+name: Research Strategy
+description: >
+  Strategy selection guide for research tasks. Routes between quick lookup, literature survey,
+  deep citation tracing, web search, hybrid, and full research pipeline modes.
+  Use this skill when you need to decide which research approach fits the user's question.
+  Covers everything from finding a single paper to running a multi-round autonomous research loop.
+---
+
 # Research Strategy
 
 Flexible research strategies for Claude Code. Choose a strategy based on the user's research goal, then orchestrate DARE's external MCP tools accordingly. These are guidelines, not rigid scripts — adapt tool usage, ordering, and depth to the actual findings as you go.
@@ -138,17 +147,17 @@ After completing any strategy, present:
 
 For full scientific research workflows (topic → idea → experiment), use the research pipeline with review-driven iteration:
 
-**Recommended entry point:** `skill/research-loop.md` — encapsulates Stages 1-3 with iterative review. Runs survey → gap → idea → review → selective redo until quality threshold is met.
+**Recommended entry point:** `skills/research-loop/SKILL.md` — encapsulates Stages 1-3 with iterative review. Runs survey → gap → idea → review → selective redo until quality threshold is met.
 
 **Full pipeline:**
-1. `skill/research-loop.md` — Stages 1-3 with review loop (survey + gap + idea + review)
-2. `skill/experiment-design.md` — Stage 4: experiment plan (skeleton)
-3. `skill/experiment-execution.md` — Stage 5: remote GPU experiment execution
+1. `skills/research-loop/SKILL.md` — Stages 1-3 with review loop (survey + gap + idea + review)
+2. `skills/experiment-design/SKILL.md` — Stage 4: experiment plan (skeleton)
+3. `skills/experiment-execution/SKILL.md` — Stage 5: remote GPU experiment execution
 
 **Individual stage skills** (for one-off use outside the review loop):
-- `skill/literature-survey.md` — structured literature survey with three-pass reading
-- `skill/gap-analysis.md` — cross-paper gap discovery
-- `skill/idea-generation.md` — idea generation and scoring
+- `skills/literature-survey/SKILL.md` — structured literature survey with three-pass reading
+- `skills/gap-analysis/SKILL.md` — cross-paper gap discovery
+- `skills/idea-generation/SKILL.md` — idea generation and scoring
 
 **Review only** (for ad-hoc review of existing outputs):
-- `skill/research-review.md` — single-shot review via independent CC process
+- `skills/research-review/SKILL.md` — single-shot review via independent CC process

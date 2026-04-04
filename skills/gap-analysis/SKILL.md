@@ -1,3 +1,12 @@
+---
+name: Gap Analysis
+description: >
+  Identify unexplored opportunities and underserved problems in a research domain through
+  iterative gap discovery. Builds on literature survey findings to find what's missing,
+  what's underdeveloped, and where novel contributions are possible.
+  Stage 2 of the DARE research pipeline. Use when you need to find research gaps.
+---
+
 # Gap Analysis
 
 Identify research gaps using iterative loop engine. This is Stage 2 of the research pipeline.
@@ -269,7 +278,7 @@ After loop terminates and ranking complete, produce:
 
 ## Next Stage
 
-Pass the ranked gap list + full knowledge + papersRead to **Idea Generation** (skill/idea-generation.md).
+Pass the ranked gap list + full knowledge + papersRead to **Idea Generation** (skills/idea-generation/SKILL.md).
 
 ## Key Differences from Previous Version
 

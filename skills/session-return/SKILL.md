@@ -1,12 +1,20 @@
+---
+name: Session Return
+description: >
+  Pull experiment results from remote pods and clean up resources.
+  3-phase SOP: pull results → digest into local context → cleanup pod.
+  Use after experiment execution completes on a remote pod.
+---
+
 # Session Return — Pull Results + Cleanup SOP
 
 Retrieves experiment outputs from a remote pod via git pull, then cleans up. Triggered manually by user after experiment completes.
 
-This skill handles cleanup after session-teleport. Behavior depends on the pod type used during teleport.
+This skill handles cleanup after skills/session-teleport/SKILL.md. Behavior depends on the pod type used during teleport.
 
 ## Prerequisites
 - Pod/server is running with experiment outputs committed and pushed
-- Local repo is on the same branch used during session-teleport Phase 3
+- Local repo is on the same branch used during skills/session-teleport/SKILL.md Phase 3
 - Know the pod type used during teleport: **RunPod** or **Remote**
 
 ## Phase 1: Pull Results
@@ -31,7 +39,7 @@ This skill handles cleanup after session-teleport. Behavior depends on the pod t
 
 ## Phase 3: Cleanup
 
-Cleanup behavior depends on the pod type used during session-teleport.
+Cleanup behavior depends on the pod type used during skills/session-teleport/SKILL.md.
 
 ### RunPod
 
@@ -58,7 +66,7 @@ NO cleanup action. Inform user:
 
 > Remote server cleanup is your responsibility. Stop CC manually on the remote machine if needed.
 
-The remote server is not managed by DARE — it existed before session-teleport and will continue to exist after. Do not attempt to shut down or modify the remote machine.
+The remote server is not managed by DARE — it existed before skills/session-teleport/SKILL.md and will continue to exist after. Do not attempt to shut down or modify the remote machine.
 
 ## Golden Rule
 
