@@ -1,6 +1,6 @@
 # De-Anthropocentric: Nothing Human Makes It Out of the Lab
 
-*By Pthahnix*
+By Pthahnix
 
 > *A manifesto for science after the human bottleneck*
 >
