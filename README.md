@@ -44,7 +44,7 @@ Each stage runs SEARCH → READ → REFLECT → EVALUATE cycles with autonomous 
 
 **Key features of the pipeline:**
 
-- 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search)
+- 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search), plus supplementary AlphaXiv arXiv searches when needed
 - Two-step enrich pipeline: `paper_searching` → `paper_fetching`
 - Web page pipeline: `brave_web_search` → `web_fetching` → `web_content`
 - Three-pass reading protocol (High / Medium / Low rating)
@@ -105,7 +105,7 @@ Three-layer architecture: **Skills** (when/why) orchestrate **Pipelines** (how) 
 │  Tool sequencing, batching, error handling        │
 ├──────────────────────────────────────────────────┤
 │  TOOL LAYER — atomic MCP operations              │
-│  dare-scholar, dare-web, apify, brave, runpod    │
+│  dare-scholar, dare-web, alphaxiv, apify, brave  │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -135,6 +135,8 @@ MCP Client (Claude Code — local)
     │
     ├── @runpod/mcp-server ─── GPU pod lifecycle
     │
+    ├── AlphaXiv MCP (SSE) ─── paper search, Q&A, code exploration (arXiv)
+    │
     └── Git-based Context Transfer ─── distributed experiment execution
 ```
 
@@ -148,6 +150,7 @@ MCP Client (Claude Code — local)
 | **apify** | `@apify/actors-mcp-server` (npm) | Google Scholar search + web page scraping |
 | **brave-search** | `@brave/brave-search-mcp-server` (npm) | Web search API |
 | **runpod** | `@runpod/mcp-server` (npm) | GPU pod lifecycle management |
+| **alphaxiv** | AlphaXiv MCP (SSE) | Paper search, Q&A, code exploration (arXiv, auxiliary to dare-scholar) |
 
 ### 🔧 Tools
 
@@ -176,6 +179,19 @@ MCP Client (Claude Code — local)
 | `rag-web-browser` | apify | Fetch web page as markdown |
 | `brave_web_search` | brave-search | Web search via Brave Search API |
 | `create-pod` / `start-pod` / `stop-pod` / `delete-pod` | runpod | GPU pod lifecycle management |
+
+#### alphaxiv (Paper Search, Q&A, Code Exploration — arXiv only)
+
+| Tool | Description |
+| --- | --- |
+| `embedding_similarity_search` | Semantic paper search via embeddings |
+| `full_text_papers_search` | Keyword paper search (exact names, authors) |
+| `agentic_paper_retrieval` | Multi-turn autonomous retrieval (beta) |
+| `get_paper_content` | AI-generated paper report or raw full text |
+| `answer_pdf_queries` | Ask questions about any paper PDF |
+| `read_files_from_github_repository` | Read files from a paper's GitHub repo |
+
+> AlphaXiv is auxiliary to dare-scholar: dare-scholar covers all academic sources via Google Scholar; AlphaXiv covers arXiv only but adds paper Q&A and code exploration capabilities that dare-scholar lacks.
 
 ### 📦 Monorepo Structure
 
