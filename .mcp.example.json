@@ -51,6 +51,10 @@
         "GITHUB_PAT": "your-github-pat",
         "HF_TOKEN": "your-huggingface-token"
       }
+    },
+    "alphaxiv": {
+      "type": "sse",
+      "url": "https://api.alphaxiv.org/mcp/v1"
     }
   }
 }
