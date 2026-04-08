@@ -1,5 +1,7 @@
 # De-Anthropocentric: Nothing Human Makes It Out of the Lab
 
+*By Pthahnix*
+
 > *A manifesto for science after the human bottleneck*
 >
 > *"Progress is neither automatic nor mechanistic; it is rare. Indeed, the unique history of the West proves the exception to the rule that most human beings through the millennia have existed in a naturally brutal, unchanging, and impoverished state. But there is no law that the exceptional rise of the West must continue."*
