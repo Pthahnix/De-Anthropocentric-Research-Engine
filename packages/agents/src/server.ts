@@ -35,6 +35,10 @@ import { facetBisociation } from './tools/facet-bisociation.js';
 import { analogicalTransfer } from './tools/analogical-transfer.js';
 import { randomPaperEntry } from './tools/random-paper-entry.js';
 import { forcedBridge } from './tools/forced-bridge.js';
+import { axiomNegation } from './tools/axiom-negation.js';
+import { reverseEngineering } from './tools/reverse-engineering.js';
+import { worstMethodAnalysis } from './tools/worst-method-analysis.js';
+import { antiBenchmark } from './tools/anti-benchmark.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -458,6 +462,38 @@ server.tool('forced_bridge', 'Cross-Domain: Force connections between two unrela
   context: z.string().describe('Research context'),
 }, async (params) => {
   const result = await forcedBridge(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('axiom_negation', 'Assumption: de Bono PO provocation — negate a fundamental assumption', {
+  assumption: z.string().describe('The assumption to negate'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await axiomNegation(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('reverse_engineering', 'Assumption: Reverse brainstorm — how to make the problem WORSE', {
+  problem: z.string().describe('The problem to reverse'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await reverseEngineering(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('worst_method_analysis', 'Assumption: Design the worst method, then extract insights from inverting it', {
+  problem: z.string().describe('The problem to analyze'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await worstMethodAnalysis(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('anti_benchmark', 'Assumption: Challenge a benchmark\'s fundamental assumptions', {
+  benchmark: z.string().describe('Benchmark name and description'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await antiBenchmark(params);
   return { content: [{ type: 'text', text: JSON.stringify(result) }] };
 });
 
