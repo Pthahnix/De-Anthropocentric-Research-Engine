@@ -44,6 +44,10 @@ import { practitionerHat } from './tools/practitioner-hat.js';
 import { theoristHat } from './tools/theorist-hat.js';
 import { constraintInjection } from './tools/constraint-injection.js';
 import { timeMachine } from './tools/time-machine.js';
+import { benchmarkSweep } from './tools/benchmark-sweep.js';
+import { methodProblemMatrix } from './tools/method-problem-matrix.js';
+import { ablationBrainstorm } from './tools/ablation-brainstorm.js';
+import { failureTaxonomy } from './tools/failure-taxonomy.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -534,6 +538,39 @@ server.tool('time_machine', 'Perspective: Project idea to future or past', {
   idea: z.string(), direction: z.enum(['future', 'past']), years: z.number(), context: z.string(),
 }, async (params) => {
   const result = await timeMachine(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('benchmark_sweep', 'Enumerate: Systematic benchmark analysis with cross-benchmark ideas', {
+  benchmarks: z.string().describe('JSON array of benchmark names'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await benchmarkSweep(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('method_problem_matrix', 'Enumerate: Method × Problem matrix to find unexplored combinations', {
+  methods: z.string().describe('JSON array of method names'),
+  problems: z.string().describe('JSON array of problem names'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await methodProblemMatrix(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('ablation_brainstorm', 'Enumerate: Ablation analysis — what if we remove/replace SOTA components?', {
+  sotaComponents: z.string().describe('JSON array of SOTA method components'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await ablationBrainstorm(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('failure_taxonomy', 'Enumerate: Categorize failure cases and generate targeted fixes', {
+  failureCases: z.string().describe('JSON array of known failure cases'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await failureTaxonomy(params);
   return { content: [{ type: 'text', text: JSON.stringify(result) }] };
 });
 
