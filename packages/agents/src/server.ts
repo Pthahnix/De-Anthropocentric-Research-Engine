@@ -17,6 +17,13 @@ import { insightAbstraction } from './tools/insight-abstraction.js';
 import { insightAssumption } from './tools/insight-assumption.js';
 import { insightValidation } from './tools/insight-validation.js';
 import { qualityDiversityFilter } from './tools/quality-diversity-filter.js';
+import { scamperSubstitute } from './tools/scamper-substitute.js';
+import { scamperCombine } from './tools/scamper-combine.js';
+import { scamperAdapt } from './tools/scamper-adapt.js';
+import { scamperModify } from './tools/scamper-modify.js';
+import { scamperPutOtherUse } from './tools/scamper-put-other-use.js';
+import { scamperEliminate } from './tools/scamper-eliminate.js';
+import { scamperReverse } from './tools/scamper-reverse.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -228,6 +235,98 @@ server.tool(
   },
   async (params) => {
     const result = await qualityDiversityFilter(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_substitute',
+  'SCAMPER: Replace a component with an alternative to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperSubstitute(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_combine',
+  'SCAMPER: Merge two ideas/methods into something new',
+  {
+    idea: z.string().describe('JSON-serialized Idea A object'),
+    secondIdea: z.string().describe('JSON-serialized Idea B object to combine with Idea A'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperCombine(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_adapt',
+  'SCAMPER: Borrow and modify a technique from another domain',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperAdapt(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_modify',
+  'SCAMPER: Magnify or minify a key aspect to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperModify(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_put_other_use',
+  'SCAMPER: Repurpose the method for a different problem or domain',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperPutOtherUse(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_eliminate',
+  'SCAMPER: Remove a component while preserving core value',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperEliminate(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_reverse',
+  'SCAMPER: Invert an assumption, order, or direction to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperReverse(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
