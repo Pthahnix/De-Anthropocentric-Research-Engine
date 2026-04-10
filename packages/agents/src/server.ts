@@ -6,6 +6,7 @@ import { facetExtract } from './tools/facet-extract.js';
 import { digestExtract } from './tools/digest-extract.js';
 import { paperRate } from './tools/paper-rate.js';
 import { selfReview } from './tools/self-review.js';
+import { debateCritic } from './tools/debate-critic.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -69,6 +70,21 @@ server.tool(
   },
   async (params) => {
     const result = await selfReview(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'debate_critic',
+  'Critic role: attack artifact with evidence-based objections',
+  {
+    artifact: z.string(),
+    artifactType: z.string(),
+    context: z.string(),
+    debateHistory: z.string().optional().describe('Previous debate rounds for context'),
+  },
+  async (params) => {
+    const result = await debateCritic(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
