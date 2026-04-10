@@ -39,6 +39,11 @@ import { axiomNegation } from './tools/axiom-negation.js';
 import { reverseEngineering } from './tools/reverse-engineering.js';
 import { worstMethodAnalysis } from './tools/worst-method-analysis.js';
 import { antiBenchmark } from './tools/anti-benchmark.js';
+import { reviewer2Hat } from './tools/reviewer2-hat.js';
+import { practitionerHat } from './tools/practitioner-hat.js';
+import { theoristHat } from './tools/theorist-hat.js';
+import { constraintInjection } from './tools/constraint-injection.js';
+import { timeMachine } from './tools/time-machine.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -494,6 +499,41 @@ server.tool('anti_benchmark', 'Assumption: Challenge a benchmark\'s fundamental 
   context: z.string().describe('Research context'),
 }, async (params) => {
   const result = await antiBenchmark(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('reviewer2_hat', 'Perspective: Hostile reviewer finds fatal flaws', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await reviewer2Hat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('practitioner_hat', 'Perspective: Industry engineer evaluates practicality', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await practitionerHat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('theorist_hat', 'Perspective: Formal theorist evaluates foundations', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await theoristHat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('constraint_injection', 'Perspective: Add random constraint and find workarounds', {
+  idea: z.string(), constraint: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await constraintInjection(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('time_machine', 'Perspective: Project idea to future or past', {
+  idea: z.string(), direction: z.enum(['future', 'past']), years: z.number(), context: z.string(),
+}, async (params) => {
+  const result = await timeMachine(params);
   return { content: [{ type: 'text', text: JSON.stringify(result) }] };
 });
 
