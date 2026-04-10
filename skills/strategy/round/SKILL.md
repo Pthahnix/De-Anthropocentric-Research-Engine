@@ -3,7 +3,7 @@ name: Round
 description: One full research round — survey + gap-analysis + idea-generation + review
 type: strategy
 layer: strategy
-calls: [lit-survey, academic-research, web-research]
+calls: [lit-survey]
 input: researchBrief, previousRoundState (if hot loop), roundNumber
 output: RoundResult — survey results, gaps, ideas, review score
 ---
