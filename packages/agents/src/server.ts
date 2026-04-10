@@ -29,6 +29,8 @@ import { surgeryMultiply } from './tools/surgery-multiply.js';
 import { surgeryDivide } from './tools/surgery-divide.js';
 import { surgeryUnify } from './tools/surgery-unify.js';
 import { surgeryRedirect } from './tools/surgery-redirect.js';
+import { trizContradiction } from './tools/triz-contradiction.js';
+import { morphologicalMatrix } from './tools/morphological-matrix.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -400,6 +402,24 @@ server.tool(
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
+
+server.tool('triz_contradiction', 'TRIZ: Resolve conflicting metrics using inventive principles', {
+  idea: z.string().describe('JSON-serialized Idea object'),
+  metricX: z.string().describe('Metric to improve'),
+  metricY: z.string().describe('Metric that suffers when metricX improves'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await trizContradiction(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('morphological_matrix', 'Morphological: Decompose problem into dimensions and enumerate novel combinations', {
+  dimensions: z.string().describe('JSON array of { dimension: string, options: string[] }'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await morphologicalMatrix(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
 
 // Start server
 const transport = new StdioServerTransport();
