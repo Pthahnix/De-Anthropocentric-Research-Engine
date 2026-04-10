@@ -24,6 +24,11 @@ import { scamperModify } from './tools/scamper-modify.js';
 import { scamperPutOtherUse } from './tools/scamper-put-other-use.js';
 import { scamperEliminate } from './tools/scamper-eliminate.js';
 import { scamperReverse } from './tools/scamper-reverse.js';
+import { surgerySubtract } from './tools/surgery-subtract.js';
+import { surgeryMultiply } from './tools/surgery-multiply.js';
+import { surgeryDivide } from './tools/surgery-divide.js';
+import { surgeryUnify } from './tools/surgery-unify.js';
+import { surgeryRedirect } from './tools/surgery-redirect.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -327,6 +332,71 @@ server.tool(
   },
   async (params) => {
     const result = await scamperReverse(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_subtract',
+  'Surgery: Remove a component and analyze what remains',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgerySubtract(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_multiply',
+  'Surgery: Duplicate a component into multiple variants and analyze what diversity enables',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryMultiply(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_divide',
+  'Surgery: Split a component into sub-problems and analyze if parts work better independently',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryDivide(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_unify',
+  'Surgery: Merge separate components into one and analyze what simplicity or emergence results',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryUnify(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_redirect',
+  'Surgery: Repurpose a component to serve a different goal and analyze what new capability emerges',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryRedirect(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
