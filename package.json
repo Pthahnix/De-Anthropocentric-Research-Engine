@@ -6,7 +6,7 @@
   "type": "module",
   "workspaces": ["packages/*"],
   "scripts": {
-    "test": "npm test -w packages/scholar -w packages/web",
+    "test": "npm test -w packages/scholar -w packages/web -w packages/agents",
     "build": "npm run build --workspaces --if-present"
   },
   "license": "Apache-2.0"
