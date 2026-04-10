@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { facetExtract } from './tools/facet-extract.js';
 import { digestExtract } from './tools/digest-extract.js';
 import { paperRate } from './tools/paper-rate.js';
+import { selfReview } from './tools/self-review.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -54,6 +55,20 @@ server.tool(
   },
   async (params) => {
     const result = await paperRate(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'self_review',
+  'Single-call C→D→J self-review for any research artifact',
+  {
+    artifact: z.string().describe('The artifact to review (gap, idea, experiment plan, or results)'),
+    artifactType: z.string().describe('Type: gap | idea | experiment-design | experiment-result'),
+    context: z.string().describe('Supporting context (accumulated knowledge, evidence)'),
+  },
+  async (params) => {
+    const result = await selfReview(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
