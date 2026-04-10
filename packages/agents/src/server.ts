@@ -3,6 +3,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { facetExtract } from './tools/facet-extract.js';
+import { digestExtract } from './tools/digest-extract.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -22,6 +23,20 @@ server.tool(
   },
   async (params) => {
     const result = await facetExtract(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'digest_extract',
+  'Three-pass paper reading (Keshav method) producing structured Digest',
+  {
+    paperMarkdown: z.string().describe('Full paper content in markdown format'),
+    normalizedTitle: z.string().describe('Normalized paper title (cache key)'),
+    rating: z.enum(['High', 'Medium', 'Low']).describe('Reading depth: High=3 passes, Medium=2, Low=1'),
+  },
+  async (params) => {
+    const result = await digestExtract(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
