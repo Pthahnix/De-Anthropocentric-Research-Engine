@@ -7,6 +7,7 @@ import { digestExtract } from './tools/digest-extract.js';
 import { paperRate } from './tools/paper-rate.js';
 import { selfReview } from './tools/self-review.js';
 import { debateCritic } from './tools/debate-critic.js';
+import { debateDefender } from './tools/debate-defender.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -85,6 +86,22 @@ server.tool(
   },
   async (params) => {
     const result = await debateCritic(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'debate_defender',
+  'Defender role: defend artifact against critic attacks with evidence',
+  {
+    artifact: z.string(),
+    artifactType: z.string(),
+    context: z.string(),
+    criticOutput: z.string().describe('JSON output from debate_critic'),
+    debateHistory: z.string().optional(),
+  },
+  async (params) => {
+    const result = await debateDefender(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
