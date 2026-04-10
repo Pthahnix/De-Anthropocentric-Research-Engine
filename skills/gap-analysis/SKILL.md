@@ -21,7 +21,7 @@ Identify research gaps using iterative loop engine. This is Stage 2 of the resea
 ## Prerequisites
 
 - Completed literature survey with rated and read papers
-- Prompts: `prompt/gap-discovery.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
+- Prompts: `prompts/gap-discovery.md`, `prompts/reflect-gaps.md`, `prompts/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
 - Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
 
@@ -105,8 +105,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   6. Read Top Papers (focus on Limitations/Future Work sections)
      - Select top 8-12 papers
-     - Apply prompt/paper-rating.md → High/Medium/Low
-     - Apply prompt/paper-reading.md with special focus:
+     - Apply prompts/paper-rating.md → High/Medium/Low
+     - Apply prompts/paper-reading.md with special focus:
        * High: Pass 1 → Pass 2 → Pass 3, extract Limitations + Future Work sections
        * Medium: Pass 1 → Pass 2, extract Limitations
        * Low: Pass 1 only
@@ -133,10 +133,10 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== REFLECT Phase =====
   10. Gap Discovery
-      - Load prompt/reflect-gaps.md
+      - Load prompts/reflect-gaps.md
       - Input: currentGap, readContent (this iteration, focus on limitations), knowledge, diary
       - Output: { newGaps: string[], progressAssessment: string }
-      - Additionally, apply prompt/gap-discovery.md to synthesize:
+      - Additionally, apply prompts/gap-discovery.md to synthesize:
         * Method comparison matrix
         * Contradiction detection
         * Blank identification
@@ -155,7 +155,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== EVALUATE Phase =====
   13. Gap Validation
-      - Load prompt/evaluate-answer.md
+      - Load prompts/evaluate-answer.md
       - Input: currentGap, knowledge, readContent
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
       - Question format: "Based on papers read, is '{currentGap}' a genuine research gap?"

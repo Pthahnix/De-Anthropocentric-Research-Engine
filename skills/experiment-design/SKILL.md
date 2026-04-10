@@ -23,7 +23,7 @@ Design an experiment plan using iterative loop engine. This is Stage 4 of the re
 ## Prerequisites
 
 - Completed idea generation with selected idea
-- Prompts: `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
+- Prompts: `prompts/reflect-gaps.md`, `prompts/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
 - Tools (direct): paper_content, paper_reference (dare-scholar)
 
@@ -118,8 +118,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   6. Read Top Papers (focus on Experiments/Evaluation sections)
      - Select top 8-12 papers
-     - Apply prompt/paper-rating.md → High/Medium/Low
-     - Apply prompt/paper-reading.md with special focus:
+     - Apply prompts/paper-rating.md → High/Medium/Low
+     - Apply prompts/paper-reading.md with special focus:
        * High: Pass 1 → Pass 2 → Pass 3, extract Experiments + Evaluation + Ablation sections
        * Medium: Pass 1 → Pass 2, extract Experiments
        * Low: Pass 1 only
@@ -146,7 +146,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== REFLECT Phase =====
   10. Experiment Component Discovery
-      - Load prompt/reflect-gaps.md (adapted for experiment design)
+      - Load prompts/reflect-gaps.md (adapted for experiment design)
       - Input: currentGap, readContent (experiments/evaluation), knowledge, diary
       - Output: { newGaps: string[], progressAssessment: string }
       - Additionally, extract experiment components:
@@ -176,7 +176,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== EVALUATE Phase =====
   14. Completeness Check
-      - Load prompt/evaluate-answer.md
+      - Load prompts/evaluate-answer.md
       - Input: currentGap, experimentPlan, knowledge
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
       - Question format: "Based on papers read, is the experiment design for '{currentGap}' complete?"

@@ -19,7 +19,7 @@ $ARGUMENTS — research topic or question
 
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
 - Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
-- Prompts: `prompt/paper-rating.md`, `prompt/paper-reading.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
+- Prompts: `prompts/paper-rating.md`, `prompts/paper-reading.md`, `prompts/reflect-gaps.md`, `prompts/evaluate-answer.md`
 
 ## Overview
 
@@ -101,8 +101,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   6. Read Top Papers
      - Select top 8-12 papers
-     - Apply prompt/paper-rating.md → High/Medium/Low
-     - Apply prompt/paper-reading.md:
+     - Apply prompts/paper-rating.md → High/Medium/Low
+     - Apply prompts/paper-reading.md:
        * High: Pass 1 → Pass 2 → Pass 3
        * Medium: Pass 1 → Pass 2
        * Low: Pass 1 only
@@ -128,7 +128,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== REFLECT Phase =====
   10. Gap Discovery
-      - Load prompt/reflect-gaps.md
+      - Load prompts/reflect-gaps.md
       - Input: currentGap, readContent (this iteration), knowledge, diary
       - Output: { newGaps: string[], progressAssessment: string }
 
@@ -145,7 +145,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== EVALUATE Phase =====
   13. Answer Evaluation
-      - Load prompt/evaluate-answer.md
+      - Load prompts/evaluate-answer.md
       - Input: currentGap, knowledge, readContent
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
 
@@ -269,8 +269,8 @@ Pass the full output (knowledge + papersRead + diary) to **Gap Analysis** (skill
 
 **Added**:
 - Iterative SEARCH→READ→REFLECT→EVALUATE loop
-- Autonomous gap discovery via prompt/reflect-gaps.md
-- Autonomous answer evaluation via prompt/evaluate-answer.md
+- Autonomous gap discovery via prompts/reflect-gaps.md
+- Autonomous answer evaluation via prompts/evaluate-answer.md
 - Dynamic stopping conditions based on task completion
 - State management (gaps queue, knowledge accumulation, diary)
 

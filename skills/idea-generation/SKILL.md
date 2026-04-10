@@ -21,7 +21,7 @@ Generate and evaluate research ideas using iterative loop engine. This is Stage 
 ## Prerequisites
 
 - Completed gap analysis with ranked gaps
-- Prompts: `prompt/idea-scoring.md`, `prompt/reflect-gaps.md`, `prompt/evaluate-answer.md`
+- Prompts: `prompts/idea-scoring.md`, `prompts/reflect-gaps.md`, `prompts/evaluate-answer.md`
 - Pipelines: `pipeline/acd-searching.md`, `pipeline/web-searching.md`
 - Tools (direct): paper_content, paper_reference, paper_reading (dare-scholar)
 
@@ -108,8 +108,8 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   6. Read Top Papers (focus on Methods/Innovation)
      - Select top 8-12 papers
-     - Apply prompt/paper-rating.md → High/Medium/Low
-     - Apply prompt/paper-reading.md with special focus:
+     - Apply prompts/paper-rating.md → High/Medium/Low
+     - Apply prompts/paper-reading.md with special focus:
        * High: Pass 1 → Pass 2 → Pass 3, extract Methods + key innovations
        * Medium: Pass 1 → Pass 2, extract Methods
        * Low: Pass 1 only
@@ -136,7 +136,7 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
 
   // ===== REFLECT Phase =====
   10. Idea Generation
-      - Load prompt/reflect-gaps.md (adapted for idea generation)
+      - Load prompts/reflect-gaps.md (adapted for idea generation)
       - Input: currentGap, readContent (methods/innovations), knowledge, diary
       - Output: { newGaps: string[], progressAssessment: string }
       - Additionally, generate idea candidates using approaches:
@@ -165,13 +165,13 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
   // ===== EVALUATE Phase =====
   14. Idea Scoring
       - For each idea candidate that passed novelty pre-check:
-        * Load prompt/idea-scoring.md
+        * Load prompts/idea-scoring.md
         * Input: idea description, supporting papers, gap context
         * Output: { novelty: 1-10, feasibility: 1-10, impact: 1-10, clarity: 1-10, evidence: 1-10 }
         * Total score = sum of 5 dimensions (max 50)
 
   15. Idea Validation
-      - Load prompt/evaluate-answer.md
+      - Load prompts/evaluate-answer.md
       - Input: "Is this idea feasible and supported by sufficient evidence?"
       - Output: { canAnswer: bool, answer: string, sources: string[], confidence: string, missingInfo: string }
 

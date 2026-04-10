@@ -33,11 +33,11 @@ WHILE (gaps.length > 0 AND iteration < MAX_ITERATIONS):
   Call web-research tactic with 3 web queries (in parallel)
 
   STEP 3 — REFLECT:
-  Use prompt/reflect-gaps.md to discover new gaps from what was just read
+  Use prompts/reflect-gaps.md to discover new gaps from what was just read
   Update knowledge with key findings
 
   STEP 4 — EVALUATE:
-  Use prompt/evaluate-answer.md to judge sufficiency
+  Use prompts/evaluate-answer.md to judge sufficiency
   Remove gaps that are now answered
   
   STEP 5 — STOP CHECK:

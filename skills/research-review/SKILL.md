@@ -22,13 +22,13 @@ Single-shot academic review of Stage 1-3 research outputs. Invokes an independen
 
 ### 1. Prepare Review Prompt
 
-Read `prompt/research-review.md` and substitute `{PROJECT_ROOT}` with the actual absolute project root path (e.g., `D:/NEOCORTICA`).
+Read `prompts/research-review.md` and substitute `{PROJECT_ROOT}` with the actual absolute project root path (e.g., `D:/NEOCORTICA`).
 
 ### 2. Invoke Reviewer CC
 
 ```bash
 export CLAUDE_CODE_GIT_BASH_PATH='D:\Git\bin\bash.exe'
-REVIEW_OUTPUT=$(claude -p "$(cat prompt/research-review.md | sed 's|{PROJECT_ROOT}|<actual_path>|g')" \
+REVIEW_OUTPUT=$(claude -p "$(cat prompts/research-review.md | sed 's|{PROJECT_ROOT}|<actual_path>|g')" \
   --allowedTools "Read,Glob,Grep,WebSearch,WebFetch,mcp__brave-search__brave_web_search,mcp__perplexity__perplexity_ask" \
   2>/dev/null)
 ```

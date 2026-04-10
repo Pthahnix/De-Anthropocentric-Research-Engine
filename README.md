@@ -203,7 +203,7 @@ dare/
 │   └── session/          # Git-based context transfer (pod provisioning scripts)
 ├── skills/               # Research workflow SOPs (directory-per-skill)
 ├── pipeline/             # Fixed tool-orchestration workflows
-├── prompt/               # LLM prompt templates
+├── prompts/               # LLM prompt templates
 ├── package.json          # Root workspace config
 └── .mcp.json             # MCP server configuration (gitignored)
 ```

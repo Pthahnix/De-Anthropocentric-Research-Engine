@@ -21,7 +21,7 @@ Execute an experiment on a remote GPU pod via Supervisor architecture. This is S
 
 - RunPod MCP available (@runpod/mcp-server configured in .mcp.json)
 - Bash tool available for curl commands
-- Prompts: `prompt/hardware-estimation.md`, `prompt/experiment-task.md`
+- Prompts: `prompts/hardware-estimation.md`, `prompts/experiment-task.md`
 - Environment: `API_KEY_RUNPOD` set in .env
 - Pre-built Docker image: `dare-pod:latest` (built via `npm run docker:build`)
 
@@ -52,7 +52,7 @@ localResultsDir: string     // ./results/<experimentName> (local)
    - Default checkpoints: `["phase_3", "phase_4", "phase_5", "phase_6"]`
    - For complex experiments, add sub-checkpoints (e.g., `"phase_4_dryrun"`)
 
-2. Load `prompt/experiment-task.md`
+2. Load `prompts/experiment-task.md`
 
 3. Build the task payload by injecting:
    - `{{EXPERIMENT_PLAN}}` → full experiment plan text
@@ -79,7 +79,7 @@ localResultsDir: string     // ./results/<experimentName> (local)
 
 ## Phase 1: Hardware Estimation
 
-1. Load `prompt/hardware-estimation.md`
+1. Load `prompts/hardware-estimation.md`
 2. Feed the Experiment Plan's method, datasets, resources sections as input
 3. Produce hardware estimate JSON: gpuType, gpuCount, estimatedHours, estimatedCost, diskEstimate, dockerImage
 4. Present to user in a clear table:
