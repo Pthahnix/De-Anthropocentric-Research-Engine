@@ -16,6 +16,7 @@ import { insightHmw } from './tools/insight-hmw.js';
 import { insightAbstraction } from './tools/insight-abstraction.js';
 import { insightAssumption } from './tools/insight-assumption.js';
 import { insightValidation } from './tools/insight-validation.js';
+import { qualityDiversityFilter } from './tools/quality-diversity-filter.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -214,6 +215,19 @@ server.tool(
   },
   async (params) => {
     const result = await insightValidation(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'quality_diversity_filter',
+  'MAP-Elites-style quality-diversity filtering for ideas',
+  {
+    ideas: z.string().describe('JSON array of ideas to filter'),
+    gaps: z.string().describe('JSON array of gaps defining the niche dimensions'),
+  },
+  async (params) => {
+    const result = await qualityDiversityFilter(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
