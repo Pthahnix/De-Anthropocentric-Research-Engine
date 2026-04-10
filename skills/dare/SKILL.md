@@ -3,7 +3,7 @@ name: /dare
 description: DARE research engine entry point — orchestrates the full research pipeline
 type: meta-strategy
 layer: meta-strategy
-calls: [intake, lit-survey, round]
+calls: [intake, lit-survey, gap-analysis, insight, round]
 ---
 
 # /dare — De-Anthropocentric Research Engine
@@ -15,7 +15,7 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 ## Layer Rules
 - **Layer**: meta-strategy — top of the hierarchy
 - **Called by**: user (via `/dare` command)
-- **Calls**: strategies only (intake, round)
+- **Calls**: strategies only (intake, lit-survey, gap-analysis, insight, round)
 - **NEVER**: calls tactics, SOPs, or MCP tools directly
 
 ## Pipeline
@@ -32,7 +32,7 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 ### Phase 2: Research Loop (Stages 1-3)
 - **Round 0 (Cold Start)**:
   - Call **round strategy** with `{ researchBrief, roundNumber: 0 }`
-  - Runs: lit-survey(10 iter) → gap-analysis(6 iter, P1) → idea-gen(5 iter, P2) → review(P1)
+  - Runs: lit-survey(10 iter) → gap-analysis(6 iter) → insight(7-step pipeline) → idea-gen(5 iter, P2) → review
 
 - **Hot Loop (Round 1-6)**:
   - Read review feedback
@@ -68,12 +68,15 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 - [x] Self-review-quick SOP (lightweight validation)
 - [x] All 7 dare-agents tools (facet, digest, rate, self-review, C/D/J debate)
 
-## After P1
-- [ ] INSIGHT 7-step pipeline (deep gap analysis)
-- [ ] Full multiagent debate (multi-round C/D/J)
-- [ ] Quality-diversity filtering
-- [ ] Gap-analysis strategy
-- [ ] Insight strategy
+## P1 Implemented
+- [x] INSIGHT 7-step pipeline (root-cause → stakeholder → tension → hmw → abstraction → assumption → validation)
+- [x] Full multiagent debate (4 structured C→D rounds + Judge + 3 free rounds)
+- [x] Quality-diversity filtering (MAP-Elites niche selection)
+- [x] Gap-analysis strategy (6 iterations, calls insight tactic)
+- [x] Insight strategy (orchestrates INSIGHT pipeline + debate validation)
+- [x] INSIGHT SOPs (7 step SOPs + QD filtering SOP)
+- [x] Debate SOPs (debate-idea, debate-gap, debate-insight, debate-experiment)
+- [x] Tactics (insight, multiagent-debate, review)
 
 ## After P2
 - [ ] IDEATION methods (5 categories, 31 tools)
