@@ -9,6 +9,13 @@ import { selfReview } from './tools/self-review.js';
 import { debateCritic } from './tools/debate-critic.js';
 import { debateDefender } from './tools/debate-defender.js';
 import { debateJudge } from './tools/debate-judge.js';
+import { insightRootCause } from './tools/insight-root-cause.js';
+import { insightStakeholder } from './tools/insight-stakeholder.js';
+import { insightTension } from './tools/insight-tension.js';
+import { insightHmw } from './tools/insight-hmw.js';
+import { insightAbstraction } from './tools/insight-abstraction.js';
+import { insightAssumption } from './tools/insight-assumption.js';
+import { insightValidation } from './tools/insight-validation.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -119,6 +126,94 @@ server.tool(
   },
   async (params) => {
     const result = await debateJudge(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_root_cause',
+  'Step 1 of INSIGHT pipeline: apply 5 Whys to drill from a surface research gap to its root cause',
+  {
+    gap: z.string().describe('The research gap to analyze'),
+    evidence: z.string().describe('Evidence from literature supporting the existence of this gap'),
+    knowledge: z.string().describe('Accumulated knowledge from the literature survey'),
+  },
+  async (params) => {
+    const result = await insightRootCause(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_stakeholder',
+  'Step 2 of INSIGHT pipeline: JTBD stakeholder mapping — identify who is affected and how',
+  {
+    gap: z.string().describe('The research gap being analyzed'),
+    rootCauseOutput: z.string().describe('JSON output from insight_root_cause'),
+  },
+  async (params) => {
+    const result = await insightStakeholder(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_tension',
+  'Step 3 of INSIGHT pipeline: mine the tensions (opposing forces) that make the gap persistent',
+  {
+    gap: z.string().describe('The research gap being analyzed'),
+    stakeholderOutput: z.string().describe('JSON output from insight_stakeholder'),
+  },
+  async (params) => {
+    const result = await insightTension(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_hmw',
+  'Step 4 of INSIGHT pipeline: reformulate tensions as actionable How Might We questions',
+  {
+    tensions: z.string().describe('JSON output from insight_tension'),
+  },
+  async (params) => {
+    const result = await insightHmw(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_abstraction',
+  'Step 5 of INSIGHT pipeline: build abstraction ladder from concrete problem to meta-principle and back',
+  {
+    hmwQuestions: z.string().describe('JSON output from insight_hmw'),
+  },
+  async (params) => {
+    const result = await insightAbstraction(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_assumption',
+  'Step 6 of INSIGHT pipeline: audit all assumptions embedded in Steps 1-5 of the insight chain',
+  {
+    insightSoFar: z.string().describe('Concatenated JSON outputs from insight steps 1-5'),
+  },
+  async (params) => {
+    const result = await insightAssumption(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'insight_validation',
+  'Step 7 of INSIGHT pipeline: 6-gate validation checklist to determine if insight is ready for idea generation',
+  {
+    fullInsight: z.string().describe('Concatenated JSON outputs from all insight steps 1-6'),
+  },
+  async (params) => {
+    const result = await insightValidation(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
