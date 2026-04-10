@@ -4,6 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { facetExtract } from './tools/facet-extract.js';
 import { digestExtract } from './tools/digest-extract.js';
+import { paperRate } from './tools/paper-rate.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -37,6 +38,22 @@ server.tool(
   },
   async (params) => {
     const result = await digestExtract(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'paper_rate',
+  'Rate paper relevance (High/Medium/Low) based on metadata vs research topic',
+  {
+    title: z.string().describe('Paper title'),
+    abstract: z.string().describe('Paper abstract'),
+    year: z.number().optional().describe('Publication year'),
+    citations: z.number().optional().describe('Citation count'),
+    topic: z.string().describe('Research topic to rate relevance against'),
+  },
+  async (params) => {
+    const result = await paperRate(params);
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
