@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { getConfiguredModel, getApiKey } from '../config.js';
-import { SurgeryResult } from './surgery-subtract.js';
+import type { SurgeryResult } from './surgery-subtract.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SYSTEM_PROMPT = readFileSync(join(__dirname, '../prompts/surgery-unify.md'), 'utf-8');
