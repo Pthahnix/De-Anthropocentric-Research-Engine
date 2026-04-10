@@ -32,7 +32,7 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 ### Phase 2: Research Loop (Stages 1-3)
 - **Round 0 (Cold Start)**:
   - Call **round strategy** with `{ researchBrief, roundNumber: 0 }`
-  - Runs: lit-survey(10 iter) → gap-analysis(6 iter) → insight(7-step pipeline) → idea-gen(5 iter, P2) → review
+  - Runs: lit-survey(10 iter) → gap-analysis(6 iter) → insight(7-step pipeline) → ideation(5 iter) → review
 
 - **Hot Loop (Round 1-6)**:
   - Read review feedback
@@ -78,9 +78,15 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 - [x] Debate SOPs (debate-idea, debate-gap, debate-insight, debate-experiment)
 - [x] Tactics (insight, multiagent-debate, review)
 
+## P2 Implemented
+- [x] IDEATION methods (5 categories, 31 dare-agents tools)
+- [x] IDEATION SOPs (31 SKILL.md files across 5 categories)
+- [x] IDEATION tactics (9: 2 operational + 5 categorical + 2 compound)
+- [x] Ideation strategy (iterative: generate → augment → filter → validate)
+- [x] Idea-generation tactic (5-category divergence + cross-pollination + convergence)
+- [x] Idea-augmentation tactic (reviewer2 + SCAMPER + surgery improvements)
+
 ## After P2
-- [ ] IDEATION methods (5 categories, 31 tools)
-- [ ] Ideation strategy
 - [ ] Experiment design strategy
 
 ## After P3
