@@ -31,6 +31,10 @@ import { surgeryUnify } from './tools/surgery-unify.js';
 import { surgeryRedirect } from './tools/surgery-redirect.js';
 import { trizContradiction } from './tools/triz-contradiction.js';
 import { morphologicalMatrix } from './tools/morphological-matrix.js';
+import { facetBisociation } from './tools/facet-bisociation.js';
+import { analogicalTransfer } from './tools/analogical-transfer.js';
+import { randomPaperEntry } from './tools/random-paper-entry.js';
+import { forcedBridge } from './tools/forced-bridge.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -418,6 +422,42 @@ server.tool('morphological_matrix', 'Morphological: Decompose problem into dimen
   context: z.string().describe('Research context'),
 }, async (params) => {
   const result = await morphologicalMatrix(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('facet_bisociation', 'Cross-Domain: Koestler bisociation between facets from different papers', {
+  facetA: z.string().describe('Facet JSON from paper A'),
+  facetB: z.string().describe('Facet JSON from paper B (different domain)'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await facetBisociation(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('analogical_transfer', 'Cross-Domain: Synectics — transfer principle from source to target', {
+  sourceDomain: z.string().describe('Source domain description'),
+  targetProblem: z.string().describe('Target problem to solve'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await analogicalTransfer(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('random_paper_entry', 'Cross-Domain: Random entry point stimulation from a distant paper', {
+  randomPaperFacet: z.string().describe('Random paper facet JSON'),
+  targetProblem: z.string().describe('Target problem'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await randomPaperEntry(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('forced_bridge', 'Cross-Domain: Force connections between two unrelated techniques', {
+  techniqueA: z.string().describe('First technique description'),
+  techniqueB: z.string().describe('Second technique description'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await forcedBridge(params);
   return { content: [{ type: 'text', text: JSON.stringify(result) }] };
 });
 
