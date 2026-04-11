@@ -33,6 +33,18 @@ output: |
 
 Apply evolutionary algorithms to DARE's own methodology — mutation, crossover, and selection on the SOPs and tactics themselves.
 
+## Research Budget — Method-Evolve
+
+| Metric | Target |
+|--------|--------|
+| Generations (mutation cycles) | 5+ |
+| Evaluations per generation | 3+ |
+| Crossover attempts | 2+ |
+| Method types represented in population | 3+ |
+
+These targets ensure the evolutionary process has enough diversity and iterations
+to produce meaningful improvements.
+
 ## When to Use
 
 - After multiple research sessions have been completed (need track record data)
@@ -92,6 +104,28 @@ Retirement threshold: Elo < 1200 after 10+ evaluations
 | `method_evolve_mutate` | Produce mutated method variants | P3 Task 2 |
 | `method_evolve_crossover` | Combine two methods into hybrid | P3 Task 2 |
 | `method_evolve_evaluate` | Head-to-head comparison + Elo update | P3 Task 2 |
+
+## Completeness Probe — Method-Evolve
+
+<HARD-GATE>
+Before accepting the evolved method population:
+
+**Method type coverage:**
+- [ ] Does the population include methods from at least 3 different creative categories?
+  (e.g., SCAMPER-family, surgery-family, cross-domain, assumption-based, systematic)
+- [ ] Did crossover combine methods from different categories (not just within-category)?
+
+**Evolution depth:**
+- [ ] Were at least 5 generations of mutation applied?
+- [ ] Did any method show measurable improvement across generations?
+- [ ] Were dead-end mutations properly pruned?
+
+**Evaluation rigor:**
+- [ ] Was each method evaluated on at least 1 test problem?
+- [ ] Did evaluation use consistent criteria across all methods?
+
+If ANY checkbox fails → run 1-2 more generations targeting the weakness.
+</HARD-GATE>
 
 ## Open Questions (to resolve during v3.2 implementation)
 
