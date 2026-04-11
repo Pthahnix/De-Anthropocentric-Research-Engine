@@ -20,6 +20,23 @@ output: DebateResult — verdict, confidence, full debate transcript
   - `experiment-result` → debate-experiment-result SOP
 - **Never calls**: dare-agents tools directly (that is the SOP's responsibility)
 
+## Minimum Debate Depth
+
+<HARD-GATE>
+**Minimum 2 rounds of Critic-Defender exchange before the Judge renders a verdict.**
+
+A "round" is one full Critic → Defender cycle. The Judge may only be called after round 2+.
+
+Round 1: Critic attacks → Defender responds
+Round 2: Critic attacks on NEW weaknesses (not rehashing round 1) → Defender responds
+Round 3+ (optional): Continue if Judge verdict is CONTINUE
+
+Single-round debates produce shallow validation. The second round forces the Critic to find
+deeper issues beyond surface-level objections, and the Defender to mount a more rigorous defense.
+
+If the artifact is so strong that the Critic struggles in round 2 → that's signal, not waste.
+</HARD-GATE>
+
 ## Procedure
 
 ### Single-Artifact Mode
@@ -81,3 +98,16 @@ When called with `artifacts` (array of exactly 2 items) instead of a single `art
 - **REJECT** — artifact has fundamental flaws; discard and regenerate
 - **REVISE** — artifact has correctable issues; `revisionGuidance` specifies what to fix
 - **CONTINUE** — for experiment-result only: results are partial, more data needed before verdict
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: multiagent-debate
+| Metric | Count |
+|--------|-------|
+| Debate rounds completed | ?? |
+| Critic objections raised | ?? |
+| Defender rebuttals | ?? |
+| Judge verdict | ACCEPT / REJECT / REVISE / CONTINUE |
+| Artifacts debated | ?? |
+</HARD-GATE>
