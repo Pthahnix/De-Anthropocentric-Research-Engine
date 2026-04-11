@@ -16,6 +16,8 @@ DARE is not a tool that helps you do research. It *is* the researcher. You set t
 - ⚔️ **Adversarial debate** — Proposer-Critic-Judge architecture validates every gap, insight, and idea through structured 4+3 round debates
 - 🔬 **INSIGHT pipeline** — 7-step deep analysis (root-cause → stakeholder → tension → HMW → abstraction → assumption → validation)
 - 🔄 **Self-review loop** — an independent AI process reviews all outputs, scores them, and selectively re-runs weak stages
+- 📏 **Research depth enforcement** — quantitative budget floors (S/M/L topic tiers), state ledgers, budget gates, and adversarial completeness probes ensure the AI cannot take shortcuts or produce shallow results
+- 🌍 **Forced cross-domain discovery** — before ideation, mandatory search across 3+ unrelated domains (biology, physics, economics, etc.) to fuel cross-domain collision methods
 - 🧪 **Experiment design & execution** — designs experiments and runs them on remote GPU pods, autonomously
 - 🧬 **Method evolution** (planned) — AlphaEvolve-inspired evolutionary improvement of DARE's own methods (mutation + crossover + Elo ranking). Core tools implemented, full loop coming in v3.2+
 - 🌐 **Deep reference exploration** — traces citation graphs via Semantic Scholar
@@ -68,9 +70,18 @@ Ideas that survive this gauntlet are genuinely robust. Ideas that don't are disc
 
 Most AI systems optimize for a single quality metric — they'll give you 10 variations of the same good idea. DARE uses **MAP-Elites**, a quality-diversity algorithm that maintains a population of ideas spanning multiple dimensions of variation. The result: you get the *best* idea in each *niche*, not 10 copies of the same insight.
 
----
+### 📏 Research Depth & Breadth Enforcement
 
-## 🔄 Research Pipeline
+AI agents naturally take the path of least resistance — searching a handful of papers and declaring victory. DARE embeds hard enforcement mechanisms directly into every skill to prevent this:
+
+- **Research Budget**: Every strategy declares quantitative floors with three topic-size tiers (Small / Medium / Large). A literature survey on a Medium topic *must* fetch 40+ papers and 50+ web pages.
+- **State Ledger**: A progress table printed before every iteration — the AI cannot lose track of where it stands.
+- **Budget Gate**: A `<HARD-GATE>` that blocks the strategy from exiting its loop until 80% of the budget is met. The AI *cannot* stop early no matter how "satisfied" it feels.
+- **Adversarial Completeness Probe**: After the budget is met, a qualitative self-check probes for blind spots (missing sub-areas, unchecked citations, unexplored perspectives). Up to 2 extra iterations if gaps are found.
+- **Yield Reports**: Every tactic prints execution metrics (papers fetched, ideas generated, methods used) that feed the calling strategy's ledger.
+- **Cross-Domain Discovery**: Before any ideation method runs, a mandatory phase searches 3+ unrelated domains for analogical inspiration — because the best ideas come from unexpected collisions.
+
+---
 
 ```text
 You ask a question
@@ -79,10 +90,10 @@ You ask a question
 │  Phase 0: Brainstorming (structured requirement clarification) │
 │  Phase 1: Intake (research brief)                            │
 │  Phase 2: Research Loop (Stages 1-3, up to 7 rounds)         │
-│    ├── Literature Survey (up to 50+ papers)                  │
-│    ├── Gap Analysis (30 papers deep)                         │
+│    ├── Literature Survey (S:20 / M:40 / L:60+ papers)       │
+│    ├── Gap Analysis (S:10 / M:15 / L:25+ papers)            │
 │    ├── Insight (7-step pipeline)                             │
-│    ├── Ideation (31 methods × 5 categories)                  │
+│    ├── Ideation (cross-domain discovery → 31 methods × 5)   │
 │    └── Review → Selective Redo → Review (score ≥ 8/10)       │
 │  Phase 3: Experiment Design                                  │
 │  Phase 4: GPU Execution (remote pod, fully autonomous)       │
@@ -240,6 +251,7 @@ npm install -g @apify/actors-mcp-server @brave/brave-search-mcp-server @runpod/m
 | Phase | Component | Status |
 |-------|-----------|--------|
 | P0 | Core pipeline (intake, lit-survey, round, scholar SOPs, web SOPs) | ✅ Done |
+| P0.1 | Research depth enforcement (budgets, gates, ledgers, completeness probes, yield reports) | ✅ Done |
 | P1 | INSIGHT 7-step pipeline, multiagent debate, quality-diversity filtering | ✅ Done |
 | P2 | 31 ideation tools (SCAMPER, surgery, cross-domain, perspective, structural) | ✅ Done |
 | P3 | Paper-writing strategy (interface), method-evolve tools (mutate/crossover/evaluate) | ✅ Done |
