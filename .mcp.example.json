@@ -1,15 +1,24 @@
 {
   "mcpServers": {
+    "dare-agents": {
+      "command": "npx",
+      "args": ["--prefix", "/absolute/path/to/dare/packages/agents", "tsx", "/absolute/path/to/dare/packages/agents/src/server.ts"],
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+        "ANTHROPIC_AUTH_TOKEN": "your-anthropic-api-key",
+        "ANTHROPIC_MODEL": "claude-sonnet-4-20250514"
+      }
+    },
     "dare-scholar": {
       "command": "npx",
       "args": ["--prefix", "/absolute/path/to/dare/packages/scholar", "tsx", "/absolute/path/to/dare/packages/scholar/src/mcp_server.ts"],
       "env": {
         "MINERU_TOKEN": "your-mineru-token",
         "EMAIL": "your-email@example.com",
-        "DARE_CACHE": "/absolute/path/to/dare/.cache",
+        "DARE_CACHE": "/absolute/path/to/cache",
         "OPENAI_API_KEY": "your-openai-compatible-api-key",
         "OPENAI_BASE_URL": "https://openrouter.ai/api/v1",
-        "OPENAI_MODEL": "openai/gpt-oss-120b"
+        "OPENAI_MODEL": "your-model-name"
       }
     },
     "dare-web": {
@@ -17,19 +26,23 @@
       "args": ["--prefix", "/absolute/path/to/dare/packages/web", "tsx", "/absolute/path/to/dare/packages/web/src/mcp_server.ts"],
       "env": {
         "APIFY_TOKEN": "your-apify-token",
-        "DARE_CACHE": "/absolute/path/to/dare/.cache"
+        "DARE_CACHE": "/absolute/path/to/cache"
       }
     },
-    "runpod": {
+    "dare-session": {
       "command": "npx",
-      "args": ["-y", "@runpod/mcp-server@latest"],
+      "args": ["--prefix", "/absolute/path/to/dare/packages/session", "tsx", "/absolute/path/to/dare/packages/session/src/mcp_server.ts"],
       "env": {
-        "RUNPOD_API_KEY": "your-runpod-api-key"
+        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+        "ANTHROPIC_AUTH_TOKEN": "your-anthropic-api-key",
+        "ANTHROPIC_MODEL": "claude-sonnet-4-20250514",
+        "GITHUB_PAT": "your-github-pat",
+        "HF_TOKEN": "your-huggingface-token"
       }
     },
     "apify": {
       "command": "npx",
-      "args": ["-y", "@apify/actors-mcp-server", "--tools", "fetch-actor-details,get-dataset-items,get-dataset-schema,marco.gullo/google-scholar-scraper,apify/rag-web-browser"],
+      "args": ["-y", "@apify/actors-mcp-server", "--tools", "fetch-actor-details,get-actor-output,get-dataset-items,get-dataset-schema,marco.gullo/google-scholar-scraper,apify/rag-web-browser"],
       "env": {
         "APIFY_TOKEN": "your-apify-token"
       }
@@ -41,19 +54,15 @@
         "BRAVE_API_KEY": "your-brave-api-key"
       }
     },
-    "dare-session": {
-      "command": "echo",
-      "args": ["credential-store-only"],
+    "runpod": {
+      "command": "npx",
+      "args": ["-y", "@runpod/mcp-server@latest"],
       "env": {
-        "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
-        "ANTHROPIC_AUTH_TOKEN": "your-anthropic-api-key",
-        "ANTHROPIC_MODEL": "claude-sonnet-4-6",
-        "GITHUB_PAT": "your-github-pat",
-        "HF_TOKEN": "your-huggingface-token"
+        "RUNPOD_API_KEY": "your-runpod-api-key"
       }
     },
     "alphaxiv": {
-      "type": "sse",
+      "type": "http",
       "url": "https://api.alphaxiv.org/mcp/v1"
     }
   }

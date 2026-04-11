@@ -202,9 +202,9 @@ npm install -g @apify/actors-mcp-server @brave/brave-search-mcp-server @runpod/m
 
 | Variable | Description |
 | --- | --- |
-| `PI_API_KEY` | API key for LLM completions (OpenAI-compatible) |
-| `PI_BASE_URL` | API base URL (e.g., `https://openrouter.ai/api/v1`) |
-| `PI_MODEL` | Model name for micro-agent tools |
+| `ANTHROPIC_AUTH_TOKEN` | API key for LLM completions (Anthropic or compatible proxy) |
+| `ANTHROPIC_BASE_URL` | API base URL (optional, for proxy/gateway) |
+| `ANTHROPIC_MODEL` | Model ID (default: `claude-sonnet-4-20250514`) |
 
 ### dare-scholar
 
