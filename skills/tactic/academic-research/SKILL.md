@@ -38,3 +38,35 @@ output: NewPapers[] with digests, facets, ratings + updated knowledge
 ## State Updates
 - `papersRead`: extended with newly read paper titles
 - `knowledge`: extended with key findings from top-rated papers
+
+## Minimum Yield Standard
+
+<HARD-GATE>
+**Hard floor: 8 papers fetched, 5 papers read per invocation.**
+
+If the initial 3 queries yield fewer than 8 papers:
+1. Generate 3 ALTERNATE queries using different terminology, synonyms, or broader/narrower scope
+2. Try alternate data sources: if Google Scholar failed, try alphaXiv embedding search
+3. Try citation tracing: if you found ANY good paper, check its references via paper_reference
+4. Expand to adjacent sub-fields if the topic is very narrow
+
+Do NOT return with fewer than 5 papers read unless ALL fallback strategies have been exhausted.
+If truly exhausted, document which strategies were tried in the Yield Report.
+</HARD-GATE>
+
+## Yield Report
+
+<HARD-GATE>
+After execution completes, print this report. The calling strategy uses these numbers
+to update its State Ledger. Skipping the yield report is a protocol violation.
+
+### Yield Report: academic-research
+| Metric | Count |
+|--------|-------|
+| Papers searched | ?? |
+| Papers successfully fetched | ?? |
+| Papers read (full text) | ?? |
+| Facets extracted | ?? |
+| Failed fetches | ?? |
+| Queries used | ?? |
+</HARD-GATE>
