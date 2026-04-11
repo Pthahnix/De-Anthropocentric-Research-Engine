@@ -3,8 +3,8 @@ import { complete } from '@mariozechner/pi-ai';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { getConfiguredModel, getApiKey } from '../config.js';
-
+import { getConfiguredModel, getCompleteOptions } from '../config.js';
+import { parseResponseJson } from '../parse-response.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SYSTEM_PROMPT = readFileSync(join(__dirname, '../prompts/quality-diversity-filter.md'), 'utf-8');
 
@@ -31,10 +31,6 @@ export async function qualityDiversityFilter(params: {
   const response = await complete(model, {
     systemPrompt: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage, timestamp: Date.now() }],
-  }, { apiKey: getApiKey() });
-  const text = response.content
-    .filter((b: any) => b.type === 'text')
-    .map((b: any) => b.text)
-    .join('');
-  return JSON.parse(text);
+  }, getCompleteOptions(model));
+  return parseResponseJson(response);
 }

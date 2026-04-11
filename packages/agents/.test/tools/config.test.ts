@@ -57,9 +57,19 @@ describe('config', () => {
     expect(model.baseUrl).toBe('https://custom-proxy.example.com');
   });
 
-  it('should fall back to ANTHROPIC_BASE_URL for baseUrl override', () => {
+  it('should NOT fall back to ANTHROPIC_BASE_URL for non-anthropic providers', () => {
     process.env.DARE_AGENTS_PROVIDER = 'openrouter';
     process.env.DARE_AGENTS_MODEL = 'anthropic/claude-3.5-haiku';
+    delete process.env.DARE_AGENTS_BASE_URL;
+    process.env.ANTHROPIC_BASE_URL = 'https://legacy-proxy.example.com';
+    const model = getConfiguredModel();
+    // Should use the default openrouter baseUrl, NOT the anthropic proxy
+    expect(model.baseUrl).not.toBe('https://legacy-proxy.example.com');
+  });
+
+  it('should fall back to ANTHROPIC_BASE_URL only for anthropic provider', () => {
+    process.env.DARE_AGENTS_PROVIDER = 'anthropic';
+    process.env.DARE_AGENTS_MODEL = 'claude-sonnet-4-20250514';
     delete process.env.DARE_AGENTS_BASE_URL;
     process.env.ANTHROPIC_BASE_URL = 'https://legacy-proxy.example.com';
     const model = getConfiguredModel();

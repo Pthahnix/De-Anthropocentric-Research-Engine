@@ -3,7 +3,8 @@ import { complete } from '@mariozechner/pi-ai';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { getConfiguredModel, getApiKey } from '../config.js';
+import { getConfiguredModel, getCompleteOptions } from '../config.js';
+import { parseResponseJson } from '../parse-response.js';
 import type { ScamperResult } from './scamper-substitute.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -19,10 +20,6 @@ export async function scamperAdapt(params: {
   const response = await complete(model, {
     systemPrompt: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage, timestamp: Date.now() }],
-  }, { apiKey: getApiKey() });
-  const text = response.content
-    .filter((b: any) => b.type === 'text')
-    .map((b: any) => b.text)
-    .join('');
-  return JSON.parse(text);
+  }, getCompleteOptions(model));
+  return parseResponseJson(response);
 }
