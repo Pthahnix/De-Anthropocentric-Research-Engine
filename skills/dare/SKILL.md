@@ -63,7 +63,7 @@ The following aggregate targets guide the entire research loop. Individual strat
 | Web pages fetched (total) | 30 | 80 | 200+ |
 | Search queries (total) | 20 | 50 | 100+ |
 | Iteration rounds (total) | 6 | 10 | 15+ |
-| Cross-domain papers (ideation) | 5 | 15 | 30+ |
+| Cross-domain papers (ideation) | 5 | 15 | 25+ |
 
 - **Round 0 (Cold Start)**:
   - Call **round strategy** with `{ researchBrief, roundNumber: 0 }`

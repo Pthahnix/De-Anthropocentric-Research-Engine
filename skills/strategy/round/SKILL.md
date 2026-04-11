@@ -30,7 +30,7 @@ Each child strategy reads these targets from state.
 | gap-analysis web pages | 10 | 20 | 40+ |
 | ideation cross-domain papers | 5 | 15 | 25+ |
 | Total papers | 35 | 70 | 110+ |
-| Total web pages | 35 | 85 | 185+ |
+| Total web pages | 35 | 85 | 190+ |
 
 ### Hot Loop (Round 1+) — 40% of Cold Start targets
 
