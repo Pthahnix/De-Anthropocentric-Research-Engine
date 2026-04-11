@@ -74,3 +74,19 @@ Return:
 - Mutated methods must differ meaningfully from parents (not cosmetic changes)
 - Hybrids must integrate aspects from both parents (not just one parent with a new name)
 - Elo updates must be symmetric (winner gains what loser loses)
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: method-evolution
+| Metric | Count |
+|--------|-------|
+| Mutations attempted | ?? |
+| Mutations successful | ?? |
+| Crossovers attempted | ?? |
+| Crossovers successful | ?? |
+| Evaluations run | ?? |
+| Methods improved | ?? |
+| Methods pruned | ?? |
+| Population size (final) | ?? |
+</HARD-GATE>
