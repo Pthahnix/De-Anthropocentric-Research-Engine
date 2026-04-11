@@ -15,7 +15,51 @@ output: RoundResult — survey results, gaps, ideas, review score
 - **Called by**: /dare meta-strategy only
 - **Calls**: lit-survey strategy (P0), gap-analysis strategy (P1, stub for now), idea-generation strategy (P2, stub for now)
 
+## Budget Distribution by Topic Size
+
+The round strategy distributes the total research budget across its child strategies.
+Each child strategy reads these targets from state.
+
+### Cold Start (Round 0)
+
+| Strategy | Small | Medium | Large |
+|----------|-------|--------|-------|
+| lit-survey papers | 20 | 40 | 60+ |
+| lit-survey web pages | 20 | 50 | 120+ |
+| gap-analysis papers | 10 | 15 | 25+ |
+| gap-analysis web pages | 10 | 20 | 40+ |
+| ideation cross-domain papers | 5 | 15 | 25+ |
+| Total papers | 35 | 70 | 110+ |
+| Total web pages | 35 | 85 | 185+ |
+
+### Hot Loop (Round 1+) — 40% of Cold Start targets
+
+| Strategy | Small | Medium | Large |
+|----------|-------|--------|-------|
+| lit-survey papers | 8 | 16 | 24+ |
+| gap-analysis papers | 4 | 6 | 10+ |
+| ideation cross-domain papers | 2 | 6 | 10+ |
+
 ## Procedure
+
+## Round State Ledger
+
+<HARD-GATE>
+Print this CUMULATIVE ledger at the START and END of every round.
+This ledger tracks progress ACROSS all strategies within the round.
+
+| Metric | Round Start | Round End | Round Delta | Cumulative (all rounds) | Overall Target |
+|--------|-------------|-----------|-------------|------------------------|----------------|
+| Papers read | ?? | ?? | ?? | ?? | [from budget] |
+| Web pages fetched | ?? | ?? | ?? | ?? | [from budget] |
+| Gaps identified | ?? | ?? | ?? | ?? | ... |
+| Ideas generated | ?? | ?? | ?? | ?? | ... |
+| Ideas surviving QD | ?? | ?? | ?? | ?? | 3+ |
+
+This is the top-level progress tracker. If a round ends with little delta
+(< 10% improvement on any metric), escalate: the next round should target
+the weakest metric specifically.
+</HARD-GATE>
 
 ### Cold Start (Round 0)
 1. Call **lit-survey strategy** with full iteration budget (10 iterations)
