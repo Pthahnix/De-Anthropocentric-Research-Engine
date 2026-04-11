@@ -16,6 +16,22 @@ output: Idea[] variants from selected SCAMPER operations
 - **Called by**: structural-deconstruction tactic, idea-augmentation tactic
 - **Calls**: 1-3 SCAMPER SOPs selected by AI based on idea characteristics
 
+## Minimum Operator Usage
+
+<HARD-GATE>
+**You MUST use at least 2 SCAMPER operators.** Using only 1 operator produces narrow results.
+
+The 7 SCAMPER operators: Substitute, Combine, Adapt, Modify, Put-other-use, Eliminate, Reverse
+
+Selection guidance:
+- For Small topics: use 2-3 operators
+- For Medium topics: use 3-4 operators
+- For Large topics: use 4+ operators
+
+Prefer operators that produce DIVERSE ideas (don't pick 2 similar operators like Modify + Adapt).
+Good diverse pairs: Substitute + Reverse, Combine + Eliminate, Adapt + Put-other-use.
+</HARD-GATE>
+
 ## Procedure
 1. Analyze the idea to determine which SCAMPER operations are most promising:
    - Has replaceable components? → **Substitute**
@@ -34,3 +50,15 @@ output: Idea[] variants from selected SCAMPER operations
 - First run: try Substitute + Eliminate + Reverse (highest novelty potential)
 - If idea has clear domain transfer: add Adapt
 - If two ideas available: prioritize Combine
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: scamper
+| Metric | Count |
+|--------|-------|
+| Operators used | ?? |
+| Operator names | [list] |
+| Ideas generated per operator | ?? |
+| Total ideas generated | ?? |
+</HARD-GATE>
