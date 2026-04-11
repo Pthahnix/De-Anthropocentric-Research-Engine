@@ -52,6 +52,33 @@ STEP 2 — HANDLE VERDICT:
 - Inputs (`gap`, `evidence`, `knowledge`) may be refined between revision cycles based on tactic feedback
 - Does not maintain papersRead or urlsVisited — those are managed by the calling gap-analysis strategy
 
+## Completeness Probe — Insight
+
+<HARD-GATE>
+Before accepting an insight as PASS, verify:
+
+**5 Whys depth:**
+- [ ] Did the root-cause drilling reach a fundamental cause (not just a symptom)?
+- [ ] Are there at least 3 levels of "why" in the chain?
+- [ ] Does the root cause suggest a clear direction for solutions?
+
+**Stakeholder coverage:**
+- [ ] Were at least 3 different stakeholder perspectives considered?
+  (e.g., researchers, practitioners, reviewers, end-users)
+- [ ] Did stakeholder mapping reveal any surprising or non-obvious needs?
+
+**Tension mining:**
+- [ ] Were genuine opposing forces identified (not just restated problem)?
+- [ ] Do the tensions explain WHY this gap persists despite being known?
+
+**HMW quality:**
+- [ ] Are the How Might We questions actionable (not too broad, not too narrow)?
+- [ ] Do they suggest multiple possible solution directions?
+
+If ANY checkbox fails → trigger one REVISE cycle with targeted instructions.
+This probe runs BEFORE the existing verdict check, not after.
+</HARD-GATE>
+
 ## Output
 ```json
 {
