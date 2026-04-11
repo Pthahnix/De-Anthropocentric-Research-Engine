@@ -18,6 +18,23 @@ output: ReviewResult — per-artifact verdicts, filtered set if applicable
   - **quality-diversity-filtering SOP** (Phase 2, conditional) — MAP-Elites filtering when ideas > 3
   - **multiagent-debate tactic** (Phase 3, conditional) — full debate for low-confidence REVISE verdicts
 
+## Review Completeness Gate
+
+<HARD-GATE>
+**self-review-quick is MANDATORY for every artifact.** No artifact may pass review without it.
+
+**For idea artifacts:** QD filtering (quality-diversity-filter) is MANDATORY in addition to self-review.
+Ideas that skip QD filtering may have poor niche diversity.
+
+Review phases:
+1. self-review-quick → MANDATORY for ALL artifacts
+2. QD filtering → MANDATORY for idea artifacts, skip for non-idea artifacts
+3. debate escalation → triggered when self-review confidence < 0.7
+4. aggregate → always runs
+
+Do NOT shortcut by skipping phase 1 or phase 2 (for ideas).
+</HARD-GATE>
+
 ## Procedure
 
 ### Phase 1: Quick Self-Review (all artifacts)
@@ -101,3 +118,18 @@ output: ReviewResult — per-artifact verdicts, filtered set if applicable
 | REVISE verdict AND confidence < 0.5 | Full debate escalation |
 | REVISE verdict AND confidence >= 0.5 | Keep in revised[], no escalation |
 | REJECT verdict (any confidence) | No escalation — reject stands |
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: review
+| Metric | Count |
+|--------|-------|
+| Artifacts reviewed | ?? |
+| Self-reviews completed | ?? |
+| QD filter applied | yes / no / N/A |
+| Debates escalated | ?? |
+| Artifacts accepted | ?? |
+| Artifacts revised | ?? |
+| Artifacts rejected | ?? |
+</HARD-GATE>
