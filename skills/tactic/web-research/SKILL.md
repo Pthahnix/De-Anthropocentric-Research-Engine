@@ -32,3 +32,30 @@ output: WebContent[] with summaries + updated urlsVisited
 ## State Updates
 - `urlsVisited`: extended with newly visited URLs
 - `knowledge`: extended with key points from web content
+
+## Minimum Yield Standard
+
+<HARD-GATE>
+**Hard floor: 5 web pages fetched per invocation.**
+
+If the initial queries yield fewer than 5 pages:
+1. Expand query terms: add synonyms, related concepts, or broader scope
+2. Try different query patterns: "[topic] tutorial", "[topic] survey", "[topic] comparison"
+3. Use Brave search with different keywords if Apify results are insufficient
+4. Try domain-specific searches: add "site:arxiv.org", "site:github.com", "site:medium.com"
+
+Do NOT return with fewer than 3 pages fetched unless ALL expansion strategies are exhausted.
+</HARD-GATE>
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: web-research
+| Metric | Count |
+|--------|-------|
+| Queries used | ?? |
+| Web pages fetched | ?? |
+| Web pages successfully read | ?? |
+| Failed fetches | ?? |
+| Key findings extracted | ?? |
+</HARD-GATE>
