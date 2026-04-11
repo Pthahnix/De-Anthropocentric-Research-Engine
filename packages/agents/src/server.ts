@@ -48,6 +48,9 @@ import { benchmarkSweep } from './tools/benchmark-sweep.js';
 import { methodProblemMatrix } from './tools/method-problem-matrix.js';
 import { ablationBrainstorm } from './tools/ablation-brainstorm.js';
 import { failureTaxonomy } from './tools/failure-taxonomy.js';
+import { methodEvolveMutate } from './tools/method-evolve-mutate.js';
+import { methodEvolveCrossover } from './tools/method-evolve-crossover.js';
+import { methodEvolveEvaluate } from './tools/method-evolve-evaluate.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -573,6 +576,52 @@ server.tool('failure_taxonomy', 'Enumerate: Categorize failure cases and generat
   const result = await failureTaxonomy(params);
   return { content: [{ type: 'text', text: JSON.stringify(result) }] };
 });
+
+// Method-Evolve tools (P3)
+server.tool(
+  'method_evolve_mutate',
+  'Mutate a research method to produce an improved variant. Identifies weakest aspect and applies meaningful mutation.',
+  {
+    method: z.string().describe('Full method protocol (markdown)'),
+    trackRecord: z.string().describe('Method usage history and performance data'),
+    context: z.string().describe('Current research domain and constraints'),
+  },
+  async (params) => {
+    const result = await methodEvolveMutate(params);
+    return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+server.tool(
+  'method_evolve_crossover',
+  'Combine two research methods into a coherent hybrid. Preserves strengths of both parents.',
+  {
+    methodA: z.string().describe('First parent method protocol (markdown)'),
+    methodB: z.string().describe('Second parent method protocol (markdown)'),
+    trackRecords: z.string().describe('Track records for both methods'),
+    context: z.string().describe('Current research domain and constraints'),
+  },
+  async (params) => {
+    const result = await methodEvolveCrossover(params);
+    return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+server.tool(
+  'method_evolve_evaluate',
+  'Head-to-head comparison of two methods. Evaluates criterion-by-criterion, determines winner, suggests Elo update.',
+  {
+    methodA: z.string().describe('First method protocol'),
+    outputA: z.string().describe('Output produced by method A on test problem'),
+    methodB: z.string().describe('Second method protocol'),
+    outputB: z.string().describe('Output produced by method B on test problem'),
+    criteria: z.string().describe('Evaluation criteria (e.g. novelty, feasibility, diversity)'),
+  },
+  async (params) => {
+    const result = await methodEvolveEvaluate(params);
+    return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
 // Start server
 const transport = new StdioServerTransport();
