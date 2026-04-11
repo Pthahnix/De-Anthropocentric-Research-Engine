@@ -1,80 +1,182 @@
-# 🧬 DARE — De-Anthropocentric Research Engine
+# 🧠 DARE — De-Anthropocentric Research Engine
 
 > **Human-centered AI-assisted research can no longer sustain the next great leaps of our civilization. What we need is not just more tools, but an AI researcher that thinks and acts independently — a new entity to replace the human role in science. This is DARE.**
 
-🚧 *Personal side project. Actively under development.*
+*🚧 Personal side project. Actively under development.*
 
 DARE is not a tool that helps you do research. It *is* the researcher. You set the direction — DARE searches, reads, discovers gaps, generates ideas, designs experiments, and executes them on GPUs. Autonomously. Iteratively. Without asking for permission.
 
-## 🔬 What It Does
+---
 
-- **Autonomous literature survey** — searches Google Scholar, downloads full papers (not just abstracts), reads them cover-to-cover with a three-pass protocol
-- **Gap discovery** — identifies what the field is missing, not what you tell it to find
-- **Idea generation** — proposes novel research directions from discovered gaps
-- **Self-review loop** — an independent AI process reviews all outputs, scores them, and selectively re-runs weak stages until quality threshold is met
-- **Experiment design & execution** — designs experiments and runs them on remote GPU pods, autonomously
-- **Deep reference exploration** — traces citation graphs via Semantic Scholar
-- **Full-text caching** — every paper and web page converted to markdown, cached locally for offline access
-- **Dual pod targets** — supports both RunPod GPU pods and remote SSH servers for experiment execution
-- **Git-based context transfer** — research context (CLAUDE.md + MEMORY) pushed to GitHub, cloned on pod, executed by a fresh AI instance
+## ⚡ What It Does
 
-## 🔄 Five-Stage Pipeline
+- 📚 **Autonomous literature survey** — searches Google Scholar, downloads full papers (not just abstracts), reads them cover-to-cover with a three-pass protocol
+- 🔍 **Gap discovery** — identifies what the field is missing, not what you tell it to find
+- 💡 **Idea generation** — 31 ideation methods across 5 categories (SCAMPER, component surgery, cross-domain, perspective forcing, structural deconstruction), filtered by MAP-Elites quality-diversity algorithm
+- ⚔️ **Adversarial debate** — Proposer-Critic-Judge architecture validates every gap, insight, and idea through structured 4+3 round debates
+- 🔬 **INSIGHT pipeline** — 7-step deep analysis (root-cause → stakeholder → tension → HMW → abstraction → assumption → validation)
+- 🔄 **Self-review loop** — an independent AI process reviews all outputs, scores them, and selectively re-runs weak stages
+- 🧪 **Experiment design & execution** — designs experiments and runs them on remote GPU pods, autonomously
+- 🧬 **Method evolution** (planned) — AlphaEvolve-inspired evolutionary improvement of DARE's own methods (mutation + crossover + Elo ranking). Core tools implemented, full loop coming in v3.2+
+- 🌐 **Deep reference exploration** — traces citation graphs via Semantic Scholar
+- 💾 **Full-text caching** — every paper and web page converted to markdown, cached locally
+- 🚀 **Git-based context transfer** — research context pushed to GitHub, cloned on remote GPU pod, executed by a fresh AI instance
 
-Five-stage iterative pipeline with review-driven quality loop:
+---
+
+## 🎯 Design Philosophy
+
+### 🤔 Why "De-Anthropocentric"?
+
+The bottleneck in modern research is not data or compute — it's the human in the loop. Every existing "AI research assistant" still requires a human to decide what to search, what to read, which gaps matter, and which ideas are worth pursuing. DARE removes this bottleneck entirely. The human provides only the initial direction; everything after that is autonomous.
+
+This isn't about replacing researchers — it's about creating a parallel research capacity that operates on timescales and breadths impossible for any individual.
+
+### 🎖️ The Military Metaphor: Four-Layer Command Structure
+
+DARE's architecture follows a military command hierarchy — not because research is war, but because the decomposition pattern is remarkably effective:
+
+```
+General (Meta-Strategy)  →  "Take that hill"        →  WHAT to research
+Colonel (Strategy)       →  "Flank from the east"   →  WHEN and WHY
+Captain (Tactic)         →  "Squad A cover, B move"  →  HOW to combine
+Sergeant (SOP)           →  "Fire, reload, advance"  →  HOW to execute
+```
+
+Each layer has a single concern and calls only the layer directly below it. A Strategy never touches MCP tools directly; a Tactic never decides research direction. This strict layering means every component is independently testable, replaceable, and composable.
+
+### 🤖 Micro-Agent Paradigm: Every Tool Thinks
+
+Traditional MCP tools are dumb functions — they take input, return output, no reasoning involved. DARE's `dare-agents` tools are fundamentally different. Each of the 49 tools is a **single-responsibility LLM micro-agent** with its own system prompt, personality, and reasoning chain.
+
+When DARE runs "root-cause-drilling", it's not calling a template — it's spawning an AI agent whose entire existence is devoted to drilling from surface symptoms to root causes. When "debate-critic" runs, it genuinely tries to destroy the idea it's reviewing. This is what makes DARE's outputs qualitatively different from prompt-chaining systems.
+
+Built on [`pi-ai`](https://github.com/badlogic/pi-mono) — a lightweight framework for building LLM-powered tools as MCP servers.
+
+### ⚔️ Adversarial Validation: Ideas Must Survive Attack
+
+Every significant output in DARE goes through adversarial debate before being accepted. The Proposer-Critic-Judge architecture isn't decoration — it's the core quality mechanism:
+
+1. A **Proposer** presents the gap/insight/idea
+2. A **Critic** attacks it from every angle (4 rounds of critique)
+3. A **Defender** responds to each attack (3 rounds of defense)
+4. A **Judge** evaluates the exchange and scores the result
+
+Ideas that survive this gauntlet are genuinely robust. Ideas that don't are discarded or refined. No hand-waving, no "sounds good to me."
+
+### 🎲 Quality × Diversity: Not Just Good Ideas, Different Ideas
+
+Most AI systems optimize for a single quality metric — they'll give you 10 variations of the same good idea. DARE uses **MAP-Elites**, a quality-diversity algorithm that maintains a population of ideas spanning multiple dimensions of variation. The result: you get the *best* idea in each *niche*, not 10 copies of the same insight.
+
+---
+
+## 🔄 Research Pipeline
 
 ```text
 You ask a question
     ↓
-┌─────────────────────────────────────────────────┐
-│  Stage 1: Literature Survey (up to 50+ papers)  │
-│  Stage 2: Gap Analysis (30 papers deep)         │  ← Review loop:
-│  Stage 3: Idea Generation (3+ novel ideas)      │    AI reviews AI's work
-│                                                  │    Score ≥ 8/10 to pass
-│        ↻ Review → Selective Redo → Review        │    Up to 7 rounds
-└─────────────────────────────────────────────────┘
-    ↓
-  Stage 4: Experiment Design
-    ↓
-  Stage 5: GPU Execution (remote pod, fully autonomous)
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 0: Brainstorming (structured requirement clarification) │
+│  Phase 1: Intake (research brief)                            │
+│  Phase 2: Research Loop (Stages 1-3, up to 7 rounds)         │
+│    ├── Literature Survey (up to 50+ papers)                  │
+│    ├── Gap Analysis (30 papers deep)                         │
+│    ├── Insight (7-step pipeline)                             │
+│    ├── Ideation (31 methods × 5 categories)                  │
+│    └── Review → Selective Redo → Review (score ≥ 8/10)       │
+│  Phase 3: Experiment Design                                  │
+│  Phase 4: GPU Execution (remote pod, fully autonomous)       │
+└─────────────────────────────────────────────────────────────┘
     ↓
 Results returned via git
 ```
 
 Each stage runs SEARCH → READ → REFLECT → EVALUATE cycles with autonomous gap discovery and dynamic stopping. No human in the loop.
 
-**Key features of the pipeline:**
+---
 
-- 6 parallel searches per iteration (3 google-scholar-scraper + 3 brave_web_search), plus supplementary AlphaXiv arXiv searches when needed
-- Two-step enrich pipeline: `paper_searching` → `paper_fetching`
-- Web page pipeline: `brave_web_search` → `web_fetching` → `web_content`
-- Three-pass reading protocol (High / Medium / Low rating)
-- State inheritance between stages and across review rounds (knowledge + papersRead + urlsVisited)
-- Dynamic stopping: gaps cleared, no progress for 3 rounds, or target reached
-- Zero external validation cost — review loop uses a separate `claude -p` process
+## 🏗️ Architecture (v3.0)
 
-## 🧠 How It Actually Works
-
-Most "AI research tools" read abstracts, summarize them, and call it a day. DARE downloads the full paper — methodology, experiments, discussion, appendices — converts it to markdown, and has AI evaluate it with a three-pass reading protocol (skim → comprehend → critique).
-
-The review loop is the key innovation: after Stages 1-3, an independent Claude Code process (`claude -p`) reviews all outputs with web search verification, scores each stage 1-10, and selectively re-runs stages that fall below threshold. Only weak stages are re-run, with reduced iteration limits in hot loop. This continues until score ≥ 8/10 with no critical issues, or 7 rounds max.
-
-Stage 5 deploys the full research context to a remote GPU pod via Git — CLAUDE.md + MEMORY are pushed to GitHub, cloned on the pod, and a fresh AI instance executes the experiment with zero human supervision. Experiment outputs return as structured files via git push/pull.
+Four-layer skill hierarchy where each layer calls only the layer below:
 
 ```text
-Git-based Context Transfer (Stage 5):
-
-  Local: MEMORY → git push → GitHub
-      ↓
-  Pod: git clone → deploy-context.sh → CC reads CLAUDE.md + MEMORY
-      ↓
-  Pod: experiment outputs → git push → GitHub
-      ↓
-  Local: git pull → CC digests results
+┌──────────────────────────────────────────────────────────────┐
+│  META-STRATEGY (/dare)                                       │
+│  Entry point — orchestrates the full research pipeline        │
+├──────────────────────────────────────────────────────────────┤
+│  STRATEGY (8)                                                 │
+│  intake, lit-survey, gap-analysis, insight, ideation,         │
+│  round, paper-writing, method-evolve                          │
+├──────────────────────────────────────────────────────────────┤
+│  TACTIC (15)                                                  │
+│  academic-research, web-research, insight, multiagent-debate, │
+│  review, idea-generation, idea-augmentation, scamper,         │
+│  component-surgery, cross-domain-collision, and more          │
+├──────────────────────────────────────────────────────────────┤
+│  SOP (60)                                                     │
+│  Single-responsibility wrappers around dare-agents tools      │
+├──────────────────────────────────────────────────────────────┤
+│  TOOL LAYER (MCP servers — atomic operations)                 │
+│  dare-agents, dare-scholar, dare-web, apify, brave, runpod   │
+└──────────────────────────────────────────────────────────────┘
 ```
+
+- **Meta-Strategy** = WHAT to research (entry point, pipeline orchestration)
+- **Strategy** = WHEN and WHY (iteration loops, state management, stopping conditions)
+- **Tactic** = HOW to combine (orchestrates multiple SOPs into coherent workflows)
+- **SOP** = HOW to execute (single dare-agents tool wrapper with protocol)
+- **Tool** = WHAT to do (atomic MCP operations)
+
+### 🧩 dare-agents — LLM-Powered Micro-Agent Tools
+
+The core engine of v3. 49 tools built with [`pi-ai`](https://github.com/badlogic/pi-mono), each a single-responsibility LLM micro-agent with its own system prompt.
+
+| Category | Tools | Count |
+|----------|-------|-------|
+| Insight | root-cause-drilling, stakeholder-mapping, tension-mining, question-reformulation, abstraction-laddering, assumption-audit, validation | 7 |
+| Debate | debate-critic, debate-defender, debate-judge | 3 |
+| SCAMPER | substitute, combine, adapt, modify, put-other-use, eliminate, reverse | 7 |
+| Component Surgery | subtract, multiply, divide, unify, redirect | 5 |
+| Cross-Domain & Others | analogical-transfer, forced-bridge, triz-contradiction, morphological-matrix, axiom-negation, constraint-injection, random-paper-entry, reverse-engineering, worst-method-analysis, method-problem-matrix, time-machine, anti-benchmark, ablation-brainstorm, benchmark-sweep, failure-taxonomy | 15 |
+| Utility | facet-extraction, facet-bisociation, digest-extraction, paper-rating, quality-diversity-filtering, self-review, reviewer2-hat, theorist-hat, practitioner-hat | 9 |
+| Method-Evolve | mutate, crossover, evaluate | 3 |
+
+### 📁 Monorepo Structure
+
+```text
+dare/
+├── packages/
+│   ├── agents/           # dare-agents MCP — 49 LLM micro-agent tools (72 tests)
+│   ├── scholar/          # dare-scholar MCP — academic paper pipeline (5 tools)
+│   ├── web/              # dare-web MCP — web page fetching & caching (2 tools)
+│   └── session/          # dare-session — pod provisioning scripts
+├── skills/
+│   ├── dare/             # /dare meta-strategy (entry point)
+│   ├── strategy/         # 8 strategies (lit-survey, gap-analysis, insight, ...)
+│   ├── tactic/           # 15 tactics (debate, scamper, surgery, ...)
+│   └── sop/              # 60 SOPs (one per dare-agents tool)
+├── package.json          # Root workspace config
+└── .mcp.json             # MCP server configuration (gitignored)
+```
+
+### 🔌 MCP Servers
+
+| Server | Source | Tools | Purpose |
+| --- | --- | --- | --- |
+| **dare-agents** | `packages/agents` | 49 | LLM micro-agent tools (ideation, debate, insight, method-evolve) |
+| **dare-scholar** | `packages/scholar` | 5 | Academic paper pipeline — search, enrich, fetch, read, reference |
+| **dare-web** | `packages/web` | 2 | Web page fetching and markdown caching |
+| **dare-session** | `packages/session` | — | Git-based context transfer to remote GPU pods |
+| **apify** | `@apify/actors-mcp-server` | 2 | Google Scholar search + web page scraping |
+| **brave-search** | `@brave/brave-search-mcp-server` | 1 | Web search API |
+| **runpod** | `@runpod/mcp-server` | 4 | GPU pod lifecycle management |
+| **alphaxiv** | AlphaXiv MCP (SSE) | 6 | Paper search, Q&A, code exploration (arXiv) |
+
+---
 
 ## 🚀 Quick Start
 
-1. Clone and install (all workspace packages are installed automatically):
+1. Clone and install:
 
 ```bash
 git clone https://github.com/Pthahnix/De-Anthropocentric-Research-Engine.git
@@ -82,133 +184,27 @@ cd De-Anthropocentric-Research-Engine
 npm install
 ```
 
-1. Install external MCP servers:
+2. Install external MCP servers:
 
 ```bash
 npm install -g @apify/actors-mcp-server @brave/brave-search-mcp-server @runpod/mcp-server
 ```
 
-1. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths.
+3. Copy `.mcp.example.json` to `.mcp.json` and fill in your API keys and paths.
 
-1. Claude Code will auto-discover all tools from the configured MCP servers.
+4. Claude Code will auto-discover all tools from the configured MCP servers.
 
-## 🏗️ Architecture
-
-Three-layer architecture: **Skills** (when/why) orchestrate **Pipelines** (how) which call **Tools** (what).
-
-```text
-┌──────────────────────────────────────────────────┐
-│  SKILL LAYER — orchestration & decision-making   │
-│  Iteration loops, gap discovery, stopping logic  │
-├──────────────────────────────────────────────────┤
-│  PIPELINE LAYER — fixed workflows                │
-│  Tool sequencing, batching, error handling        │
-├──────────────────────────────────────────────────┤
-│  TOOL LAYER — atomic MCP operations              │
-│  dare-scholar, dare-web, alphaxiv, apify, brave  │
-└──────────────────────────────────────────────────┘
-```
-
-```text
-MCP Client (Claude Code — local)
-    │
-    │  ┌─ Monorepo Packages ──────────────────────────────┐
-    │  │                                                   │
-    ├──┤  packages/scholar ─── academic paper pipeline     │
-    │  │    ├── paper_searching  → enrich Scholar results  │
-    │  │    ├── paper_fetching   → fetch full text         │
-    │  │    ├── paper_content    → read cached markdown    │
-    │  │    ├── paper_reference  → Semantic Scholar refs   │
-    │  │    └── paper_reading    → AI three-pass reading   │
-    │  │                                                   │
-    ├──┤  packages/web ─── web page pipeline               │
-    │  │    ├── web_fetching     → fetch page as markdown  │
-    │  │    └── web_content      → read cached markdown    │
-    │  │                                                   │
-    ├──┤  packages/session ─── context transfer scripts    │
-    │  │    └── scripts/         → pod provisioning        │
-    │  └───────────────────────────────────────────────────┘
-    │
-    ├── @apify/actors-mcp-server ─── Google Scholar + web scraping
-    │
-    ├── @brave/brave-search-mcp-server ─── web search
-    │
-    ├── @runpod/mcp-server ─── GPU pod lifecycle
-    │
-    ├── AlphaXiv MCP (SSE) ─── paper search, Q&A, code exploration (arXiv)
-    │
-    └── Git-based Context Transfer ─── distributed experiment execution
-```
-
-### 🔌 MCP Servers
-
-| Server | Source | Purpose |
-| --- | --- | --- |
-| **dare-scholar** | `packages/scholar` (workspace) | Academic paper pipeline — search, fetch, read, reference tracing |
-| **dare-web** | `packages/web` (workspace) | Web page fetching and caching |
-| **dare-session** | `packages/session` (workspace) | Git-based context transfer to remote GPU pods |
-| **apify** | `@apify/actors-mcp-server` (npm) | Google Scholar search + web page scraping |
-| **brave-search** | `@brave/brave-search-mcp-server` (npm) | Web search API |
-| **runpod** | `@runpod/mcp-server` (npm) | GPU pod lifecycle management |
-| **alphaxiv** | AlphaXiv MCP (SSE) | Paper search, Q&A, code exploration (arXiv, auxiliary to dare-scholar) |
-
-### 🔧 Tools
-
-#### dare-scholar (Academic Paper Pipeline)
-
-| Tool | Description |
-| --- | --- |
-| `paper_searching` | Enrich Google Scholar results into PaperMeta (arXiv, Semantic Scholar, Unpaywall) |
-| `paper_fetching` | Fetch full paper as markdown (cache-first, multi-source fallback) |
-| `paper_content` | Read cached paper markdown (local only, no network) |
-| `paper_reference` | Get paper references via Semantic Scholar API |
-| `paper_reading` | AI three-pass reading (Keshav method) via LLM agent |
-
-#### dare-web (Web Page Pipeline)
-
-| Tool | Description |
-| --- | --- |
-| `web_fetching` | Fetch web page as markdown via Apify rag-web-browser (cache-first) |
-| `web_content` | Read cached web page markdown (local only, no network) |
-
-#### External Tools
-
-| Tool | Server | Description |
-| --- | --- | --- |
-| `google-scholar-scraper` | apify | Search Google Scholar for papers |
-| `rag-web-browser` | apify | Fetch web page as markdown |
-| `brave_web_search` | brave-search | Web search via Brave Search API |
-| `create-pod` / `start-pod` / `stop-pod` / `delete-pod` | runpod | GPU pod lifecycle management |
-
-#### alphaxiv (Paper Search, Q&A, Code Exploration — arXiv only)
-
-| Tool | Description |
-| --- | --- |
-| `embedding_similarity_search` | Semantic paper search via embeddings |
-| `full_text_papers_search` | Keyword paper search (exact names, authors) |
-| `agentic_paper_retrieval` | Multi-turn autonomous retrieval (beta) |
-| `get_paper_content` | AI-generated paper report or raw full text |
-| `answer_pdf_queries` | Ask questions about any paper PDF |
-| `read_files_from_github_repository` | Read files from a paper's GitHub repo |
-
-> AlphaXiv is auxiliary to dare-scholar: dare-scholar covers all academic sources via Google Scholar; AlphaXiv covers arXiv only but adds paper Q&A and code exploration capabilities that dare-scholar lacks.
-
-### 📦 Monorepo Structure
-
-```text
-dare/
-├── packages/
-│   ├── scholar/          # dare-scholar MCP server (5 tools, 153 tests)
-│   ├── web/              # dare-web MCP server (2 tools)
-│   └── session/          # Git-based context transfer (pod provisioning scripts)
-├── skills/               # Research workflow SOPs (directory-per-skill)
-├── pipeline/             # Fixed tool-orchestration workflows
-├── prompts/               # LLM prompt templates
-├── package.json          # Root workspace config
-└── .mcp.json             # MCP server configuration (gitignored)
-```
+---
 
 ## ⚙️ Configuration
+
+### dare-agents
+
+| Variable | Description |
+| --- | --- |
+| `PI_API_KEY` | API key for LLM completions (OpenAI-compatible) |
+| `PI_BASE_URL` | API base URL (e.g., `https://openrouter.ai/api/v1`) |
+| `PI_MODEL` | Model name for micro-agent tools |
 
 ### dare-scholar
 
@@ -218,7 +214,7 @@ dare/
 | `EMAIL` | Email for Unpaywall API (polite pool) |
 | `DARE_CACHE` | Cache directory (**must be an absolute path**) |
 | `OPENAI_API_KEY` | OpenAI-compatible API key for AI paper reading |
-| `OPENAI_BASE_URL` | API base URL (e.g., `https://openrouter.ai/api/v1`) |
+| `OPENAI_BASE_URL` | API base URL |
 | `OPENAI_MODEL` | Model name for paper reading agent |
 
 ### dare-web
@@ -237,17 +233,36 @@ dare/
 | `REMOTE_USER` | SSH username (for remote server targets) |
 | `HF_TOKEN` | Hugging Face token (passed to pod for model downloads) |
 
+---
+
+## 📊 Implementation Status
+
+| Phase | Component | Status |
+|-------|-----------|--------|
+| P0 | Core pipeline (intake, lit-survey, round, scholar SOPs, web SOPs) | ✅ Done |
+| P1 | INSIGHT 7-step pipeline, multiagent debate, quality-diversity filtering | ✅ Done |
+| P2 | 31 ideation tools (SCAMPER, surgery, cross-domain, perspective, structural) | ✅ Done |
+| P3 | Paper-writing strategy (interface), method-evolve tools (mutate/crossover/evaluate) | ✅ Done |
+| — | Experiment design strategy | 🔜 Planned |
+| — | Paper-writing implementation (v3.1+) | 🔜 Planned |
+| — | Method-evolve full loop (v3.2+) | 🔜 Planned |
+
+🎯 The end goal: a four-dimensional research engine combining **Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution**. No other open-source system attempts this.
+
+---
+
 ## 🗺️ Roadmap
 
-### Completed
+- **🧬 Method-evolve full loop (v3.2+)** — AlphaEvolve-inspired evolutionary improvement of DARE's own research methods. The core tools (mutate, crossover, evaluate) are implemented; the full autonomous loop — where DARE continuously evolves its methodology, running Elo-style tournaments between method variants — is next.
+- **📝 Paper-writing implementation (v3.1+)** — automated academic paper composition from research outputs. Strategy interface defined, implementation pending.
+- **🧪 Experiment design strategy** — structured experiment planning from validated ideas to executable GPU workloads.
 
-- ✅ **Review-Driven Research Loop** — Independent `claude -p` process reviews Stage 1-3 outputs with web search verification, selective redo of weak stages
-- ✅ **Git-based Context Transfer** — Replaced session export/import with Git-based context transfer for distributed experiment execution
-- ✅ **Monorepo Consolidation** — All MCP servers consolidated into npm workspaces monorepo with dual pod target support
-- ✅ **End-to-End Pipeline Validation** — Full research pipeline validated on real topic (survey → gap analysis → idea generation → review → experiment design)
-
-The end goal: a four-dimensional research engine combining **Deep Research + Adversarial Debate + Evolutionary Generation + Distributed Execution**. No other open-source system attempts this.
+---
 
 ## 📄 License
 
 [Apache-2.0](LICENSE)
+
+---
+
+*Built by [Pthahnix](https://github.com/Pthahnix)*
