@@ -25,11 +25,46 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 - Truncate after clarify questions — DARE's research loop replaces brainstorming's design/spec flow
 - Output: `userTopic` (refined research topic)
 
+### Phase 0.5: Topic-Size Classification
+
+<HARD-GATE>
+Before entering the research loop, classify the research topic into one of three size tiers.
+This classification determines budget targets for ALL downstream strategies.
+
+| Tier | Description | Example |
+|------|-------------|---------|
+| **Small (S)** | Narrow sub-problem, specific technique, single benchmark | "Improving GNN message-passing efficiency on heterogeneous graphs" |
+| **Medium (M)** | Standard research topic spanning multiple sub-areas | "Graph neural networks for drug discovery" |
+| **Large (L)** | Broad survey, cross-disciplinary, or emerging field | "Foundation models for scientific discovery" |
+
+**Classification heuristic:**
+- S: topic can be described in one sentence with a single technical focus
+- M: topic spans 2-4 distinct sub-areas or methodologies
+- L: topic spans 5+ sub-areas, multiple disciplines, or is a survey/position paper
+
+Store the tier in state: `topicSize: "S" | "M" | "L"`
+
+This tier is passed to every strategy and determines their budget targets.
+</HARD-GATE>
+
 ### Phase 1: Intake
 - Call **intake strategy** with `userTopic`
 - Output: `researchBrief` (structured topic + initial queries + field context)
 
 ### Phase 2: Research Loop (Stages 1-3)
+
+#### Research Budget Overview (by topic size)
+
+The following aggregate targets guide the entire research loop. Individual strategy budgets sum to these totals.
+
+| Metric | Small | Medium | Large |
+|--------|-------|--------|-------|
+| Papers read (total) | 30 | 60 | 100+ |
+| Web pages fetched (total) | 30 | 80 | 200+ |
+| Search queries (total) | 20 | 50 | 100+ |
+| Iteration rounds (total) | 6 | 10 | 15+ |
+| Cross-domain papers (ideation) | 5 | 15 | 30+ |
+
 - **Round 0 (Cold Start)**:
   - Call **round strategy** with `{ researchBrief, roundNumber: 0 }`
   - Runs: lit-survey(10 iter) → gap-analysis(6 iter) → insight(7-step pipeline) → ideation(5 iter) → review
