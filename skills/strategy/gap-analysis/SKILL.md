@@ -18,6 +18,38 @@ target: 30 papers read, validated gaps
 - **Calls**: insight tactic, review tactic, academic-research tactic, web-research tactic
 - **Never calls**: SOPs or tools directly
 
+## Research Budget — Gap-Analysis
+
+Gap-analysis carries ~25% of the total paper/web budget. It performs targeted investigation of identified gaps.
+
+| Metric | Small | Medium | Large |
+|--------|-------|--------|-------|
+| Papers read | 10 | 15 | 25+ |
+| Web pages fetched | 10 | 20 | 40+ |
+| Search queries | 10 | 20 | 40+ |
+| Iteration rounds | 4 | 6 | 8+ |
+| Gaps investigated (min) | 3 | 5 | 8+ |
+
+Read the `topicSize` from state to select the correct column.
+These are HARD FLOORS.
+
+## State Ledger
+
+<HARD-GATE>
+Print this table BEFORE EVERY iteration of the gap-analysis loop. Update counts after each tactic call returns its Yield Report.
+
+| Metric | Current | Target | Remaining | Status |
+|--------|---------|--------|-----------|--------|
+| Papers read | ?? | [from budget] | ?? | ... |
+| Web pages fetched | ?? | [from budget] | ?? | ... |
+| Queries issued | ?? | [from budget] | ?? | ... |
+| Iterations done | ?? | [from budget] | ?? | ... |
+| Gaps identified | ?? | [from budget] | ?? | ... |
+| Gaps with evidence | ?? | [from budget] | ?? | ... |
+
+When a tactic returns a Yield Report, ADD its counts to the Current column.
+</HARD-GATE>
+
 ## Procedure — Iterative Loop
 
 ```
@@ -51,7 +83,21 @@ WHILE (unvalidated_gaps AND iteration < MAX_ITERATIONS):
   Review may escalate to multiagent-debate for controversial or high-stakes gaps
   Gaps that survive review → confirmed in validatedGaps[]
   Gaps that fail review → rejected with reason
+```
 
+## Budget Gate
+
+<HARD-GATE>
+Before evaluating any stop condition, check:
+
+1. Papers read >= 80% of target?
+2. Web pages fetched >= 80% of target?
+3. Gaps investigated >= minimum from budget table?
+
+If ANY condition fails → CONTINUE iterating. Do NOT evaluate stop conditions.
+</HARD-GATE>
+
+```
   STEP 5 — STOP CHECK:
   - All candidate gaps processed? → STOP (success)
   - No new gaps validated for 2 consecutive iterations? → STOP (plateau)
@@ -59,6 +105,30 @@ WHILE (unvalidated_gaps AND iteration < MAX_ITERATIONS):
 
 END LOOP
 ```
+
+## Completeness Probe — Gap-Analysis
+
+<HARD-GATE>
+After the Budget Gate passes AND the stop check says "stop," answer honestly:
+
+**Evidence balance:**
+- [ ] For each gap, do I have BOTH supporting AND contradicting evidence?
+- [ ] Have I searched for papers that explicitly address (or fail to address) each gap?
+- [ ] Is there a gap I identified early but never investigated deeply?
+
+**Dimension completeness:**
+- [ ] Have I considered gaps across multiple dimensions?
+  (methodology gaps, data gaps, evaluation gaps, theoretical gaps)
+- [ ] Are there gaps that are "obvious" to practitioners but missing from the literature?
+- [ ] Did I check if any gap has been partially addressed in very recent work (last 6 months)?
+
+**Cross-domain hint (optional but encouraged):**
+- [ ] Are there analogous problems in other fields that might reframe this gap?
+- [ ] Could a technique from another domain directly address one of these gaps?
+
+If ANY checkbox in the first two sections fails → add 1-3 targeted queries and run ONE MORE iteration.
+Maximum 2 extra completeness iterations. Cross-domain leads are a bonus, not a requirement here.
+</HARD-GATE>
 
 ## State Management
 - `knowledge`: inherited from lit-survey surveyResult; extended with gap-analysis findings each iteration
