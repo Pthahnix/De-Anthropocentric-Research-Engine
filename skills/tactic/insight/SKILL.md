@@ -18,6 +18,28 @@ output: ValidatedInsight — complete insight chain that passed 6-gate validatio
 - **Calls**: insight-root-cause-drilling SOP → insight-stakeholder-mapping SOP → insight-tension-mining SOP → insight-question-reformulation SOP → insight-abstraction-laddering SOP → insight-assumption-audit SOP → insight-validation SOP
 - **Max attempts**: 2 (initial run + 1 revision pass if REVISE)
 
+## Step Completeness Gate
+
+<HARD-GATE>
+**All 7 steps MUST be executed sequentially. No step skipping.**
+
+The 7 steps are:
+1. root-cause-drilling (insight_root_cause)
+2. stakeholder-mapping (insight_stakeholder)
+3. tension-mining (insight_tension)
+4. question-reformulation (insight_hmw)
+5. abstraction-laddering (insight_abstraction)
+6. assumption-audit (insight_assumption)
+7. validation (insight_validation)
+
+Each step's output is input to the next. Skipping a step produces garbage downstream.
+
+If a step fails or produces low-quality output:
+- Retry the specific step with refined input (up to 2 retries per step)
+- Do NOT skip to the next step
+- If a step fails 3 times, document the failure and proceed with best-effort output
+</HARD-GATE>
+
 ## Procedure
 
 ### Step 1: Root Cause Drilling
@@ -126,3 +148,19 @@ IF overallVerdict == FAIL:
   "attempts": 1
 }
 ```
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: insight
+| Metric | Count |
+|--------|-------|
+| Steps completed | ?? / 7 |
+| Steps skipped | ?? (should be 0) |
+| Steps retried | ?? |
+| Validation verdict | PASS / REVISE / FAIL |
+| Root causes identified | ?? |
+| Stakeholders mapped | ?? |
+| Tensions found | ?? |
+| HMW questions generated | ?? |
+</HARD-GATE>
