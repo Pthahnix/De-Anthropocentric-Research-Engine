@@ -14,6 +14,19 @@ output: Idea[] transformed variants
 - **Layer**: tactic — orchestrates Surgery SOPs
 - **Called by**: structural-deconstruction tactic, idea-augmentation tactic
 
+## Minimum Operation Usage
+
+<HARD-GATE>
+**You MUST use at least 2 surgery operations.** Single-operation runs produce shallow results.
+
+The 5 surgery operations: subtract, multiply, divide, unify, redirect
+
+Selection guidance:
+- Prefer operations that produce CONTRASTING ideas
+- Good pairs: subtract + multiply (remove vs add), divide + unify (split vs merge)
+- redirect is good as a third operation for lateral thinking
+</HARD-GATE>
+
 ## Procedure
 1. Decompose idea into components (model, data, loss, evaluation, preprocessing)
 2. Select surgical operations based on component analysis:
@@ -24,3 +37,15 @@ output: Idea[] transformed variants
    - Component serving wrong purpose? → **Redirect**
 3. Call selected SOP(s) sequentially
 4. Return transformed variants
+
+## Yield Report
+
+<HARD-GATE>
+### Yield Report: component-surgery
+| Metric | Count |
+|--------|-------|
+| Operations used | ?? |
+| Operation names | [list] |
+| Ideas generated per operation | ?? |
+| Total ideas generated | ?? |
+</HARD-GATE>
