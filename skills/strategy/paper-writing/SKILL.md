@@ -74,6 +74,30 @@ For each section, in order:
 2. User review of final draft
 3. Output final paper draft to `docs/dare/papers/`
 
+## Completeness Probe — Paper-Writing
+
+<HARD-GATE>
+Before finalizing the paper draft:
+
+**Related work completeness:**
+- [ ] Does the Related Work section cite at least 80% of the papers from the lit-survey?
+- [ ] Are competing approaches fairly represented (not just straw-manned)?
+- [ ] Is there a relevant paper discovered during the research that isn't cited?
+
+**Claim-evidence mapping:**
+- [ ] Does every major claim in the paper have supporting evidence from the research?
+- [ ] Are there claims that rely on assumptions rather than evidence?
+- [ ] Is each evidence source properly cited with specific findings (not just "X et al. showed...")?
+
+**Structure completeness:**
+- [ ] Does the Introduction clearly state the problem, gap, and contribution?
+- [ ] Does the Method section have enough detail for reproduction?
+- [ ] Do the Results address every research question/hypothesis?
+- [ ] Does the Discussion acknowledge limitations honestly?
+
+If ANY checkbox fails → revise the specific section before proceeding.
+</HARD-GATE>
+
 ## Dependencies
 
 - Requires: experiment strategy results (Phase 5 GO verdict)
