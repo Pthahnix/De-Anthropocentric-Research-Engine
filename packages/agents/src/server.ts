@@ -17,6 +17,37 @@ import { insightAbstraction } from './tools/insight-abstraction.js';
 import { insightAssumption } from './tools/insight-assumption.js';
 import { insightValidation } from './tools/insight-validation.js';
 import { qualityDiversityFilter } from './tools/quality-diversity-filter.js';
+import { scamperSubstitute } from './tools/scamper-substitute.js';
+import { scamperCombine } from './tools/scamper-combine.js';
+import { scamperAdapt } from './tools/scamper-adapt.js';
+import { scamperModify } from './tools/scamper-modify.js';
+import { scamperPutOtherUse } from './tools/scamper-put-other-use.js';
+import { scamperEliminate } from './tools/scamper-eliminate.js';
+import { scamperReverse } from './tools/scamper-reverse.js';
+import { surgerySubtract } from './tools/surgery-subtract.js';
+import { surgeryMultiply } from './tools/surgery-multiply.js';
+import { surgeryDivide } from './tools/surgery-divide.js';
+import { surgeryUnify } from './tools/surgery-unify.js';
+import { surgeryRedirect } from './tools/surgery-redirect.js';
+import { trizContradiction } from './tools/triz-contradiction.js';
+import { morphologicalMatrix } from './tools/morphological-matrix.js';
+import { facetBisociation } from './tools/facet-bisociation.js';
+import { analogicalTransfer } from './tools/analogical-transfer.js';
+import { randomPaperEntry } from './tools/random-paper-entry.js';
+import { forcedBridge } from './tools/forced-bridge.js';
+import { axiomNegation } from './tools/axiom-negation.js';
+import { reverseEngineering } from './tools/reverse-engineering.js';
+import { worstMethodAnalysis } from './tools/worst-method-analysis.js';
+import { antiBenchmark } from './tools/anti-benchmark.js';
+import { reviewer2Hat } from './tools/reviewer2-hat.js';
+import { practitionerHat } from './tools/practitioner-hat.js';
+import { theoristHat } from './tools/theorist-hat.js';
+import { constraintInjection } from './tools/constraint-injection.js';
+import { timeMachine } from './tools/time-machine.js';
+import { benchmarkSweep } from './tools/benchmark-sweep.js';
+import { methodProblemMatrix } from './tools/method-problem-matrix.js';
+import { ablationBrainstorm } from './tools/ablation-brainstorm.js';
+import { failureTaxonomy } from './tools/failure-taxonomy.js';
 
 const server = new McpServer({
   name: 'dare-agents',
@@ -231,6 +262,317 @@ server.tool(
     return { content: [{ type: 'text', text: JSON.stringify(result) }] };
   }
 );
+
+server.tool(
+  'scamper_substitute',
+  'SCAMPER: Replace a component with an alternative to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperSubstitute(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_combine',
+  'SCAMPER: Merge two ideas/methods into something new',
+  {
+    idea: z.string().describe('JSON-serialized Idea A object'),
+    secondIdea: z.string().describe('JSON-serialized Idea B object to combine with Idea A'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperCombine(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_adapt',
+  'SCAMPER: Borrow and modify a technique from another domain',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperAdapt(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_modify',
+  'SCAMPER: Magnify or minify a key aspect to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperModify(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_put_other_use',
+  'SCAMPER: Repurpose the method for a different problem or domain',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperPutOtherUse(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_eliminate',
+  'SCAMPER: Remove a component while preserving core value',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperEliminate(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'scamper_reverse',
+  'SCAMPER: Invert an assumption, order, or direction to generate idea variants',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await scamperReverse(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_subtract',
+  'Surgery: Remove a component and analyze what remains',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgerySubtract(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_multiply',
+  'Surgery: Duplicate a component into multiple variants and analyze what diversity enables',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryMultiply(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_divide',
+  'Surgery: Split a component into sub-problems and analyze if parts work better independently',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryDivide(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_unify',
+  'Surgery: Merge separate components into one and analyze what simplicity or emergence results',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryUnify(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool(
+  'surgery_redirect',
+  'Surgery: Repurpose a component to serve a different goal and analyze what new capability emerges',
+  {
+    idea: z.string().describe('JSON-serialized Idea object'),
+    context: z.string().describe('Research context and accumulated knowledge'),
+  },
+  async (params) => {
+    const result = await surgeryRedirect(params);
+    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+  }
+);
+
+server.tool('triz_contradiction', 'TRIZ: Resolve conflicting metrics using inventive principles', {
+  idea: z.string().describe('JSON-serialized Idea object'),
+  metricX: z.string().describe('Metric to improve'),
+  metricY: z.string().describe('Metric that suffers when metricX improves'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await trizContradiction(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('morphological_matrix', 'Morphological: Decompose problem into dimensions and enumerate novel combinations', {
+  dimensions: z.string().describe('JSON array of { dimension: string, options: string[] }'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await morphologicalMatrix(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('facet_bisociation', 'Cross-Domain: Koestler bisociation between facets from different papers', {
+  facetA: z.string().describe('Facet JSON from paper A'),
+  facetB: z.string().describe('Facet JSON from paper B (different domain)'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await facetBisociation(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('analogical_transfer', 'Cross-Domain: Synectics — transfer principle from source to target', {
+  sourceDomain: z.string().describe('Source domain description'),
+  targetProblem: z.string().describe('Target problem to solve'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await analogicalTransfer(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('random_paper_entry', 'Cross-Domain: Random entry point stimulation from a distant paper', {
+  randomPaperFacet: z.string().describe('Random paper facet JSON'),
+  targetProblem: z.string().describe('Target problem'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await randomPaperEntry(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('forced_bridge', 'Cross-Domain: Force connections between two unrelated techniques', {
+  techniqueA: z.string().describe('First technique description'),
+  techniqueB: z.string().describe('Second technique description'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await forcedBridge(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('axiom_negation', 'Assumption: de Bono PO provocation — negate a fundamental assumption', {
+  assumption: z.string().describe('The assumption to negate'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await axiomNegation(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('reverse_engineering', 'Assumption: Reverse brainstorm — how to make the problem WORSE', {
+  problem: z.string().describe('The problem to reverse'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await reverseEngineering(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('worst_method_analysis', 'Assumption: Design the worst method, then extract insights from inverting it', {
+  problem: z.string().describe('The problem to analyze'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await worstMethodAnalysis(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('anti_benchmark', 'Assumption: Challenge a benchmark\'s fundamental assumptions', {
+  benchmark: z.string().describe('Benchmark name and description'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await antiBenchmark(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('reviewer2_hat', 'Perspective: Hostile reviewer finds fatal flaws', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await reviewer2Hat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('practitioner_hat', 'Perspective: Industry engineer evaluates practicality', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await practitionerHat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('theorist_hat', 'Perspective: Formal theorist evaluates foundations', {
+  idea: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await theoristHat(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('constraint_injection', 'Perspective: Add random constraint and find workarounds', {
+  idea: z.string(), constraint: z.string(), context: z.string(),
+}, async (params) => {
+  const result = await constraintInjection(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('time_machine', 'Perspective: Project idea to future or past', {
+  idea: z.string(), direction: z.enum(['future', 'past']), years: z.number(), context: z.string(),
+}, async (params) => {
+  const result = await timeMachine(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('benchmark_sweep', 'Enumerate: Systematic benchmark analysis with cross-benchmark ideas', {
+  benchmarks: z.string().describe('JSON array of benchmark names'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await benchmarkSweep(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('method_problem_matrix', 'Enumerate: Method × Problem matrix to find unexplored combinations', {
+  methods: z.string().describe('JSON array of method names'),
+  problems: z.string().describe('JSON array of problem names'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await methodProblemMatrix(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('ablation_brainstorm', 'Enumerate: Ablation analysis — what if we remove/replace SOTA components?', {
+  sotaComponents: z.string().describe('JSON array of SOTA method components'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await ablationBrainstorm(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
+
+server.tool('failure_taxonomy', 'Enumerate: Categorize failure cases and generate targeted fixes', {
+  failureCases: z.string().describe('JSON array of known failure cases'),
+  context: z.string().describe('Research context'),
+}, async (params) => {
+  const result = await failureTaxonomy(params);
+  return { content: [{ type: 'text', text: JSON.stringify(result) }] };
+});
 
 // Start server
 const transport = new StdioServerTransport();
