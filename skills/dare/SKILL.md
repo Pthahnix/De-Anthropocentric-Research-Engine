@@ -89,6 +89,9 @@ into validated research artifacts (survey, gaps, ideas, experiment designs, resu
 ## After P2
 - [ ] Experiment design strategy
 
-## After P3
-- [ ] Paper-writing strategy
-- [ ] Method-evolve strategy
+## P3 Implemented
+- [x] Paper-writing strategy (future v3.1+ — interface defined)
+- [x] Method-evolve strategy (future v3.2+ — tools implemented)
+- [x] Method-evolve dare-agents tools (3: mutate, crossover, evaluate)
+- [x] Method-evolve SOPs (3: method-mutate, method-crossover, method-evaluate)
+- [x] Method-evolution tactic (orchestrates mutation + crossover + evaluation cycle)
