@@ -1,3 +1,4 @@
+<!-- markdownlint-disable -->
 # DARE v3 P0 — E2E Integration Tests
 
 These tests verify the full tool chain works end-to-end with real MCP server connections.
