@@ -85,7 +85,7 @@ CC may use this template, modify it, combine sections, add new sections, or writ
 
 Update the row for the current context file:
 - Increment the Checkpoints count
-- Update the Last Updated timestamp (call `scripts/timestamp.py` for current time)
+- Update the Last Updated timestamp (run `date +%Y-%m-%d-%H-%M` for current time)
 
 ## Content Guidance
 

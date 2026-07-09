@@ -21,10 +21,10 @@ step: "import context-management:context-init"
 
 ### Step 1: Get Timestamp
 
-Run the timestamp script to get the current time:
+Get the current time:
 
 ```bash
-python scripts/timestamp.py
+date +%Y-%m-%d-%H-%M
 ```
 
 Output format: `yyyy-mm-dd-hh-mm` (e.g., `2026-05-16-14-30`)
