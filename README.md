@@ -38,7 +38,7 @@ This repository is the **single-clone distribution** of the entire [Yogsoth AI](
 - 🔬 **Convergence & synthesis** — multi-criteria scoring, Pareto frontier construction, pairwise ranking, structured consensus, dialectical synthesis across competing threads
 - 📏 **Executable Research Specs** — machine-readable documents with checkbox progress tracking, quantified completion criteria, backtrack conditions, and session recovery. Another CC instance picks up where you left off
 - 🧪 **Experiment design** — full experimental methodology generation (factor-level design, parameter screening, sensitivity analysis) ready for execution
-- 🌐 **6 MCP integrations** — Semantic Scholar, Brave Search, Tavily, AlphaXiv, Apify web scraping, and Wiki Vault for persistent knowledge graphs
+- 🌐 **7 MCP integrations** — Semantic Scholar, Brave Search, Tavily, Keenable, AlphaXiv, Apify web scraping, and Wiki Vault for persistent knowledge graphs
 
 ---
 
@@ -188,8 +188,8 @@ Inside every package, the skills are organized into exactly four layers. The rul
 │  hypothesis-formulation · analogy-extraction · pairwise-comparison        │
 │  assumption-audit · falsifiability-check · monte-carlo-sampling · ...     │
 ├───────────────────────────────────────────────────────────────────────────┤
-│  MCP LAYER (6 servers — external tool access)                             │
-│  semantic-scholar · brave-search · tavily · alphaxiv · apify · wiki-vault │
+│  MCP LAYER (7 servers — external tool access)                             │
+│  semantic-scholar · brave · tavily · keenable · alphaxiv · apify · wiki   │
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -257,6 +257,7 @@ de-anthropocentric-research-engine/
 | **wiki-vault** | [`@yogsoth-ai/wiki-vault`](https://github.com/yogsoth-ai/wiki-vault) | stdio | Research knowledge graph — BM25 search, typed edges, graph traversal (8 tools) |
 | **brave-search** | `@brave/brave-search-mcp-server` | stdio | Web search, news search, local search, LLM context |
 | **tavily-search** | `tavily-mcp` | stdio | Web search optimized for LLMs (opt-in alternative to Brave Search) |
+| **keenable** | — | http | Web search + page fetch, keyless by default (no API key; hosted remote server) |
 | **apify** | `@apify/actors-mcp-server` | stdio | Web scraping via RAG web browser, Google Scholar |
 | **alphaxiv** | — | http | arXiv paper search, Q&A, PDF queries, code exploration |
 
@@ -442,6 +443,10 @@ You: /executing-specs docs/de-anthropocentric/specs/2026-05-19-cot-faithfulness-
 | Variable | Description |
 | -------- | ----------- |
 | `TAVILY_API_KEY` | [Tavily API key](https://app.tavily.com) — opt-in alternative to Brave Search for web search (1,000 free credits/month) |
+
+#### keenable (HTTP — no local install)
+
+No configuration needed. Connects directly to `https://api.keenable.ai/mcp` and is **keyless by default** (public endpoint, rate-limited). Setting an optional `KEENABLE_API_KEY` only lifts the rate limit; it is never required. Provides web search plus page fetch (clean markdown).
 
 #### apify (`@apify/actors-mcp-server`)
 

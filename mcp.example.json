@@ -27,6 +27,10 @@
         "TAVILY_API_KEY": "<your-tavily-api-key>"
       }
     },
+    "keenable": {
+      "type": "http",
+      "url": "https://api.keenable.ai/mcp"
+    },
     "wiki-vault": {
       "type": "stdio",
       "command": "npx",
