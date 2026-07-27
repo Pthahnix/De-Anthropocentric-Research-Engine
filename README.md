@@ -221,8 +221,7 @@ Every skill declares its own dependencies inline. Each `SKILL.md` carries, in it
 
 ```bash
 de-anthropocentric-research-engine/
-├── agents/skills/dare-research-engine/
-│   └── SKILL.md                     # Codex adapter source
+├── AGENTS.md                           # Codex routing instructions and DARE entry contract
 ├── install/
 │   ├── codex.sh                     # Clone-based Codex installer (macOS / Linux)
 │   └── codex.ps1                    # Clone-based Codex installer (Windows PowerShell)
@@ -303,7 +302,7 @@ Plus the infrastructure that every package draws on:
 
 ### Codex
 
-1. Install the Codex adapter from this clone:
+1. Install the DARE project instructions and knowledge base from this clone:
 
    ```bash
    # Install into this repository
@@ -320,17 +319,18 @@ Plus the infrastructure that every package draws on:
    .\install\codex.ps1 --target C:\path\to\your\project
    ```
 
-   The adapter source lives at `agents/skills/dare-research-engine/SKILL.md`. The installer writes it to `.agents/skills/dare-research-engine/SKILL.md` in the target project because that is the Codex discovery path. The full `skills/` tree remains the DARE knowledge base and is read on demand through YAML `dependencies`.
+   The installer creates or updates a marked DARE section in the target project's `AGENTS.md` without replacing its other project instructions. That section directs Codex to treat `.dare/skills` as an on-demand research knowledge base, read the DARE orchestrator first, and follow YAML `dependencies` as the authoritative call graph. It does not install a `.agents/skills` adapter or register all DARE files as Codex-discovered skills.
 
    - Default behavior copies the DARE knowledge base into `.dare/skills`, so the target project still works if this clone is deleted.
    - Use `--link` only when you explicitly want `.dare/skills` to point back to this clone.
+   - Re-running the installer updates only the marked DARE block in `AGENTS.md`; existing instructions outside that block are preserved.
    - Use `--dry-run` to preview changes.
    - MCP is not configured by this installer; add Codex MCP servers later in `.codex/config.toml` if needed.
 
-2. Invoke the entry point in Codex:
+2. Ask Codex to use DARE for a research task:
 
    ```text
-   $dare-research-engine
+   Use DARE to turn this research direction into an executable Research Spec: ...
    ```
 
 ### Claude Code
