@@ -8,11 +8,14 @@
     "url": "git+https://github.com/yogsoth-ai/de-anthropocentric-research-engine.git"
   },
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
-    "@apify/actors-mcp-server": "^0.10.4",
+    "@apify/actors-mcp-server": "^0.13.0",
     "@brave/brave-search-mcp-server": "^2.0.82",
-    "tavily-mcp": "^0.1.4",
     "@yogsoth-ai/semantic-scholar-mcp": "^1.0.0",
-    "@yogsoth-ai/wiki-vault": "^1.2.1"
+    "@yogsoth-ai/wiki-vault": "^1.2.1",
+    "tavily-mcp": "^0.2.21"
   }
 }
