@@ -1,25 +1,26 @@
 $ErrorActionPreference = "Stop"
 
-$SourceAdapterRel = Join-Path (Join-Path (Join-Path "agents" "skills") "dare-research-engine") "SKILL.md"
-$CodexAdapterRel = Join-Path (Join-Path (Join-Path ".agents" "skills") "dare-research-engine") "SKILL.md"
 $RequiredRootSkill = Join-Path "de-anthropocentric-research-engine" "SKILL.md"
 $RequiredCatalogSkill = Join-Path "research-catalog" "SKILL.md"
+$AgentsBegin = "<!-- BEGIN DARE RESEARCH ENGINE -->"
+$AgentsEnd = "<!-- END DARE RESEARCH ENGINE -->"
 
 function Show-Usage {
 @"
 Usage: ./install/codex.ps1 [options]
 
-Install the DARE Codex adapter from this cloned repository into a target project.
+Install DARE project instructions and its skills knowledge base into a target project.
 
 Options:
   --target <dir>   Project directory to install into (default: current directory)
   --copy           Copy the DARE skills knowledge base into .dare/skills
   --link           Symlink .dare/skills to this clone's skills directory
-  --force          Replace an existing adapter file
   --dry-run        Show what would change without writing files
   -h, --help       Show this help
 
-Default behavior copies the knowledge base so the target still works if this clone is removed.
+The installer creates or updates a managed DARE block in AGENTS.md. Default
+behavior copies the knowledge base so the target still works if this clone is
+removed.
 "@
 }
 
@@ -50,15 +51,6 @@ function Test-SamePath([string]$Left, [string]$Right) {
   return [string]::Equals($resolvedLeft, $resolvedRight, [System.StringComparison]::Ordinal)
 }
 
-function Test-SameFileContent([string]$Left, [string]$Right) {
-  if (-not (Test-Path -LiteralPath $Left -PathType Leaf) -or -not (Test-Path -LiteralPath $Right -PathType Leaf)) {
-    return $false
-  }
-  $leftHash = (Get-FileHash -LiteralPath $Left -Algorithm SHA256).Hash
-  $rightHash = (Get-FileHash -LiteralPath $Right -Algorithm SHA256).Hash
-  return $leftHash -eq $rightHash
-}
-
 function Assert-DareSkillsRoot([string]$Root) {
   $rootSkill = Join-Path $Root $RequiredRootSkill
   $catalogSkill = Join-Path $Root $RequiredCatalogSkill
@@ -76,9 +68,28 @@ function Copy-Skills([string]$Source, [string]$Dest) {
   Copy-Item -LiteralPath $Source -Destination $parent -Recurse
 }
 
+function Get-MarkerCount([string]$Path, [string]$Marker) {
+  $lines = [System.IO.File]::ReadAllLines($Path)
+  return @($lines | Where-Object { $_ -eq $Marker }).Count
+}
+
+function Get-DareAgentsBlock([string]$Path) {
+  $content = [System.IO.File]::ReadAllText($Path)
+  $pattern = "(?ms)^$([regex]::Escape($AgentsBegin))\r?\n.*?^$([regex]::Escape($AgentsEnd))\r?(?:\n|$)"
+  $matches = [regex]::Matches($content, $pattern)
+  if ($matches.Count -ne 1) {
+    Stop-WithUsage "Expected exactly one complete DARE block in $Path"
+  }
+  return $matches[0].Value.TrimEnd("`r", "`n") + [Environment]::NewLine
+}
+
+function Write-Utf8NoBom([string]$Path, [string]$Content) {
+  $encoding = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($Path, $Content, $encoding)
+}
+
 $TargetDir = (Get-Location).Path
 $Mode = "copy"
-$ForceInstall = $false
 $DryRun = $false
 
 for ($i = 0; $i -lt $args.Count; $i++) {
@@ -92,7 +103,6 @@ for ($i = 0; $i -lt $args.Count; $i++) {
     }
     "--copy" { $Mode = "copy" }
     "--link" { $Mode = "link" }
-    "--force" { $ForceInstall = $true }
     "--dry-run" { $DryRun = $true }
     "-h" {
       Show-Usage
@@ -119,39 +129,64 @@ if (-not (Test-Path -LiteralPath $TargetDir -PathType Container)) {
 $TargetDir = (Resolve-Path -LiteralPath $TargetDir).ProviderPath
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path -LiteralPath (Join-Path $ScriptDir "..")).ProviderPath
-$SourceAdapter = Join-Path $RepoRoot $SourceAdapterRel
+$SourceAgents = Join-Path $RepoRoot "AGENTS.md"
 $SourceSkills = Join-Path $RepoRoot "skills"
 
-if (-not (Test-Path -LiteralPath $SourceAdapter -PathType Leaf)) {
-  Stop-WithUsage "Codex adapter not found at $SourceAdapter"
+if (-not (Test-Path -LiteralPath $SourceAgents -PathType Leaf)) {
+  Stop-WithUsage "DARE project instructions not found at $SourceAgents"
+}
+if ((Get-MarkerCount $SourceAgents $AgentsBegin) -ne 1 -or (Get-MarkerCount $SourceAgents $AgentsEnd) -ne 1) {
+  Stop-WithUsage "Expected exactly one DARE begin marker and one DARE end marker in $SourceAgents"
 }
 Assert-DareSkillsRoot $SourceSkills
 
-$DestAdapter = Join-Path $TargetDir $CodexAdapterRel
-$AdapterStatus = "created"
+$AgentsBlock = Get-DareAgentsBlock $SourceAgents
+$AgentsPath = Join-Path $TargetDir "AGENTS.md"
+$AgentsStatus = "created"
+$AgentsCandidate = $AgentsBlock
 
-if (Test-Path -LiteralPath $DestAdapter -PathType Leaf) {
-  if (Test-SameFileContent $SourceAdapter $DestAdapter) {
-    $AdapterStatus = "unchanged"
-  } else {
-    if (-not $ForceInstall) {
-      Stop-WithUsage "Adapter already exists and differs: $DestAdapter. Re-run with --force to replace it."
+if (Test-Path -LiteralPath $AgentsPath) {
+  if (-not (Test-Path -LiteralPath $AgentsPath -PathType Leaf)) {
+    Stop-WithUsage "AGENTS.md exists but is not a regular file: $AgentsPath"
+  }
+
+  $existingAgents = [System.IO.File]::ReadAllText($AgentsPath)
+  $targetBeginCount = Get-MarkerCount $AgentsPath $AgentsBegin
+  $targetEndCount = Get-MarkerCount $AgentsPath $AgentsEnd
+
+  if ($targetBeginCount -eq 0 -and $targetEndCount -eq 0) {
+    $trimmed = $existingAgents.TrimEnd("`r", "`n")
+    if ($trimmed.Length -eq 0) {
+      $AgentsCandidate = $AgentsBlock
+    } else {
+      $AgentsCandidate = $trimmed + [Environment]::NewLine + [Environment]::NewLine + $AgentsBlock
     }
-    $AdapterStatus = "replaced"
+    $AgentsStatus = "appended"
+  } elseif ($targetBeginCount -eq 1 -and $targetEndCount -eq 1) {
+    $pattern = "(?ms)^$([regex]::Escape($AgentsBegin))\r?\n.*?^$([regex]::Escape($AgentsEnd))\r?(?:\n|$)"
+    $matches = [regex]::Matches($existingAgents, $pattern)
+    if ($matches.Count -ne 1) {
+      Stop-WithUsage "Malformed DARE block in $AgentsPath: the end marker must follow the begin marker"
+    }
+    $AgentsCandidate = $existingAgents.Substring(0, $matches[0].Index) + $AgentsBlock + $existingAgents.Substring($matches[0].Index + $matches[0].Length)
+    if ([string]::Equals($AgentsCandidate, $existingAgents, [System.StringComparison]::Ordinal)) {
+      $AgentsStatus = "unchanged"
+    } else {
+      $AgentsStatus = "updated"
+    }
+  } else {
+    Stop-WithUsage "Malformed DARE block in $AgentsPath: expected one begin marker and one end marker"
   }
 }
 
-if ($AdapterStatus -eq "created" -or $AdapterStatus -eq "replaced") {
-  if ($DryRun) {
-    if ($AdapterStatus -eq "created") {
-      $AdapterStatus = "would-create"
-    } else {
-      $AdapterStatus = "would-replace"
-    }
-  } else {
-    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $DestAdapter) | Out-Null
-    Copy-Item -LiteralPath $SourceAdapter -Destination $DestAdapter -Force
+if ($DryRun) {
+  switch ($AgentsStatus) {
+    "created" { $AgentsStatus = "would-create" }
+    "appended" { $AgentsStatus = "would-append" }
+    "updated" { $AgentsStatus = "would-update" }
   }
+} elseif ($AgentsStatus -ne "unchanged") {
+  Write-Utf8NoBom $AgentsPath $AgentsCandidate
 }
 
 $SkillsPath = $SourceSkills
@@ -209,7 +244,7 @@ if ($DryRun) {
 }
 Write-Output "  repo: $RepoRoot"
 Write-Output "  target: $TargetDir"
-Write-Output "  adapter: $AdapterStatus $DestAdapter"
+Write-Output "  agents: $AgentsStatus $AgentsPath"
 Write-Output "  skills: $SkillsStatus $SkillsPath"
 if ($null -ne $SkillsSource) {
   Write-Output "  skills_source: $SkillsSource"
@@ -217,5 +252,5 @@ if ($null -ne $SkillsSource) {
 if ($null -ne $LinkFallbackReason) {
   Write-Output "  link_fallback_reason: $LinkFallbackReason"
 }
-Write-Output '  invoke: $dare-research-engine'
+Write-Output "  entry: AGENTS.md -> DARE skill root"
 Write-Output "  mcp: not configured by this installer"
