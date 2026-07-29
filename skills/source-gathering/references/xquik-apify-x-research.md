@@ -1,6 +1,9 @@
 # X Source Research with Xquik Apify Actors
 
-Use these Actors only for research requiring public X evidence:
+Both Actors are **opt-in and paid**. They are not in `mcp.example.json`'s
+`--tools` allowlist; add the slugs yourself before either is reachable.
+
+Use them only for research requiring public X evidence:
 
 | Actor | Slug | Actor ID | Use |
 | --- | --- | --- | --- |

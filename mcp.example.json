@@ -44,10 +44,9 @@
       "args": [
         "-y",
         "@apify/actors-mcp-server",
-        "--telemetry-enabled",
-        "false",
+        "--telemetry-enabled=false",
         "--tools",
-        "fetch-actor-details,get-actor-output,get-dataset-items,get-dataset-schema,apify/rag-web-browser,xquik/x-tweet-scraper,xquik/x-follower-scraper"
+        "fetch-actor-details,get-actor-output,get-dataset-items,get-dataset-schema,apify/rag-web-browser"
       ],
       "env": {
         "APIFY_TOKEN": "<your-apify-token>"

@@ -258,7 +258,7 @@ de-anthropocentric-research-engine/
 | **brave-search** | `@brave/brave-search-mcp-server` | stdio | Web search, news search, local search, LLM context |
 | **tavily-search** | `tavily-mcp` | stdio | Web search optimized for LLMs (opt-in alternative to Brave Search) |
 | **keenable** | — | http | Web search + page fetch, keyless by default (no API key; hosted remote server) |
-| **apify** | `@apify/actors-mcp-server` | stdio | Full-page web, Google Scholar, and public X research |
+| **apify** | `@apify/actors-mcp-server` | stdio | Full-page web scraping, Google Scholar |
 | **alphaxiv** | — | http | arXiv paper search, Q&A, PDF queries, code exploration |
 
 ### 📊 Skill Distribution by Package
@@ -456,14 +456,14 @@ No configuration needed. Connects directly to `https://api.keenable.ai/mcp` and 
 | -------- | ----------- |
 | `APIFY_TOKEN` | [Apify API token](https://console.apify.com/account#/integrations) |
 
-The example MCP configuration also loads these optional public X research Actors:
+The example passes `--telemetry-enabled=false` to the Apify server.
+
+Two public X research Actors are documented but **not** loaded by the example config — add them to the `--tools` allowlist yourself if your research question needs them:
 
 - [X Tweet Scraper](https://apify.com/xquik/x-tweet-scraper)
 - [X Follower Scraper](https://apify.com/xquik/x-follower-scraper)
 
-The example disables tool-call telemetry.
-Use them only when X evidence supports the research question.
-Read `skills/source-gathering/references/xquik-apify-x-research.md` before running either Actor.
+Both are paid Actors. Read `skills/source-gathering/references/xquik-apify-x-research.md` before running either.
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 

@@ -3,10 +3,6 @@ name: source-gathering
 description: SOP for gathering source material relevant to the ontology domain — fetch
   papers and web pages into source pages.
 execution: sop
-tools:
-  apify:
-  - xquik/x-tweet-scraper
-  - xquik/x-follower-scraper
 dependencies:
   sops:
   - wiki-ingest-source
