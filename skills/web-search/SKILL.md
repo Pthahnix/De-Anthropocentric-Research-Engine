@@ -44,6 +44,7 @@ equally valid.
 
 - Brave — see Provider Details § Brave
 - Tavily — see Provider Details § Tavily
+- Keenable — see Provider Details § Keenable (keyless; no API key required)
 
 Set the result count to ~10 per call (provider-specific parameter named in
 each Provider Details subsection).
@@ -167,6 +168,37 @@ tavily_search(query="Claude 3.5 Sonnet release date", max_results=5)
 Landscape scan:
 ```
 tavily_search(query="MCP server frameworks comparison 2025", max_results=10)
+```
+
+### Keenable
+
+Keyless by default — the `keenable` MCP server needs no API key.
+
+**Available tools:**
+
+| Tool | Purpose | Returns |
+|------|---------|---------|
+| `search_web_pages` | Web search over the Keenable index | title, URL, description snippet |
+| `fetch_page_content` | Fetch a URL as clean markdown | title, URL, full page content |
+
+**Key parameters:**
+
+- `search_web_pages`:
+  - `query` (required): search terms
+- `fetch_page_content`:
+  - `url` (required): page to fetch as markdown
+
+**Examples:**
+
+Quick fact check:
+```
+search_web_pages(query="Claude 3.5 Sonnet release date")
+```
+
+Landscape scan then deep read:
+```
+search_web_pages(query="MCP server frameworks comparison 2025")
+fetch_page_content(url="https://...")
 ```
 
 <!-- BEGIN available-tables (generated) -->
