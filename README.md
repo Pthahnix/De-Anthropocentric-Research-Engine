@@ -258,7 +258,7 @@ de-anthropocentric-research-engine/
 | **brave-search** | `@brave/brave-search-mcp-server` | stdio | Web search, news search, local search, LLM context |
 | **tavily-search** | `tavily-mcp` | stdio | Web search optimized for LLMs (opt-in alternative to Brave Search) |
 | **keenable** | — | http | Web search + page fetch, keyless by default (no API key; hosted remote server) |
-| **apify** | `@apify/actors-mcp-server` | stdio | Web scraping via RAG web browser, Google Scholar |
+| **apify** | `@apify/actors-mcp-server` | stdio | Full-page web, Google Scholar, and public X research |
 | **alphaxiv** | — | http | arXiv paper search, Q&A, PDF queries, code exploration |
 
 ### 📊 Skill Distribution by Package
@@ -291,6 +291,8 @@ Plus the infrastructure that every package draws on:
 ---
 
 ## 🚀 Quick Start
+
+Requires Node.js 22 or newer.
 
 1. Clone and install dependencies:
 
@@ -453,6 +455,17 @@ No configuration needed. Connects directly to `https://api.keenable.ai/mcp` and 
 | Variable | Description |
 | -------- | ----------- |
 | `APIFY_TOKEN` | [Apify API token](https://console.apify.com/account#/integrations) |
+
+The example MCP configuration also loads these optional public X research Actors:
+
+- [X Tweet Scraper](https://apify.com/xquik/x-tweet-scraper)
+- [X Follower Scraper](https://apify.com/xquik/x-follower-scraper)
+
+The example disables tool-call telemetry.
+Use them only when X evidence supports the research question.
+Read `skills/source-gathering/references/xquik-apify-x-research.md` before running either Actor.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 
 #### alphaxiv (HTTP — no local install)
 
