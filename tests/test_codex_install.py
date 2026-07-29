@@ -10,6 +10,30 @@ BEGIN_MARKER = "<!-- BEGIN DARE RESEARCH ENGINE -->"
 END_MARKER = "<!-- END DARE RESEARCH ENGINE -->"
 
 
+def _shell_can_symlink() -> bool:
+    """Whether the `sh` on PATH can produce a real directory symlink.
+
+    Git Bash with MSYS unset exits 0 from `ln -s` while copying the
+    directory, so probe the behaviour instead of the exit status.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "src").mkdir()
+        probe = 'ln -s "$1/src" "$1/dst" 2>/dev/null && [ -L "$1/dst" ]'
+        try:
+            done = subprocess.run(
+                ["sh", "-c", probe, "sh", str(root)],
+                capture_output=True,
+                check=False,
+            )
+        except OSError:
+            return False
+        return done.returncode == 0
+
+
+SHELL_CAN_SYMLINK = _shell_can_symlink()
+
+
 def run_installer(target: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["sh", str(INSTALLER), "--target", str(target), *args],
@@ -28,6 +52,9 @@ class CodexInstallTests(unittest.TestCase):
     def tearDown(self) -> None:
         self._temporary_directory.cleanup()
 
+    @unittest.skipUnless(
+        SHELL_CAN_SYMLINK, "sh on this platform cannot create directory symlinks"
+    )
     def test_link_install_creates_agents_entry_without_skill_adapter(self) -> None:
         result = run_installer(self.target, "--link")
 
@@ -49,9 +76,9 @@ class CodexInstallTests(unittest.TestCase):
         agents = self.target / "AGENTS.md"
         agents.write_text(project_instructions, encoding="utf-8")
 
-        first = run_installer(self.target, "--link")
+        first = run_installer(self.target, "--copy")
         first_content = agents.read_text(encoding="utf-8")
-        second = run_installer(self.target, "--link")
+        second = run_installer(self.target, "--copy")
 
         self.assertTrue(first_content.startswith(project_instructions.rstrip("\n")))
         self.assertIn("Keep this line.", first_content)
@@ -64,13 +91,13 @@ class CodexInstallTests(unittest.TestCase):
     def test_reinstall_updates_only_managed_agents_block(self) -> None:
         agents = self.target / "AGENTS.md"
         agents.write_text("# Project instructions\n\nKeep this line.\n", encoding="utf-8")
-        run_installer(self.target, "--link")
+        run_installer(self.target, "--copy")
         stale = agents.read_text(encoding="utf-8").replace(
             "Use DARE for AI Research tasks", "Use stale DARE instructions"
         )
         agents.write_text(stale, encoding="utf-8")
 
-        result = run_installer(self.target, "--link")
+        result = run_installer(self.target, "--copy")
         updated = agents.read_text(encoding="utf-8")
 
         self.assertIn("Keep this line.", updated)

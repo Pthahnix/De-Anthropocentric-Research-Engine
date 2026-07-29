@@ -210,10 +210,17 @@ if ! same_dir "$repo_root" "$target_dir"; then
     skills_status='copied'
   else
     mkdir -p "$(dirname_of "$dest_skills")"
-    if ln -s "$source_skills" "$dest_skills" 2>"$temp_dir/link-error"; then
+    if ln -s "$source_skills" "$dest_skills" 2>"$temp_dir/link-error" && [ -L "$dest_skills" ]; then
       skills_status='linked'
       skills_source="$source_skills"
     else
+      # Some shells (Git Bash with MSYS unset) exit 0 from `ln -s` while
+      # copying the directory. Drop that copy so the error path is honest.
+      if [ -e "$dest_skills" ] && [ ! -L "$dest_skills" ]; then
+        rm -rf "$dest_skills"
+        printf 'ln -s reported success but produced a copy, not a symlink\n' \
+          >>"$temp_dir/link-error"
+      fi
       link_error=$(sed -n '1,20p' "$temp_dir/link-error" 2>/dev/null || true)
       if [ "$mode" = 'link' ]; then
         die "Could not create symlink $dest_skills -> $source_skills: $link_error"
