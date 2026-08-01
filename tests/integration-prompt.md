@@ -25,6 +25,7 @@ skills/campaign-selection/SKILL.md
 skills/constraint-elicitation/SKILL.md
 skills/research-catalog/SKILL.md
 skills/research-catalog/skill-index.md
+AGENTS.md
 context/INDEX.md
 mcp.example.json
 package.json
@@ -32,6 +33,12 @@ package-lock.json
 ```
 
 Expected: All present.
+
+Also verify that `AGENTS.md`:
+- Contains exactly one `BEGIN DARE RESEARCH ENGINE` managed block
+- Directs Codex to use `.dare/skills/` first and `skills/` in the source repository
+- Directs Codex to read the DARE orchestrator and research catalog before routing
+- Does not depend on a `.agents/skills` adapter or `$dare-research-engine` invocation
 
 ---
 

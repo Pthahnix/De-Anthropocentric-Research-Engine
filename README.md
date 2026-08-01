@@ -38,7 +38,7 @@ This repository is the **single-clone distribution** of the entire [Yogsoth AI](
 - 🔬 **Convergence & synthesis** — multi-criteria scoring, Pareto frontier construction, pairwise ranking, structured consensus, dialectical synthesis across competing threads
 - 📏 **Executable Research Specs** — machine-readable documents with checkbox progress tracking, quantified completion criteria, backtrack conditions, and session recovery. Another CC instance picks up where you left off
 - 🧪 **Experiment design** — full experimental methodology generation (factor-level design, parameter screening, sensitivity analysis) ready for execution
-- 🌐 **6 MCP integrations** — Semantic Scholar, Brave Search, Tavily, AlphaXiv, Apify web scraping, and Wiki Vault for persistent knowledge graphs
+- 🌐 **7 MCP integrations** — Semantic Scholar, Brave Search, Tavily, Keenable, AlphaXiv, Apify web scraping, and Wiki Vault for persistent knowledge graphs
 
 ---
 
@@ -188,8 +188,8 @@ Inside every package, the skills are organized into exactly four layers. The rul
 │  hypothesis-formulation · analogy-extraction · pairwise-comparison        │
 │  assumption-audit · falsifiability-check · monte-carlo-sampling · ...     │
 ├───────────────────────────────────────────────────────────────────────────┤
-│  MCP LAYER (6 servers — external tool access)                             │
-│  semantic-scholar · brave-search · tavily · alphaxiv · apify · wiki-vault │
+│  MCP LAYER (7 servers — external tool access)                             │
+│  semantic-scholar · brave · tavily · keenable · alphaxiv · apify · wiki   │
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -221,8 +221,7 @@ Every skill declares its own dependencies inline. Each `SKILL.md` carries, in it
 
 ```bash
 de-anthropocentric-research-engine/
-├── agents/skills/dare-research-engine/
-│   └── SKILL.md                     # Codex adapter source
+├── AGENTS.md                           # Codex routing instructions and DARE entry contract
 ├── install/
 │   ├── codex.sh                     # Clone-based Codex installer (macOS / Linux)
 │   └── codex.ps1                    # Clone-based Codex installer (Windows PowerShell)
@@ -257,7 +256,8 @@ de-anthropocentric-research-engine/
 | **wiki-vault** | [`@yogsoth-ai/wiki-vault`](https://github.com/yogsoth-ai/wiki-vault) | stdio | Research knowledge graph — BM25 search, typed edges, graph traversal (8 tools) |
 | **brave-search** | `@brave/brave-search-mcp-server` | stdio | Web search, news search, local search, LLM context |
 | **tavily-search** | `tavily-mcp` | stdio | Web search optimized for LLMs (opt-in alternative to Brave Search) |
-| **apify** | `@apify/actors-mcp-server` | stdio | Web scraping via RAG web browser, Google Scholar |
+| **keenable** | — | http | Web search + page fetch, keyless by default (no API key; hosted remote server) |
+| **apify** | `@apify/actors-mcp-server` | stdio | Full-page web scraping, Google Scholar |
 | **alphaxiv** | — | http | arXiv paper search, Q&A, PDF queries, code exploration |
 
 ### 📊 Skill Distribution by Package
@@ -291,6 +291,8 @@ Plus the infrastructure that every package draws on:
 
 ## 🚀 Quick Start
 
+Requires Node.js 22 or newer.
+
 1. Clone and install dependencies:
 
    ```bash
@@ -303,7 +305,7 @@ Plus the infrastructure that every package draws on:
 
 ### Codex
 
-1. Install the Codex adapter from this clone:
+1. Install the DARE project instructions and knowledge base from this clone:
 
    ```bash
    # Install into this repository
@@ -320,17 +322,18 @@ Plus the infrastructure that every package draws on:
    .\install\codex.ps1 --target C:\path\to\your\project
    ```
 
-   The adapter source lives at `agents/skills/dare-research-engine/SKILL.md`. The installer writes it to `.agents/skills/dare-research-engine/SKILL.md` in the target project because that is the Codex discovery path. The full `skills/` tree remains the DARE knowledge base and is read on demand through YAML `dependencies`.
+   The installer creates or updates a marked DARE section in the target project's `AGENTS.md` without replacing its other project instructions. That section directs Codex to treat `.dare/skills` as an on-demand research knowledge base, read the DARE orchestrator first, and follow YAML `dependencies` as the authoritative call graph. It does not install a `.agents/skills` adapter or register all DARE files as Codex-discovered skills.
 
    - Default behavior copies the DARE knowledge base into `.dare/skills`, so the target project still works if this clone is deleted.
    - Use `--link` only when you explicitly want `.dare/skills` to point back to this clone.
+   - Re-running the installer updates only the marked DARE block in `AGENTS.md`; existing instructions outside that block are preserved.
    - Use `--dry-run` to preview changes.
    - MCP is not configured by this installer; add Codex MCP servers later in `.codex/config.toml` if needed.
 
-2. Invoke the entry point in Codex:
+2. Ask Codex to use DARE for a research task:
 
    ```text
-   $dare-research-engine
+   Use DARE to turn this research direction into an executable Research Spec: ...
    ```
 
 ### Claude Code
@@ -443,11 +446,26 @@ You: /executing-specs docs/de-anthropocentric/specs/2026-05-19-cot-faithfulness-
 | -------- | ----------- |
 | `TAVILY_API_KEY` | [Tavily API key](https://app.tavily.com) — opt-in alternative to Brave Search for web search (1,000 free credits/month) |
 
+#### keenable (HTTP — no local install)
+
+No configuration needed. Connects directly to `https://api.keenable.ai/mcp` and is **keyless by default** (public endpoint, rate-limited). Setting an optional `KEENABLE_API_KEY` only lifts the rate limit; it is never required. Provides web search plus page fetch (clean markdown).
+
 #### apify (`@apify/actors-mcp-server`)
 
 | Variable | Description |
 | -------- | ----------- |
 | `APIFY_TOKEN` | [Apify API token](https://console.apify.com/account#/integrations) |
+
+The example passes `--telemetry-enabled=false` to the Apify server.
+
+Two public X research Actors are documented but **not** loaded by the example config — add them to the `--tools` allowlist yourself if your research question needs them:
+
+- [X Tweet Scraper](https://apify.com/xquik/x-tweet-scraper)
+- [X Follower Scraper](https://apify.com/xquik/x-follower-scraper)
+
+Both are paid Actors. Read `skills/source-gathering/references/xquik-apify-x-research.md` before running either.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 
 #### alphaxiv (HTTP — no local install)
 
