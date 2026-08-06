@@ -10,3 +10,4 @@
 |------|-------|-------|-------------|--------------|
 | 2026-07-29-18-19-paper-reading-pkg-scoping.md | 方法论盘点 + 假设审查 + 现成产品处理链路横评（alphaXiv/Elicit/Consensus等） | paper-reading pkg 前置调研 | 3 | 2026-07-30 14:13 |
 | 2026-08-06-carry-forward-v1-findings.md | v1 暂存交接 | smoke test 挖出的 3 条真缺陷 + 1 条有效设计，v2 的硬输入 | 0 | 2026-08-06 |
+| 2026-08-06-single-paper-reading-sop-research.md | v2 前置调研（进行中） | 单篇阅读法轴线矩阵 + 候选 SOP 菜单；A1 阅读协议 / A2 评估工具 / B1 facet 抽取 / B2 原子与证据 四线铺面 | 0 | 2026-08-06 |
