@@ -89,6 +89,76 @@ RoB 2 有两点值得单独记：
   两点保真度说明：论文自称表 2 的部分条目「shortened for brevity」，完整模板在 Appendix A（真要写 SKILL.md 时应取 Appendix A）；上表若干长条目是部分直引＋余下转述。
 
   **数据泄漏单独立一节，是它与 Pineau 版最大的差异**——Pineau 版完全没有对应条目。另外 8b 那条（明说哪些语境下结论不成立）在整个 A2 批里也很少见：多数清单查「报了没报」，8b 查的是「作者有没有主动划出自己的失效边界」。
+
+---
+
+### B1 线回报 — facet 与结构化抽取
+
+> 子 agent 交了报告，ORKG 那块明确写「未查全」而没有编造——按指令行事，可取。ORKG 部分由我自己补齐（见下）。
+
+#### 各方案 schema
+
+**CSFCube**（Mysore et al., NeurIPS 2021 Datasets Track, arXiv 2103.12906）——3 个 facet，句子级标注：
+
+| Facet | 定义 |
+|---|---|
+| Background / Objective | 设置研究动机、阐述与先前工作的关系、陈述问题或研究问题 |
+| Method | 所提出或所用方法的描述（可粗可细）：方法分析、模型描述、数据处理、实验流程的程序化描述 |
+| Result | 分析或实验的详细发现、结果陈述、或依论文类型的结论性陈述 |
+
+规模 50 个查询摘要 / 34 个唯一摘要；相关度 0–3 四级（Unrelated / Related / Similar / Near-Identical），判据是 **structural / relational 相似而非 attribute 相似**；裁决后一致性 Spearman ρ 均值 0.70（background 0.73 / method 0.63 / result 0.70）；TREC depth-k pooling。**无 span offset**。
+
+**⚠ 一处重要的范畴修正（我的判断，不是子 agent 的）**：CSFCube 是**faceted paper retrieval 的测试集**，它的产出是「给定 facet，两篇摘要之间的相关度等级」——是一个**相似度排序**，不是一张填好的结构化记录。我们把它列在「facet 抽取」这条线上，严格说是错位的。可复用的是它那 3 个 facet 的**句子级标签定义**；不可复用的是它的任务形态。这一点直接影响我们能从它身上拿走什么。
+
+**SciERC**（Luan et al., EMNLP 2018, arXiv 1808.09602）——span 级，**强锚点**（字符 offset + coreference 链）：
+- 实体 6 类：Task, Method, Metric, Material, Other-ScientificTerm, Generic
+- 关系 7 类：对称的 Compare / Conjunction；非对称的 Part-of / Evaluate-for / Feature-of / Used-for / Hyponym-of
+- 500 篇摘要；允许嵌套 span；文档级 coref cluster 可跨句
+- 一致性 Cohen's κ：实体 0.769 / 关系 0.678 / coref 0.638
+
+**SciREX**（Jain et al., ACL 2020, arXiv 2005.00512）——文档级，**最强锚点**（span + coref + saliency 二值标记）：
+- 实体 4 类：Dataset, Task, Method, Metric
+- 核心是 **4 元组**（Task, Dataset, Method, Metric），同时标注二元与三元关系（均值 9.4 关系/文档）
+- **salient entity 的定义是「参与论文结果 4 元组的实体」**——不是词频高的实体，是进了结果的实体。这个定义方式值得记：它把「重要」操作化成了「进没进结果」，不靠主观判断
+- 跨度统计：二元关系 57% 跨句、20% 跨节；**4 元组 99% 跨句、55% 跨节**
+- 438 文档；SciERC 模型 + PapersWithCode 远监督自动标注后专家修正，平均 5737 词 / 22 节
+
+**NLPContributionGraph**（D'Souza et al., SemEval-2021 Task 11, arXiv 2106.07385）——三层：贡献句（均值 17 句/篇）→ 术语与谓词短语（自由抽取，不预定义词表）→ (subject, predicate, object) 三元组，按 information unit 容器组织。
+- ⚠ 子 agent 说 12 个 IU 容器但只列出 11 个（必选 3：RESEARCHPROBLEM / APPROACH-MODEL / RESULTS；可选 8：CODE / DATASET / EXPERIMENTALSETUP / HYPERPARAMETERS / BASELINES / TASKS / EXPERIMENTS / ABLATIONANALYSIS）。数目待核。
+- 287 训练 / 155 测试；单标注人（计算语言学 postdoc）+ 50 篇试标 + 二阶裁决
+- **试标一致性逐层崩塌：句子 F1 67.92% → 短语 41.82% → 三元组 22.31%**。端到端系统 F1 22.28%，给定 gold 实体则 61.29%。这组数字是本轮最有信息量的发现之一——**层级越深、结构越细，连人类专家都对不齐**。
+
+**句子级修辞角色数据集**——子 agent 只给了标签名，定义与协议未查全：CODA-19（5 类：Background / Purpose / Methods / Results / Other）、PubMed 200k RCT（5 类：Background / Objective / Method / Result / Conclusion）、NICTA-PIBOSO（6 类：Population / Intervention / Background / Outcome / Study-design / Other）、CSAbstruct（未查）。**待补**。
+
+#### ORKG comparison templates（子 agent 未查全，以下为我自己补的）
+
+机制搞清楚了，而且它正对着我们「跨篇可对齐」这个需求：
+
+- **Template 是什么**：基于 **SHACL**（Shapes Constraint Language）的形状约束——「templates allows to specify the structure of content types, and they can be used when describing research contributions」（`orkg.org/templates`，站上还有 Import SHACL 功能）。实现上是带类型占位符的图模式，用来定义并强制数据结构、格式与约束。
+- **谁定模板**：**领域专家众包**。「Data models are crowdsourced by domain experts, which are materialized in ORKG Templates.」任何用户都可以为自己的领域或某个具体研究问题新建模板。另有 Observatories 机制，由该领域活跃的研究机构负责策管。**没有中央权威**——这是它与 SciREX 那种论文里钉死 schema 的根本差别。
+- **Comparison 怎么出来**：论文的贡献用 (subject, predicate, object) 三元组描述，predicate 就是「salient properties」。Comparison 把多篇论文并排成表——**属性作行、论文作列**，「Comparisons are generated semi-automatically by matching similar properties」。可导出 SPARQL / RDF / CSV / LaTeX / PDF。
+- **已有的 leaderboard 模板正是 Task–Dataset–Metric–Value**（Kabongo et al., 2023）——**与 SciREX 的 4 元组同构**。两条独立路线收敛到同一个四槽结构，这不是巧合，说明这个形状在「跨篇可对齐」上确实是个吸引子。
+
+**关键的实证约束（这条最要紧）**：ORKG 自己的团队在 *Evaluating Large Language Models for Structured Science Summarization in the ORKG*（Info 2024, 15(6):328）里明说，手工策管属性「labor-intensive and **inconsistent among human domain-expert curators**」。另有 *Quality Assessment of Research Comparisons in the ORKG: A Case Study*（2024）指出，平台有 1000+ 用户、但策管数据此前从未做过深度质量评估。
+
+也就是说：**「预定义 facet 模板」不是免费的午餐。** 让一批领域专家去填同一张模板，他们填出来的东西彼此不一致——这是文档化了的实证事实，不是我的推测。这与上面 NCG 的一致性逐层崩塌（67.92% → 41.82% → 22.31%）是同一个现象的两次独立观测。
+
+#### 跨篇可对齐性 — 逐项判断
+
+子 agent 的结论我基本认可，但要换一个更准的解释。它说 CSFCube 对不齐是因为「method facet 在 NER 论文与图生成论文里含义完全不同」——方向对，但没说到根子上。
+
+**真正的分界线是：槽里填的是自由散文，还是共享词表里的名字。**
+
+| 方案 | 能否横排成跨篇比较表 | 根本原因 |
+|---|---|---|
+| **SciREX 4 元组** | **强** | 槽里填的是 CoNLL03、BERT、F1 这类**跨论文反复出现的名字**。名字共享，才对得齐。paperswithcode 的 leaderboard 就是这么来的 |
+| **ORKG comparison template** | **强（但有代价）** | 靠人**事先**约定一张属性表，再逼所有论文填同一张。对齐性是人为强加的，代价是策管者之间不一致 |
+| **句子级修辞角色** | **强** | 标签集固定且语义与论文内容无关（「这句是 Method」与论文讲什么无关）。可用于「把所有论文的 Methods 段落抽出来对比」 |
+| **NCG 三元组** | **弱–中** | IU 容器固定可按容器聚合，但谓词自由抽取（propose / use / evaluate 的变体无穷），要后处理规范化谓词才能半结构化对齐 |
+| **CSFCube facet** | **弱** | 产出本身是相关度排序不是结构化记录（见上文范畴修正）。3 个 facet 标签可复用，但 facet 里的内容是论文特异的散文 |
+| **SciERC 关系实例** | **弱** | 关系类型固定 7 类，但实体来自论文内容、无共享实体库。「Method A Used-for Task B」与「Method C Used-for Task D」关系同、实体不同，排不成表 |
+
+**这条判断对 `pipeline-preview.md` 的直接后果**：Stage 2 要把所有论文的原子单元混在一起分团、让轴线自己浮出来。按上表，能支撑这件事的只有两条路——①填共享词表的名字（SciREX 路线），②人事先约定属性表（ORKG 路线）。而 Stage 1 的方法论明确要求**自下而上、不预设**，这就排除了 ②。剩下 ① 的话，问题变成：`pipeline-preview` 要抽的「动了什么量、往哪个方向动、听谁的信号动」——这三样有没有一个共享词表？没有的话，它就落回自由散文，混起来对不齐。**这是整条 pipeline 目前最脆的一环，B2 的 decontextualization 是唯一可能的解法，等它回报。**
 - **Model Cards**（Mitchell et al. 2019）9 节：Model Details / Intended Use / Factors / Metrics / Evaluation Data / Training Data / Quantitative Analyses / Ethical Considerations / Caveats & Recommendations。
 - **Datasheets for Datasets**（Gebru et al. 2018）7 组 ⚠（子 agent 写「11 个问题分组」但只列出 7 个，取其列出的）：Motivation / Composition / Collection / Preprocessing / Uses / Distribution / Maintenance。
 - **NeurIPS Paper Checklist**：Pineau 版的扩展，加了伦理与社会影响声明。
