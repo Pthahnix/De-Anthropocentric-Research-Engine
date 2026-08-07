@@ -24,8 +24,9 @@
 
 <div id="header">
   <h1>paper-reading v2 — SOP Pipeline 依赖图</h1>
-  <p>42 个已核实方法 + 4 个补齐候选（共 46 个方法论），归并为 31 个 SOP 节点（其中 3 个标记为超出单篇范围）。节点=SOP，有向边=方法论按 pipeline 顺序的调用关系，边上标注走这条边的方法名。无出边/入边的节点是单步终点方法，把鼠标移到节点上看它对应哪些方法论。</p>
+  <p>42 个已核实方法 + 4 个补齐候选（共 46 个方法论），归并为 32 个 SOP 节点（其中 3 个标记为超出单篇范围）。节点=SOP，有向边=方法论按 pipeline 顺序的调用关系，边上标注走这条边的方法名。把鼠标移到节点上看它对应哪些方法论。</p>
   <p style="margin-top:6px;color:#ffd479">v2 修订：已按 <code>2026-08-07-14-08-sop-graph-coverage-audit.md</code> 覆盖度审核的 7 条严重问题 + 粒度重整建议修补——补 domain 级判定层、原子单元聚合层、rationale 选取、研究设计门控；GRADE 移出单篇范围；Keshav 三遍恢复原义；SciREX/SciERC 拆出为级联族；D 的 worst-case 三节点合一；NOS/AMSTAR-2/FINER/engineering-config-grading 各自复位。</p>
+  <p style="margin-top:6px;color:#8fd6ff">v3 新增：补 <code>paper-fetch</code> 入口节点——全图唯一无入边节点，与 literature-engine 解耦，自行走 alphaxiv→SS→bioRxiv/medRxiv 四级降级链路取原文，取不到则终止整条 pipeline。详见 <code>2026-08-07-15-15-paper-fetch-sop-design.md</code>。</p>
 </div>
 
 <div id="legend">
@@ -43,13 +44,18 @@
 <div id="footer">
 来源：<code>2026-08-07-10-26-sop-menu-final.md</code>（46方法+7轴tag表）+ 拆分/合并会话结论。<br>
 v1 初版 2026-08-07 13:42（22节点）→ v2 修订 2026-08-07 14:5x（31节点），修订依据 <code>2026-08-07-14-08-sop-graph-coverage-audit.md</code>（Opus覆盖度审核：点名46/46、可执行30/46）。<br>
-合并判据已统一为「动作序列长度相同→可参数化合并；不同→必拆」——这是审核指出的根因（原图对NCG用「结构唯一就拆」、对SciREX不用；对A2用「可参数化就合」、对D不用）。
+合并判据已统一为「动作序列长度相同→可参数化合并；不同→必拆」——这是审核指出的根因（原图对NCG用「结构唯一就拆」、对SciREX不用；对A2用「可参数化就合」、对D不用）。<br>
+v3 修订 2026-08-07 15:15（32节点）：补 <code>paper-fetch</code> 入口节点，设计详见 <code>2026-08-07-15-15-paper-fetch-sop-design.md</code>。
 </div>
 
 <script>
 // ---------- 节点定义 ----------
 // group: shared / aggregate / independent / keshav / proposal
 const nodes = [
+  // ===== paper-fetch：全图唯一真正入口，无入边 =====
+  { id: "paper-fetch", label: "paper-fetch\n(入口)", group: "gate", methods: [],
+    desc: "取原文起点SOP。与literature-engine的literature-research/-search/-overview解耦，自行直连alphaxiv→SS(查venue定位下一步)→bioRxiv/medRxiv，四级降级链路；全部失败则返回status:not_found，不进行后续工作。输出统一结构：{status, full_text, source_channel, source_url, identifier}。全图唯一无入边节点，是其余全部31个既有节点的共同前置依赖。详见 2026-08-07-15-15-paper-fetch-sop-design.md。" },
+
   // 共享节点A 拆回3个结构子族（原单一节点异质性过大，回头拆分）
   { id: "signalling-question-answering", label: "signalling-question-answering\n(节点A1)", group: "shared",
     methods: ["rob2","robins-i","quadas-2"],
@@ -175,6 +181,21 @@ const nodes = [
 
 // ---------- 边定义 ----------
 const edges = [
+  // ===== paper-fetch -> 全部链首节点（新增：取原文起点，全图唯一入口） =====
+  { from: "paper-fetch", to: "first-pass-skim", methods: ["keshav-three-pass"] },
+  { from: "paper-fetch", to: "unit-segmentation",
+    methods: ["coda-19","argumentative-zoning","coresc","pubmed-200k-rct","nicta-piboso","csabstruct","swales-move-analysis"] },
+  { from: "paper-fetch", to: "study-design-tool-gate",
+    methods: ["casp","jbi","amstar-2","nos","rob2","robins-i","quadas-2","consort","strobe","arrive","spirit","tripod","prisma","engineering-config-grading（提案）"] },
+  { from: "paper-fetch", to: "atomic-unit-writing", methods: ["nugget-evaluation","acu-atomic-content-unit"] },
+  { from: "paper-fetch", to: "claim-writing", methods: ["scifact-claim-verification"] },
+  { from: "paper-fetch", to: "multi-stage-cascade-extraction", methods: ["scierc","scirex","nlp-contribution-graph"] },
+  { from: "paper-fetch", to: "qalmri", methods: ["qalmri"] },
+  { from: "paper-fetch", to: "qasper-evidence-qa", methods: ["qasper-evidence-qa"] },
+  { from: "paper-fetch", to: "template-slot-filling", methods: ["orkg-comparison-template"] },
+  { from: "paper-fetch", to: "question-framing", methods: ["pico","peco","spider"] },
+  { from: "paper-fetch", to: "research-question-appraisal", methods: ["finer"] },
+
   // ===== Keshav 三遍级联 =====
   { from: "first-pass-skim", to: "second-pass-grasp", methods: ["keshav-three-pass"] },
   { from: "second-pass-grasp", to: "third-pass-verify", methods: ["keshav-three-pass"] },
