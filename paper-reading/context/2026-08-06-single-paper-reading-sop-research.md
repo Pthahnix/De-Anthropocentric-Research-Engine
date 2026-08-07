@@ -190,3 +190,179 @@ RoB 2 有两点值得单独记：
 子 agent 最后给的「SOP 化建议」（样式 A/B/C）我不采纳——它把三类工具直接串成一条医学系统综述的流水线（选工具 → 逐 domain → GRADE → 报告规范核对 → 综合报告），这是照搬 Cochrane 工作流，不是我们要的东西。我们要的是**一批彼此独立、可横向比较的单篇阅读法**，不是一条把它们串起来的管线。
 
 真正有用的是它无意间暴露的那条张力：**这批工具里，算法最严密的（RoB 2、GRADE）领域绑定也最深；领域上适配我们的（REFORMS、Model Cards、Datasheets）恰恰没有判定算法。** 「严密性」与「适用性」在这批证据里是负相关的。这条要带进轴线分析。
+
+---
+
+### A1 线回报 — 成文阅读法本身
+
+五种方法，核心结构均已对原始或权威二次来源核实。
+
+**Keshav 三遍法**（S. Keshav, *How to Read a Paper*, ACM SIGCOMM CCR 37(3), 2007，247引用/4高影响力引用）——三遍：①第一遍 5–10 分钟，读题目/摘要/引言/section标题/结论，判定是否值得深读及粗略分类；②第二遍约1小时，抓图表与实验结果、忽略证明细节，能向同行总结主要贡献；③第三遍4–5小时以上，逐句重读含证明，标出隐含假设与可改进点，达到"能重现"的掌握程度。纯定性指导，无判定算法。产出是叠进式理解，**六项里唯一不产出任何持久化结构化物的方法**，只留在读者脑中。
+
+**QALMRI**（心理学/认知科学教学框架，如Portland State方法课；Brosowsky & Parshina 2017教学应用章节）——六步：Question（研究问题）→Alternatives（未被采纳的竞争假设，通常要求列2–3个）→Logic（研究设计如何在假设间做区分）→Method（程序细节）→Results（关键发现）→Inference（结论与局限，含对初始问题的回应程度）。纯定性，无算法。产出是结构化工作表（六类问答对），比Keshav多一层持久化，但仍是自由文本。
+
+**Teufel argumentative zoning**——原始版（Teufel 1999博士论文，297引用/42高影响力引用）7类：AIM/OWN/BACKGROUND/CONTRAST/BASIS/OTHER/TEXTUAL，句子级单标签。扩展版AZ-II（Teufel, Siddharthan & Batchelor, EMNLP 2009，168引用/15高影响力引用）扩展到**15类**——这个数字铺面阶段一直标"未列出完整清单"，现已从二次来源核实（"extended the original 7 categories to 15 and annotated 39 articles from two domains"，ResearchGate摘录）。跨域一致性：计算语言学 Fleiss' κ = 0.71，化学 κ = 0.65（同样是本轮新核实的数字）。判定方式混合——类别定义清晰到可训练分类器（Merity et al. 2009 用最大熵分类器+Viterbi序列标注，比Teufel 1999基线提升F1 23%），但标注本身仍靠人工定性判断。产出是句子级单标签序列。
+
+**CoreSC**（Liakata, Teufel, Siddharthan & Batchelor, LREC 2010——与AZ-II同一篇论文、同一批39篇化学论文并行标注两套方案）。原始论文站点403无法直接抓取，以下类别表核实自二次来源（Duma et al., LREC 2016, Table 1，同作者团队后续应用CoreSC做引文推荐）：
+
+| Category | 定义 |
+|---|---|
+| Hypothesis | 尚未确认的陈述，非事实陈述 |
+| Motivation | 研究动机 |
+| Background | 公认背景知识与先前工作 |
+| Goal | 研究打算达到的目标状态 |
+| Object-New | 研究的产物或主题实体 |
+| Method-New | 作者为达成目标所用的方法 |
+| Method-Old | 属先前工作的方法 |
+| Experiment | 实验方法 |
+| Model | 理论模型或框架陈述 |
+| Observation | 记录到的数据/现象 |
+| Result | 关于研究产出的事实陈述 |
+| Conclusion | 从观察与结果推得、关联研究假设的陈述 |
+
+⚠**这里有个数字矛盾，与B1线发现的NCG"12容器却只列11个"是同一类问题**：上表列出12类，但同一篇论文正文另一处说其自动分类器"51.9% accuracy over all eleven classes"——11类。可能是某个分类器实现把Object/Method各自的New/Old合并计数，但二次来源没说明具体哪一类被并掉。真正完整定义仍应查原始LREC 2010论文或标注指南（Liakata et al. 2016提到"following a set of 45 page guidelines"），本轮未能拿到原文。判定方式：定性定义+机械可训练类别（同AZ-II，Sapienta分类器独立测试51.9% vs 训练语料9折交叉验证50.4%），产出是句子级单标签。
+
+**Swales move analysis / CARS**（Swales 1990《Genre Analysis》；自动化验证见Yu et al. 2024 GPT-4实验）——3个Move、共约9–10个Step：Move 1 Establishing a territory（1a声称重要性/1b学科概括/1c回顾先前研究）；Move 2 Establishing a niche（2a指出缺口/2b质疑现有主张/2c提议新方法）；Move 3 Occupying the niche（3a概述目的/3b呈现研究问题/3c宣布主要发现/3d表明论文结构）。判定方式：定性功能性判断为主——move是功能单位而非形式单位，同样句式可能实现不同move；但Yu et al. 2024用8-shot GPT-4 prompt在应用语言学摘要上达句级准确度93.33%，两位人工编码者分歧仅1.8%（678句中12句），说明定义清晰到可高一致性执行。产出是跨度/句子级标记，按move/step分组。
+
+**四线横向定位**：Keshav/QALMRI两条最靠定性一端，且不产出结构化物；Teufel AZ / CoreSC / Swales三条产出句子级或跨度级标签、可训练分类器执行，与A2线里QUADAS-2/AMSTAR-2这类"domain内有规则、无合成整体规则"的中间地带类似——但与A2线RoB2/GRADE这种"signalling questions→算法"式机械判定相比仍差一截，A1三者的产出终点就是标签本身，不再往上合成一个综合等级。与B1线对比：AZ/CoreSC的句子级单标签比SciERC的span级强锚点更粗，但比CSFCube的"相关度排序"更接近"结构化记录"。
+
+### B2 线回报 — 原子单元与证据
+
+六项逐一核实，重点回应B1留下的"整条pipeline最脆环节"：自由散文能否被系统性改写成跨篇可对齐的形式。
+
+**TDMS 抽取**（Hou et al., ACL 2019 提出任务；TDMSci语料库 Hou et al., EACL 2021, arXiv 2101.10273）——三类实体Task/Dataset/Metric，句子级span标注，2000句/2937个提及。标注规范明确排除匿名指代（"this task"），只标"factual, content-bearing"且"whose meanings usually are consistent across different papers"的实体——这句原文措辞直接说明它为什么天然可跨篇对齐。最小跨度原则：只标最小必要span，如"the text8 test set"只标"test8"；缩写与全称合并标注如"20-newsgroup (20NG)"。4名专家100句试标（均已核实）：Task F1(EM)=0.720/Fleiss'κ(token)=0.797，Dataset F1=0.752/κ=0.829，Metric F1=0.757/κ=0.896，整体F1=0.743/κ=0.842。Flair-TDM微平均F1=62.05%（数据增强后），partial match下76.47%。
+
+**QASPER**（Dasigi et al., NAACL 2021, arXiv 2105.03011）——5049问题/1585篇NLP论文，问题写作者只见标题摘要、答案标注者见全文。可回答性一致性90%（已核实）；抽取式答案平均14.4词，摘要式15.6词（后者是本轮新核实补充的数字）；55.5%可回答问题需多段落证据（已核实）。答案与证据都是原文span或自由改写，无任何规范化步骤——六项里唯一"目标就不是结构化槛填充"的一项，去语境化问题对它不适用。
+
+**SciFact**（Wadden et al., EMNLP 2020, arXiv 2004.14974）——1409条声明/5183篇摘要证据库，Claim-Abstract-Label三元组。标签一致性Cohen's κ=0.75，理由句子一致性κ=0.71（均已核实；论文给出的参照基准：FEVER的Fleiss'κ=0.68、UKP Snopes的Cohen's κ=0.70，SciFact的0.75略高）。Claim改写机制：源自citance（引用句），标注者在**看不到被引摘要内容**的情况下改写成"atomic verifiable statement"——这个盲改写设计本身是为了防止改写抄近路，不是为了跨篇对齐。改写规则：只能来自单一来源、不能是主观意见、复合声明要拆成多条原子声明。但Claim集合仍是数据集特异的，不同论文对同一发现可能写出完全不同措辞的Claim，没有共享Claim词表。
+
+**ACU**（Liu, Fabbri et al., *Revisiting the Gold Standard*, arXiv 2212.07981——⚠此前铺面阶段误判"未查全"，其实原始出处非Bhandari/Nenkova而是这篇，已核实到位）——协议改自Pyramid（Nenkova & Passonneau 2004）与LitePyramid（Shapira et al. 2019），核心动作是"ACU Writing"（论文作者本人从参考摘要抽取atomic facts，非众包）+"ACU Matching"（MTurk众包判断系统摘要是否包含该ACU，二元判断）。RoSE基准：3个数据集/28个系统/22000条摘要级标注，Krippendorff's α：摘要级0.7571、ACU级0.7528——均高于对照的RealSumm(0.66)和SummEval(0.49)，直接实证了"简化标注单元换高一致性"这个设计动机。是recall-based协议，不加权（原始多参考Pyramid要加权，单参考简化掉了）。ACU文本由作者统一撰写，客观上带"多参考规范化"效果，但ACU集合仍是每个reference summary特异的，不跨数据集共享。
+
+**Nugget评估**（AutoNuggetizer, Pradeep et al. 2025, arXiv 2504.15068, TREC 2024 RAG Track；方法论追溯至TREC QA Track 2003）——三种nugget创建条件（人工/半人工post-edit/全自动）×两种assignment条件（人工/AutoAssign）交叉实验。run-level Kendall's τ（均已核实）：AutoNuggets+Edits对照下V_strict=0.887/A_strict=0.901；ManualNuggets对照下降到0.727/0.758（20-topic样本量小，同样取20-topic子集重跑AutoNuggets+Edits得0.826/0.838，说明部分下降是样本量效应非质量效应）。但per-topic层面骤降：全topic/run组合τ仅0.297–0.438，per-topic平均τ 0.360–0.539——run-level排名可信、单题诊断不可信，论文原话"our evaluation framework is inadequate for fine-grained debugging of individual answers"。vital标注比例：人工条件59–61%，全自动AutoNuggets条件66–72%（LLM更倾向标vital）。人工nugget耗时2.5小时/主题，混合条件约1小时/主题。Nugget文本是标注者/LLM原创自然语言表述（非原文摘录），平均7–8 token，遵循"通用可理解"撰写要求——结构上类似ACU的"作者统一撰写"，但nugget集合同样是每个query/topic特异的。
+
+**CODA-19**（Huang et al., ACL Workshop 2020, arXiv 2005.02367）——5类句子/子句级修辞角色（Background/Purpose/Method/Finding/Other），10966篇COVID摘要/103978句/168286个片段，MTurk众包（248名工作者/每摘要9人重复标注/多数投票聚合）。众包-专家一致性Cohen's κ=0.741，专家-专家κ=0.788，众包准确率82.2% vs 专家间85.0%（均已核实）。纯分类任务，不涉及内容改写或抽取，去语境化问题对它不适用——但证明了"句子级修辞角色分类"这条路径可以做到接近专家水平且成本低（$3.2/摘要）。
+
+**去语境化机制总评**：六项按"槛里填的内容能否跨篇共享"排序，TDMS明显领先——它是唯一一项标注规范本身写明"目标是构建跨论文一致的实体库"的方案，且已有可训练的高一致性tagger。SciFact/ACU/Nugget三项都有"改写"动作，但目的不同：SciFact的盲改写是为了防作弊、不是为了对齐；ACU/Nugget的"统一撰写"是为了在**单个评估任务内部**（同一组参考摘要/同一个query的多个系统答案）取得标注一致性，作用范围天然止于"一个reference set"或"一个topic"，出了这个范围就退化成自由散文。QASPER和CODA-19两项设计目标上就没有对齐需求。
+
+**对B1"最脆环节"判断的回应**：B2没有推翻B1的结论，反而加固了它——目前找到的所有"跨篇可对齐"方案（SciREX四元组、TDMS三元组、ORKG模板）无一例外都走"槛里填共享词表名字"这条路线，没有一个反例证明"自由散文可以被系统性改写成跨篇对齐"。SciFact/ACU/Nugget三项虽都有改写步骤，但改写后的产物仍绑定在各自的评估范围（一条claim绑定一次引用判断、一个ACU绑定一份参考摘要、一个nugget绑定一个query）内，没有一项把改写目标定义为"让不同论文的同类内容变得可比"。`pipeline-preview.md`若要走decontextualization这条路，目前六个样本里找不到现成模板可抄——"改写后自动获得跨篇共享词表"这个效果，是六项里没有一项做到过的新东西，只能自己设计。
+
+---
+
+## 出轴 — 四线证据的分化轴线
+
+> 四线铺面已完成（A1/A2/B1/B2，约40个方法/工具已核实到可实现粒度）。本节从这批证据里抽出方法论彼此分化的独立轴线，为下一步「排列」（轴交叉生成候选SOP空格子）打底。方法：`axis-extraction`（系统抽取）+ `matrix-generation`（测独立性，非枚举SOP候选——枚举是排列阶段的事）。出轴、验轴由主 agent 做，未再拆子 agent，因为原始证据已经在本文件里核实完毕，不需要新的检索。
+
+**State Ledger**
+
+| Metric | Target (M) | Current | Status |
+|---|---|---|---|
+| Candidate dimensions | 10 | 10 | ✅ |
+| Validated dimensions | 6 | 7 | ✅ |
+| Sources analyzed | 20 | ~40（A1五项+A2约22项+B1约9项+B2六项，去重） | ✅ |
+
+三项均超 80% 门槛，可退出。
+
+### 候选轴线（10）与淘汰
+
+抽取时先列了10条候选，3条在验证阶段发现与其他轴高度重叠，合并淘汰：
+
+- **自动化成熟度**（全人工/半自动LLM辅助/全自动可训练执行器）——与「判定机制」轴基本同义（机械算法⇄可自动化），合并进判定机制轴，作为该轴的现状注脚，不单列。
+- **标注基数**（单标签/多标签并行）——证据里绝大多数方法是单标签，多标签只是少数变体（Multi-CoreSC CRA、ML Repro Checklist的"分类栏+自由文本栏"双栏设计），并入「产出锚点强度」轴的次要维度，不单列。
+- **原始设计意图/生命周期阶段**（作者自查工具反用为读者工具 vs 天生读者审查工具）——与「评估取向」轴里的"报告核查"取向高度重合（Model Cards/Datasheets/ML Repro checklist正是"反用"才落进报告核查这一格），并入评估取向轴。
+
+剩下7条通过验证，独立成轴。
+
+### 验证后的7条轴线
+
+**轴1・判定机制（Determinism）**
+两端：机械算法可执行 ⇄ 纯定性自由裁量。中间态：domain内有规则、无综合整体规则。
+代表案例：RoB2/ROBINS-I/GRADE（signalling questions→查表算等级，最接近可机械执行）；QUADAS-2/AMSTAR-2（domain内有规则但不合成数学化整体分数）；CASP/JBI/PRISMA/CONSORT/STROBE（Yes/No/Can't tell，无汇总算法）；Keshav/QALMRI（纯定性，无判定规则可言）。A1线的AZ/CoreSC/Swales落在中间偏algorithmic——类别定义清晰到可训练分类器执行（AZ最大熵分类器F1+23%、Swales GPT-4句级准确度93.33%、TDM tagger F1 62–76%），但标注动作本身仍是人工判断。
+
+**轴2・产出锚点强度 / 结构化产出粒度（Anchor Strength）**
+一条连续谱：无持久产出（Keshav）→ 自由文本工作表（QALMRI）→ 句子级单标签（AZ/CoreSC/CODA-19/PubMed200k RCT）→ span级强锚点+关系（SciERC、TDMS）→ 文档级多元组+coref+saliency二值标记（SciREX）→ 表格/等级判定（RoB2的"每结果×每时间点一行"、GRADE的SoF表）。
+这条轴衡量的是"产出物离机器可读结构化记录有多远"，与轴1不完全绑定：AZ的判定机制偏algorithmic但产出只是句子级标签（谱中段），RoB2判定机制也algorithmic但产出是等级表（谱后段）——同样"有算法"，锚点强度可以完全不同，证明两轴独立。
+
+**轴3・跨篇可对齐性（Cross-paper Alignability）**
+两端：强（可横排成跨篇比较表）⇄ 弱（论文特异，排不成表）。
+B1线已给出决定因素：**槛里填的是共享词表里的名字/固定等级，还是论文特异的自由散文**。强端案例：SciREX四元组（CoNLL03/BERT/F1这类跨论文复用的名字）、TDMS（标注规范明文写"whose meanings usually are consistent across different papers"）、ORKG模板（人事先约定属性表，代价是策管者间不一致）、RoB2/GRADE（字段与等级不随论文变）、句子级修辞角色如CODA-19（标签集固定且语义与论文内容无关，"这句是Method"这件事本身可跨篇聚合，即使Method里的散文内容不能）。弱端案例：CSFCube facet（产出是相关度排序不是记录）、SciERC关系实例（关系类型固定但实体无共享库）、NCG三元组（谓词自由抽取，需后处理规范化）、SciFact/ACU/Nugget（有改写步骤，但改写目标只是评估内部一致性，范围止步于单个claim/摘要/topic，出了这个范围仍是散文）。
+与轴1的关系：不必然绑定，AZ有一定machinability但对齐性中等（聚合后内容仍是散文片段），说明真正决定对齐性的是槛的填充物类型，不是有没有判定算法——这是B1/B2两轮回报反复验证过的结论，此处确认为独立轴。
+
+**轴4・领域绑定度（Domain Specificity）**
+三态：医学生物医学专属 / ML·CS侧 / 跨领域通用可改编。
+医学专属：RoB2/ROBINS-I/QUADAS-2/NOS/AMSTAR-2/GRADE/PRISMA/CONSORT/STROBE/ARRIVE/SPIRIT/JBI。ML/CS侧：ML Repro Checklist/NeurIPS checklist/REFORMS/Datasheets/Model Cards/TDMS/SciERC/SciREX/QASPER/SciFact。跨领域：PICO/TRIPOD（问题框架，可改编）、Keshav/QALMRI/Swales（阅读法本身学科无关）。
+**与轴1呈系统性负相关，这是本轮四线调研里最重要的一条张力**：判定机制越严密（RoB2、GRADE），领域绑定越深；领域上适配我们（CS/ML论文为主）的那批（REFORMS、Model Cards、Datasheets）恰恰没有判定算法。这条负相关不是偶然噪音——A2线回报已用四条医学工具+三条ML清单的对比明确指出。但也有例外打破纯粹负相关（说明二者仍是可分的两条轴而非同一条轴的两个说法）：TDMS是ML侧且有较强algorithmic性（可训练tagger），AZ/Swales跨领域且部分algorithmic。
+
+**轴5・评估取向（Evaluative Stance）**
+四分类，非二元：
+- 质量评判「做得好不好」——RoB2/ROBINS-I/QUADAS-2/NOS/GRADE偏倚风险工具。
+- 报告核查「报没报」——PRISMA/CONSORT/STROBE/SPIRIT/ARRIVE/TRIPOD报告规范反用作阅读清单；ML Repro Checklist/REFORMS/Model Cards/Datasheets本是作者自查工具，反用后落进这一格。
+- 内容摘述「讲了什么」——Keshav/QALMRI/AZ/CoreSC/Swales/CSFCube facet/SciERC/SciREX/TDMS，不评判好坏，只摘述论文说了什么。
+- 证据验证「支持不支持某个声明」——SciFact/nugget/ACU，面向验证或评估任务的原子证据方法。
+CASP/JBI混合了前两格——它们的"Can't tell"档实际上把"报告不足导致无法判断质量"这两件事糊在一起，A2线回报已指出这点。
+
+**轴6・关注层次（Content Layer）**
+三态：科学内容实体 / 论证修辞角色 / 工程元数据·可复现配置。
+科学内容实体：CoreSC（Hypothesis/Method/Result等实体化的科学陈述）、SciERC/SciREX/TDMS（Task/Dataset/Metric/Method这类论文谈的对象本身）。论证修辞角色：Teufel AZ（AIM/BACKGROUND/CONTRAST这类"这句话在论证里起什么作用"而非"讲了什么事实"）、Swales move（Establishing territory/niche，纯功能性单位）、CODA-19/PubMed200k RCT（句子级修辞角色分类）。工程元数据：ML Repro Checklist/REFORMS/Datasheets/Model Cards（问数据集/代码/超参这些工程细节，不是论文的科学论证内容本身）。
+这条轴解释了为什么轴3（跨篇可对齐性）里"句子级修辞角色"能排到强端——修辞角色本质上是关注层次3（论证功能）的产物，与论文谈的具体科学内容（层次1）解耦，所以天然不受"论文内容各异"的影响。
+
+**轴7・聚合跨度（Aggregation Span）**
+两端：单句独立标注（每个标注单位互不依赖）⇄ 跨句/跨段聚合成关系、元组或多行判定表（标注单位之间存在结构性依赖）。
+单句独立：AZ/CoreSC/CODA-19，每句一个标签，句间无强制关联。跨句聚合：SciERC关系实例（两个跨句实体的Used-for关系）、SciREX四元组（99%跨句、55%跨节才能凑成一个Task-Dataset-Method-Metric记录）、NCG三元组（贡献句→短语→三元组，三层聚合，且NCG的一致性逐层崩塌67.92%→41.82%→22.31%正是"聚合跨度越大、人类专家越对不齐"的实证）、RoB2（"每结果×每时间点"一行，同样需要跨越试验报告的多处才能拼出一行判定）。
+这条轴与轴2（产出锚点强度）相关但不同一：轴2问"产出物是什么形状"，轴7问"生成这个产物需不需要把分散信息粘合起来"——NCG的一致性崩塌数据直接说明聚合跨度是一个独立的难度来源，值得单列。
+
+### 轴间张力小结（供排列阶段参考）
+
+- 轴1×轴4 系统性负相关（严密性↔适用性），这是设计候选SOP时绕不开的取舍：想要CS/ML领域适配，多半要放弃"有判定算法"这个卖点，除非走TDMS/AZ/Swales这类"定义清晰到可训练但仍需人工标注"的中间路线。
+- 轴3的真正决定因素来自轴6（关注层次3=修辞功能）与"槛填共享词表"（本身不是一条独立轴，是轴3的判据），排列阶段若要造出「强跨篇对齐」的候选SOP，抓手是轴6（往修辞角色或固定字段方向设计），而不是简单地"加更多机械判定规则"（轴1）。
+- 轴7（聚合跨度）与NCG的实证数据绑在一起，是排列阶段判断"候选SOP会不会重蹈一致性崩塌"的现成检验标准——凡跨度覆盖轴7后段（多层聚合）的候选，都该在设计阶段就预期一致性会显著低于单句独立标注的候选。
+
+七条轴线互相独立、各有实证支撑，出轴阶段到此完成。
+
+---
+
+## 排列 — 轴交叉矩阵
+
+> 7轴全量交叉会爆炸（4×3×2×2×3×3×2 远超可读规模），按 `matrix-generation` 的"Start 2D"原则，先排主矩阵（评估取向×关注层次，两条最决定"SOP是什么"的轴），再排一张验证性副矩阵（跨篇可对齐性×关注层次，直接检验B1/B2那条"真正决定因素是关注层次不是判定机制"的结论）。其余5轴（判定机制/产出锚点强度/领域绑定度/聚合跨度）作为每格内的修饰标签列出，不参与交叉——这5轴更像是"同一个格子里的方法还能怎么分化"，硬拉平成8维矩阵反而稀释信号。
+
+### 主矩阵：评估取向 × 关注层次（4×3=12格，占位/淘汰/空 全部分类完毕，无逻辑不可能格）
+
+| | 科学内容实体 | 论证修辞角色 | 工程元数据/可复现配置 |
+|---|---|---|---|
+| **质量评判**（做得好不好） | 🟩占位：RoB2 / ROBINS-I / QUADAS-2 / NOS / AMSTAR-2 / GRADE；CASP・JBI（8/5套，混合格，主体在此） | ⬜**空**——候选：论证结构本身的质量判断（如"AIM是否被BACKGROUND充分证成"），证据里无方法做这件事 | ⬜**空**——候选：工程配置的"做得好不好"而非"报没报"（现有清单全是Yes/No/NA，没有质量分级） |
+| **报告核查**（报没报） | 🟩占位：PRISMA / CONSORT / STROBE / SPIRIT / TRIPOD / ARRIVE；CASP・JBI（混合格，次体在此） | ⬜**空**——候选：修辞结构完整性核查（如"Intro是否三个Move都出现"），Swales本身是摘述工具不是核查清单 | 🟩🟩占位（本轮最密集的格）：ML Reproducibility Checklist(Pineau) / NeurIPS Paper Checklist / REFORMS / Datasheets for Datasets / Model Cards |
+| **内容摘述**（讲了什么） | 🟩🟩占位：CoreSC / SciERC / SciREX / TDMS(TDMSci) / NCG三元组；CSFCube facet（★范畴修正：产出实为相关度排序非记录，标签定义可复用但任务形态错位） | 🟩🟩占位：Teufel AZ（7类/AZ-II 15类） / Swales move-CARS / CODA-19 / PubMed 200k RCT / NICTA-PIBOSO / CSAbstruct（标签名已知协议未查全） | ⬜**空**——候选：工程元数据的纯描述性摘要（如实抽取compute infra/模型规模/训练时长为事实陈述，不做Yes/No判定）；现有TDMS抽取的是Task/Dataset/Metric这类科学内容而非算力配置类字段 |
+| **证据验证**（支持不支持某声明） | 🟩占位：SciFact / Nugget评估(AutoNuggetizer) / ACU(AutoACU) / ORKG comparison template（可对齐性强，兼具摘述与验证两用，主归此格） | 🟨**弱占位/边缘**：QASPER——证据选取跨段落无视修辞分区，判断"是否支持某问答"但不按修辞角色组织，勉强算部分覆盖，未见专门方法 | ⬜**空**——候选：可复现性的**验证**而非自查清单（如"README给的命令实际能否复现论文结果"，REFORMS/ML Repro Checklist都是作者自报Yes/No，没有第三方验证机制） |
+
+**未落入本矩阵的方法**：PICO / PECO / SPIDER / FINER 四个问题框架不读论文内容，是定义"要问什么问题"的元层工具，不落入关注层次轴（它们既不摘述科学内容、也不判定修辞角色或工程配置，是生成研究问题本身的框架）——排除在矩阵外，作为脚注保留。
+
+**密度与空格模式**：12格里8格占位（3格密集占位、5格单/双方法或混合格），4格空。空格呈明显集群：**质量评判列的后两格全空**（现有质量判断工具只会评判"科学内容/研究设计做得好不好"，没人去评判"论证修辞结构好不好"或"工程配置好不好"）；**论证修辞角色列的报告核查格空**（修辞分析类方法目前全部停留在"摘述"，没人把它反用成核查清单）；**证据验证列的工程元数据格空**（可复现性目前全靠自查，没有第三方验证方法）。三个空格模式共同指向同一件事：**当前方法论集中在"摘述"与"质量评判/报告核查×科学内容实体"这两块，验证类方法（证据验证列）与修辞角色的深度应用（质量评判/报告核查×修辞角色）都是欠开发区**。
+
+### 副矩阵：跨篇可对齐性 × 关注层次（3×3，验证"关注层次是对齐性真正驱动因子"这条结论）
+
+| | 科学内容实体 | 论证修辞角色 | 工程元数据 |
+|---|---|---|---|
+| **强对齐** | SciREX四元组 / TDMS三元组 / ORKG模板（人工约定，强但有代价） | CODA-19 / PubMed200k RCT / AZ / CoreSC / Swales（标签集固定、语义与论文内容无关，天然可跨篇聚合"这句是Method"这件事本身） | Model Cards / Datasheets / ML Repro Checklist（字段名固定，"是否报告了超参搜索范围"这件事跨论文可比，即使内容本身各异） |
+| **中/弱对齐** | CSFCube facet（弱，产出是排序非记录） / SciERC关系实例（弱，实体无共享库） / NCG三元组（弱–中，谓词自由抽取需规范化） | （无实证案例——本轮40项证据里未见"弱对齐"的修辞角色方法，与"强对齐"格形成鲜明对比） | REFORMS的部分开放式条目（如3c"为何该数据集对当前任务有用"，本质是自由文本论证，字段名固定但内容不可比） |
+| **强对齐但代价高/需人工** | RoB2 / GRADE / AMSTAR-2（字段与等级机械不随论文变，但需要专家执行signalling questions） | （无） | （无——工程元数据类目前没有"需要专家判断才能强对齐"的中间态，多是纯自查清单，判定门槛本身就低） |
+
+**副矩阵证实的模式**：论证修辞角色这一列，本轮证据里**只出现在强对齐格**，中/弱对齐格完全空白——直接证实了A1/B1/B2反复得出的结论：修辞角色因为"语义与论文内容无关"而天然免疫"论文各异导致排不成表"这个弱对齐的根因。科学内容实体列则强/中弱都有案例，说明这条内容层面本身不能保证对齐，要看槛里填的是不是共享词表（SciREX/TDMS强，CSFCube/SciERC弱）——对齐性由"填充物类型"决定，而"填充物类型"这件事本身高度依赖关注层次（修辞角色的填充物永远是固定标签，科学内容实体的填充物可能是固定词表也可能是自由散文）。这就是主矩阵结论的独立复核：**关注层次是跨篇对齐性的上游因子，不是同一件事的另一种说法**。
+
+### 修饰标签（附于主矩阵每个占位格，不单独交叉）
+
+| 方法簇 | 判定机制 | 产出锚点强度 | 领域绑定度 | 聚合跨度 |
+|---|---|---|---|---|
+| RoB2/ROBINS-I/GRADE | 机械算法 | 表格/等级判定 | 医学专属 | 跨句聚合（每结果×每时间点一行） |
+| QUADAS-2/AMSTAR-2 | domain内有规则、无综合算法 | 表格/等级判定 | 医学专属 | 跨句聚合 |
+| CASP/JBI | 无算法 | Yes/No/Can't tell清单 | 医学专属 | 单条目独立 |
+| PRISMA/CONSORT/STROBE/SPIRIT/TRIPOD/ARRIVE | 无算法 | 清单条目 | 医学专属（TRIPOD可改编） | 单条目独立 |
+| ML Repro/NeurIPS/REFORMS/Datasheets/Model Cards | 无算法 | 分类栏+自由文本双栏 | ML/CS侧 | 单条目独立 |
+| CoreSC/SciERC/SciREX/TDMS | 定义清晰、可训练分类器（部分机械） | 句子级单标签→span级强锚点→文档级多元组 | ML/CS侧 | 单句独立（CoreSC/AZ）→跨句/跨节聚合（SciERC/SciREX） |
+| Teufel AZ/Swales/CODA-19 | 定义清晰可训练（AZ/Swales）、纯人工众包（CODA-19） | 句子/跨度级单标签 | 跨领域（Swales）/ML侧（AZ）/医学（CODA-19） | 单句独立 |
+| SciFact/ACU/Nugget | 人工判断为主，部分LLM辅助 | 三元组+证据句/原子事实单元 | ML/CS侧（SciFact/ACU/Nugget均为NLP领域产物） | 单条目独立，但ACU/Nugget的"改写"步骤跨越reference set聚合 |
+| Keshav/QALMRI | 无算法 | 无持久产出/自由文本工作表 | 跨领域 | 全文聚合（无中间粒度） |
+
+### 排列阶段小结
+
+矩阵产出：1张主矩阵（12格，8占位/4空，0逻辑不可能）+1张副矩阵（9格，用于交叉验证而非扩展候选空间）。4个空格是下一步`novelty-scoring`+`question-generation`的输入——它们不是随机空缺，而是集中在两类欠开发方向：①**把"摘述型"方法（AZ/Swales/CoreSC这类关注修辞角色或科学内容的描述工具）反用成"质量评判"或"报告核查"工具**（仿照Model Cards/Datasheets"自查清单反用为读者清单"的既有套路，但换到修辞/内容维度）；②**给"证据验证"补一条工程元数据分支**（可复现性的第三方验证，而非作者自查）。此外CSFCube的范畴修正、QASPER的边缘归属，提示矩阵边界本身也有几处需要在候选SOP设计阶段单独处理的"缝隙案例"，不能简单套用某个格子的现成模板。
+
+排列阶段到此停止，未做排序、未写SKILL.md（按计划留给下一轮`convergence:multi-criteria-scoring`）。
