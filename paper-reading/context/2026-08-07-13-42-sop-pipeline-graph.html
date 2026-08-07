@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>paper-reading SOP Pipeline Graph</title>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", "PingFang SC", sans-serif; background: #0f1117; color: #e6e6e6; }
+  #header { padding: 16px 24px; border-bottom: 1px solid #2a2d38; }
+  #header h1 { font-size: 18px; margin: 0 0 4px; }
+  #header p { font-size: 13px; color: #9aa0ac; margin: 0; }
+  #legend { display: flex; gap: 18px; padding: 10px 24px; font-size: 12px; color: #b8bcc4; border-bottom: 1px solid #2a2d38; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  #network { width: 100%; height: 640px; border-bottom: 1px solid #2a2d38; }
+  #detail { padding: 14px 24px; font-size: 13px; line-height: 1.7; min-height: 90px; }
+  #detail b { color: #ffd479; }
+  #detail .methods { color: #8fd6ff; }
+  #footer { padding: 10px 24px; font-size: 11px; color: #6d7280; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>paper-reading v2 — SOP Pipeline 依赖图</h1>
+  <p>42 个已核实方法 + 4 个补齐候选（共 46 个方法论），归并为 31 个 SOP 节点（其中 3 个标记为超出单篇范围）。节点=SOP，有向边=方法论按 pipeline 顺序的调用关系，边上标注走这条边的方法名。无出边/入边的节点是单步终点方法，把鼠标移到节点上看它对应哪些方法论。</p>
+  <p style="margin-top:6px;color:#ffd479">v2 修订：已按 <code>2026-08-07-14-08-sop-graph-coverage-audit.md</code> 覆盖度审核的 7 条严重问题 + 粒度重整建议修补——补 domain 级判定层、原子单元聚合层、rationale 选取、研究设计门控；GRADE 移出单篇范围；Keshav 三遍恢复原义；SciREX/SciERC 拆出为级联族；D 的 worst-case 三节点合一；NOS/AMSTAR-2/FINER/engineering-config-grading 各自复位。</p>
+</div>
+
+<div id="legend">
+  <div class="legend-item"><span class="dot" style="background:#4c8bf5"></span>共享节点（多方法复用）</div>
+  <div class="legend-item"><span class="dot" style="background:#f5a623"></span>节点D・独立聚合算法（同源不合并）</div>
+  <div class="legend-item"><span class="dot" style="background:#7ed957"></span>完全独立SOP（结构唯一）</div>
+  <div class="legend-item"><span class="dot" style="background:#c77dff"></span>Keshav三遍级联</div>
+  <div class="legend-item"><span class="dot" style="background:#ff6b6b"></span>提案SOP（未实证，填补矩阵空格）</div>
+  <div class="legend-item"><span class="dot" style="background:#40c4b7"></span>前置门控（研究设计判定/工具适用性）</div>
+  <div class="legend-item"><span class="dot" style="background:#8b95a5"></span>超出单篇范围（需跨篇输入）</div>
+</div>
+
+<div id="network"></div>
+<div id="detail">点击或悬停任意节点/边查看详情。</div>
+<div id="footer">
+来源：<code>2026-08-07-10-26-sop-menu-final.md</code>（46方法+7轴tag表）+ 拆分/合并会话结论。<br>
+v1 初版 2026-08-07 13:42（22节点）→ v2 修订 2026-08-07 14:5x（31节点），修订依据 <code>2026-08-07-14-08-sop-graph-coverage-audit.md</code>（Opus覆盖度审核：点名46/46、可执行30/46）。<br>
+合并判据已统一为「动作序列长度相同→可参数化合并；不同→必拆」——这是审核指出的根因（原图对NCG用「结构唯一就拆」、对SciREX不用；对A2用「可参数化就合」、对D不用）。
+</div>
+
+<script>
+// ---------- 节点定义 ----------
+// group: shared / aggregate / independent / keshav / proposal
+const nodes = [
+  // 共享节点A 拆回3个结构子族（原单一节点异质性过大，回头拆分）
+  { id: "signalling-question-answering", label: "signalling-question-answering\n(节点A1)", group: "shared",
+    methods: ["rob2","robins-i","quadas-2"],
+    desc: "逐domain回答signalling questions（5值域：Yes/Probably yes/Probably no/No/No information）。参数化：domain集、每domain问题集、分支规则。产出信号答案，喂给domain-level-judgment。【M8修订：移出NOS（授星非答题）与AMSTAR-2（清单条目非domain），移出GRADE（跨篇范围）】" },
+
+  { id: "quality-appraisal-checklist", label: "quality-appraisal-checklist\n(节点A2a)", group: "shared",
+    methods: ["casp","jbi","amstar-2"],
+    desc: "逐条问「做得好不好」的质量评判清单，判定{Yes/No/Can't tell}或{Yes/No/Partial Yes/Unclear/NA}。CASP三段式（A筛选门控→B方法学质量→C本地适用性）、JBI每套末尾有整体裁定、AMSTAR-2有关键域检测——三者都需要整体裁定出边。【M9修订：从原A2按评估取向拆出；M8修订：AMSTAR-2从A1移入，它的「域」就是清单条目】" },
+
+  { id: "reporting-standard-checklist", label: "reporting-standard-checklist\n(节点A2b)", group: "shared",
+    methods: ["prisma","consort","strobe","arrive","spirit","tripod"],
+    desc: "逐条查「报没报、报在哪」的报告规范核查，判定{Yes/No/NA}+位置栏（页码/章节）。条目集含a/b子条目层级。原为作者向撰写规范，反用为读者核查时条目需预先反转成疑问句（L19）。判定即终点，无汇总算法。" },
+
+  { id: "dual-column-self-check", label: "dual-column-self-check\n(节点A3)", group: "shared",
+    methods: ["ml-reproducibility-checklist","reforms","neurips-paper-checklist","model-cards",
+              "datasheets-for-datasets"],
+    desc: "逐条目分类栏{Yes/No/NA}+自由文本理由双栏。参数化：条目集。原为作者自查工具，反用作读者核查（L19：条目需预先反转）。【M14修订：engineering-config-grading已拆出——值域从二元变分级不等于评估取向从报告核查变质量评判】" },
+
+  { id: "unit-segmentation", label: "unit-segmentation\n(节点B0)", group: "shared",
+    methods: ["coda-19","argumentative-zoning","coresc","pubmed-200k-rct","nicta-piboso","csabstruct",
+              "swales-move-analysis"],
+    desc: "把全文/摘要切成待标注单元：句级切分，或进一步按逗号/分号切成子句片段（CODA-19：103,978句→168,286片段）。参数化：切分粒度（句/子句）、范围（全文/摘要/仅引言）。【L17/L18修订：原节点B缺此前置步，Swales仅限引言的范围约束也无处表达】" },
+
+  { id: "unit-classification", label: "unit-classification\n(节点B)", group: "shared",
+    methods: ["argumentative-zoning","coresc","pubmed-200k-rct","nicta-piboso","csabstruct","coda-19",
+              "swales-move-analysis","tdms-extraction",
+              "rhetorical-structure-quality（提案）","rhetorical-completeness-check（提案）"],
+    desc: "逐单元读取→按固定标签集分类，单层、无跨单元依赖。参数化：标签集、层级开关(Swales的move/step两层)、产出类型（句子级单标签 / 跨度级标记 / span级实体）。【S6修订：SciERC/SciREX已拆出——它们需要coreference聚类与saliency判定，输入是全文所有mention而非当前单元，一个布尔开关吸收不掉】" },
+
+  { id: "multi-stage-cascade-extraction", label: "multi-stage-cascade\n-extraction (节点B2)", group: "shared",
+    methods: ["scierc","scirex","nlp-contribution-graph"],
+    desc: "多阶段级联抽取：mention识别→coreference聚类（文档级）→[saliency判定]→N元关系/三元组抽取。三者层数不同但动作序列同族（均为「逐层消费上层全量产出」）。SciREX四元组99%跨句、55%跨节；NCG一致性逐层崩塌67.92%→41.82%→22.31%，是本族的共性风险。参数化：阶段数、每阶段标签/关系集、是否含saliency层。【S6修订：SciREX/SciERC从单层节点B拆入；原nlp-contribution-graph独立节点并入——判据统一为「动作序列长度相同则可合并」】" },
+
+  { id: "atomic-unit-writing", label: "atomic-unit-writing\n(节点C1a)", group: "shared",
+    methods: ["nugget-evaluation","acu-atomic-content-unit"],
+    desc: "从参考文本抽/写原子内容单元。ACU：作者本人从参考摘要抽atomic facts（统一撰写换高一致性，Krippendorff α≈0.75）。Nugget：标注者原创自然语言表述（平均7–8 token），可选vital/okay重要性二分类。参数化：单元来源（抽取/原创撰写）、是否标重要性。" },
+
+  { id: "atomic-unit-matching", label: "atomic-unit-matching\n(节点C1b)", group: "shared",
+    methods: ["nugget-evaluation","acu-atomic-content-unit"],
+    desc: "逐单元判断目标文本是否包含该单元。ACU：二元匹配（present/absent）。Nugget：三分类（support/partial_support/not_support）。参数化：判定值域。" },
+
+  { id: "atomic-unit-recall-aggregate", label: "atomic-unit-recall\n-aggregate (节点C1c)", group: "aggregate",
+    methods: ["nugget-evaluation","acu-atomic-content-unit"],
+    desc: "把逐单元匹配结果聚合成分数。ACU：归一化ACU recall（摘要级，含长度惩罚项）。Nugget：V_strict/A_strict recall（仅vital或全部），再做run-level排名——论文实证只有run级可信（Kendall τ=0.887），per-topic不可信（τ=0.297–0.539）。【S5修订：原C1是死胡同，无任何节点做求和/归一/排名，而这恰是nugget唯一可信的产出】" },
+
+  // 节点D：聚合算法。M10修订——原5个收为3个（三个worst-case同算法合一）
+  { id: "worst-case-lookup", label: "worst-case-lookup\n(节点D1)", group: "aggregate",
+    methods: ["rob2","robins-i","amstar-2"],
+    desc: "取最差项作为整体判定。RoB2：最严重domain（3值 Low/Some concerns/High）。ROBINS-I：最严重domain（5值 Low/Moderate/Serious/Critical/No info）。AMSTAR-2：先按「是否关键域」过滤再取最差（≥1关键缺陷→Critically Low）。参数化：值域、是否先按权重过滤。【M10修订：原rob2-aggregate/robins-i-aggregate/amstar2-aggregate三节点是同一算法的值域变体，与A2/B用参数化吸收差异的做法一致，故合一】" },
+
+  { id: "sum-threshold-scoring", label: "sum-threshold-scoring\n(节点D2)", group: "aggregate",
+    methods: ["nos"],
+    desc: "逐项授星后求和分档（NOS 9星制：≥7好/4–6中/0–3差）。与worst-case族结构不同（求和非取最差），单列。" },
+
+  // S4修订：补A1→D之间缺失的domain级判定层
+  { id: "domain-level-judgment", label: "domain-level-judgment\n(节点A1b)", group: "shared",
+    methods: ["rob2","robins-i","quadas-2"],
+    desc: "把signalling答案按查表算法折成domain级等级——这是RoB2/ROBINS-I/QUADAS-2算法的第①级（第②级才是整体汇总）。QUADAS-2在此产出双轴：D1–D3同时评「偏倚风险」与「适用性关注」、D4只评风险，共7个domain级判定，且domain级即其终点（无第②级）。参数化：查表规则、是否双轴评定。【S4修订：原图A1直接连D，第①级查表无归属，QUADAS-2因此永远拿不到它的终点产出；S3修订：双评结构在此获得表达位】" },
+
+  { id: "star-awarding", label: "star-awarding\n(节点A1c)", group: "shared",
+    methods: ["nos"],
+    desc: "按条目逐项判断是否授星（NOS：选择4星/可比性2星/结果或暴露3星）。动作是「给不给星」而非答5值信号问题，故不与signalling-question-answering合并。【M8修订：原图NOS挂在A1下，但A1的desc无「授星」动作，nos-aggregate却直接开始求和——星是谁给的没有节点】" },
+  // QUADAS-2 无整体汇总步骤，domain级判定即终点，故不入节点D
+  // GRADE 已移出（见 grade-out-of-scope 节点）
+
+  // M11修订：补全局前置门控——这批工具全是设计条件式的，选错整套判定无效
+  { id: "study-design-tool-gate", label: "study-design-tool-gate\n(门控G)", group: "gate",
+    methods: ["casp","jbi","amstar-2","nos","rob2","robins-i","quadas-2","consort","strobe",
+              "arrive","spirit","tripod","prisma"],
+    desc: "先判研究设计（RCT/队列/病例对照/诊断准确性/系统综述/动物研究/预测模型…），再分派对应的条目集或domain集；并判定「该工具对本文是否适用」。CASP有8套、JBI约6套、NOS有2版本、RoB2有平行/聚类/交叉扩展版——套间条目数与分段都不同，是先有分派决策而非同一参数化实例的不同取值。对CS/ML语料尤其关键：医学血统工具的多数domain（分配隐蔽、盲法、意向治疗分析）在一篇LLM论文上无从下手，此节点承载「不适用」这个合法输出。【M11修订：原图所有A1/A2节点都是无入边直接开始，没有任何位置能表达工具选择与适用性判定】" },
+
+  // S1修订：GRADE移出单篇范围
+  { id: "grade-out-of-scope", label: "grade（超出单篇范围）", group: "outofscope", methods: ["grade"],
+    desc: "GRADE评的是跨研究的证据体（body of evidence per outcome），不是单篇论文。5个降级因素里，不一致性需多研究间异质性、不精确性需合并效应CI宽度、发表偏倚需漏斗图——这三样在单篇论文里没有输入。产出应是Summary of Findings表（每outcome一行，含相对+绝对效应、参与者数、确定性等级+理由脚注）。单篇场景下唯一可做的是「读取论文里已有的GRADE评级」，那是抽取动作不是评级动作。【S1修订：原图 A1→grade-aggregate 这条边正是调研文件第190行明确否决的「照搬Cochrane流水线」】" },
+
+  // 完全独立SOP
+  { id: "qalmri", label: "qalmri", group: "independent", methods: ["qalmri"],
+    desc: "六槎自由文本工作表（Question/Alternatives/Logic/Method/Results/Inference），无判定算法。" },
+  { id: "csfcube-facet", label: "csfcube-facet\n（超出单篇范围）", group: "outofscope", methods: ["csfcube-facet"],
+    desc: "本质是多文档成对相关度排序（给定facet，判两篇摘要间的相关度等级0–3），单篇场景里没有对比对象，作为单篇SOP不可执行。真正可复用的只有它那3个facet（Background/Objective、Method、Result）的句子级标签定义——那部分已作为 unit-classification 的一个标签集参数存在，不需独立节点。【L16修订：原为「自认不可执行」的空壳独立节点，占节点预算而不产出覆盖】" },
+  { id: "qasper-evidence-qa", label: "qasper-evidence-qa", group: "independent", methods: ["qasper-evidence-qa"],
+    desc: "问题驱动问答+证据span定位，自由文本无规范化，schema驱动方法论都不适用。" },
+  { id: "template-slot-filling", label: "template-slot-filling", group: "independent", methods: ["orkg-comparison-template"],
+    desc: "往一张已给定的属性模板里填本篇论文的值（模板即SHACL形状约束，属性作行、论文作列）。这是ORKG两个动作里可执行的那半。另一半「建模板」是领域专家众包、无中央权威，属人类流程不属LLM可执行SOP——已文档化的实证约束：手工策管属性「labor-intensive and inconsistent among human domain-expert curators」。已有的leaderboard模板正是Task-Dataset-Metric-Value，与SciREX四元组同构。【L16修订：原节点只保留了不可执行的「建模板」那半，把可执行的「填模板」丢了】" },
+  // nlp-contribution-graph 已并入 multi-stage-cascade-extraction（节点B2）
+  // ——判据统一为「动作序列长度相同则可合并」后，它与SciERC/SciREX同族（S6/M10 根因修订）
+  { id: "claim-writing", label: "claim-writing\n(节点C2a)", group: "independent", methods: ["scifact-claim-verification"],
+    desc: "把citance（引用句）盲改写成原子可验证声明——标注者看不到被引摘要内容，此盲改写是为防作弊而非为跨篇对齐。改写规则：只能来自单一来源、不得含主观意见、复合声明须拆成多条原子声明。⚠输入前提：需要「引用了该论文的另一篇论文」作为第二输入，本pkg作为单篇阅读SOP无此输入（S7附带问题）。" },
+
+  { id: "rationale-selection", label: "rationale-selection\n(节点C2b)", group: "independent", methods: ["scifact-claim-verification"],
+    desc: "从候选摘要里选出证据句（rationale）——足以蕴涵该声明的最小句子集合（1–3句）。一致性单独报Cohen's κ=0.71。【S7修订：原C2只有「盲改写→三分类判定」，证据句选取无节点，而tag表的产出锚点明写「三元组+证据句」，缺此步产出不完整】" },
+
+  { id: "claim-label-prediction", label: "claim-label-prediction\n(节点C2c)", group: "independent", methods: ["scifact-claim-verification"],
+    desc: "基于选定的rationale判定三分类标签：SUPPORTS/REFUTES/NOINFO。标签一致性Cohen's κ=0.75。产出完整的(Claim, Abstract, Label, rationale句集)。" },
+  { id: "reproducibility-third-party-verification", label: "reproducibility-third-party\n-verification（提案）", group: "proposal",
+    methods: ["reproducibility-third-party-verification（提案）"],
+    desc: "实际跑训练/评测脚本核对复现结果，动作类型（执行代码）与其余45个方法都不同。填补：证据验证×工程元数据。" },
+
+  { id: "question-framing", label: "question-framing", group: "independent",
+    methods: ["pico","peco","spider"],
+    desc: "槽位填充式问题框定：PICO(Population/Intervention/Comparator/Outcome)、PECO(暴露替换干预)、SPIDER(Sample/Phenomenon/Design/Evaluation/Research type)。参数化：槽位定义集。定义要问什么问题，不读论文内容本身。【M15修订：FINER已拆出——它是五项评判不是槽位填充】" },
+
+  { id: "research-question-appraisal", label: "research-question-appraisal", group: "independent",
+    methods: ["finer"],
+    desc: "对一个已有研究问题做五项评判：Feasible/Interesting/Novel/Ethical/Relevant，每项是判定不是填空。评的是研究问题本身而非论文。结构上近质量评判清单（A2a族）而非槽位填充。【M15修订：原图与PICO/PECO/SPIDER合并，desc声称「四者结构一致」，这句对前三个成立、对FINER不成立】" },
+
+  { id: "engineering-config-grading", label: "engineering-config-grading\n（提案）", group: "proposal",
+    methods: ["engineering-config-grading（提案）"],
+    desc: "把可复现性清单的字段从Yes/No改成分级（如「超参搜索范围报告完整度：完整/部分/无」），仿NOS星级制但用在工程配置上。关键差异：判定「部分」需要评估者先建立「完整应该是什么样」的标准，这是A3其余5个方法都不做的动作——是质量评判不是报告核查。填补矩阵空格：质量评判×工程元数据。【M14修订：原合入A3，参数化只吸收了产出形状（二元→分级），没吸收判定动作，导致它要填的那个矩阵空格消失】" },
+
+  { id: "rhetorical-structure-quality", label: "rhetorical-structure-quality\n（提案）", group: "proposal",
+    methods: ["rhetorical-structure-quality（提案）"],
+    desc: "消费unit-classification产出的修辞角色标签，判断标签间的论证关系是否成立（如AIM是否被BACKGROUND充分证成）。二阶SOP，填补：质量评判×论证修辞角色。" },
+
+  // Keshav三遍级联
+  { id: "first-pass-skim", label: "first-pass-skim", group: "keshav", methods: ["keshav-three-pass"],
+    desc: "5-10分钟：题目/摘要/引言/标题/结论，判定是否深读+粗分类。" },
+  { id: "second-pass-grasp", label: "second-pass-grasp", group: "keshav", methods: ["keshav-three-pass"],
+    desc: "约1小时：抓图表与实验结果、忽略证明细节，达到「能向同行总结主要贡献」的理解。产出是叠进式理解本身，非持久化结构物（Keshav是46项里唯一不落盘结构化物的方法）。【S2修订：删去原「结构化bundle草稿+uncertain_fields」——那是本项目v1的产物，不属Keshav原义】" },
+  { id: "third-pass-verify", label: "third-pass-deep-read", group: "keshav", methods: ["keshav-three-pass"],
+    desc: "4–5小时以上：逐句重读含证明，virtual re-implementation，标出隐含假设与可改进点，达到「能重现」的掌握程度。三遍里最重的一遍，不是可空转的复核步。【S2修订：原desc把它降级为「复核uncertain_fields，无则no-op」，等于删掉了第三遍】" }
+];
+
+// ---------- 边定义 ----------
+const edges = [
+  // ===== Keshav 三遍级联 =====
+  { from: "first-pass-skim", to: "second-pass-grasp", methods: ["keshav-three-pass"] },
+  { from: "second-pass-grasp", to: "third-pass-verify", methods: ["keshav-three-pass"] },
+
+  // ===== 门控G -> 各评估/核查族（M11修订：这批工具全需先判研究设计选套） =====
+  { from: "study-design-tool-gate", to: "signalling-question-answering", methods: ["rob2","robins-i","quadas-2"] },
+  { from: "study-design-tool-gate", to: "star-awarding", methods: ["nos"] },
+  { from: "study-design-tool-gate", to: "quality-appraisal-checklist", methods: ["casp","jbi","amstar-2"] },
+  { from: "study-design-tool-gate", to: "reporting-standard-checklist",
+    methods: ["prisma","consort","strobe","arrive","spirit","tripod"] },
+
+  // ===== 偏倚风险两级算法：A1 -> A1b(domain级) -> D(整体级) =====
+  // S4修订：补上原先缺失的 domain 级判定层
+  { from: "signalling-question-answering", to: "domain-level-judgment", methods: ["rob2","robins-i","quadas-2"] },
+  { from: "domain-level-judgment", to: "worst-case-lookup", methods: ["rob2","robins-i"] },
+  // QUADAS-2 在 domain-level-judgment 即终点（双轴7判定），无第②级，故无出边
+  { from: "star-awarding", to: "sum-threshold-scoring", methods: ["nos"] },
+  { from: "quality-appraisal-checklist", to: "worst-case-lookup", methods: ["amstar-2"] },
+  // M9修订：CASP/JBI 的整体裁定（CASP三段门控 / JBI include-exclude-seek）在 A2a 内部完成，不另设节点
+
+  // ===== 句子级分类链：B0(切分) -> B(分类) =====
+  // L17/L18修订：补切分前置步
+  { from: "unit-segmentation", to: "unit-classification",
+    methods: ["argumentative-zoning","coresc","pubmed-200k-rct","nicta-piboso","csabstruct","coda-19","swales-move-analysis"] },
+
+  // ===== 节点B -> 二阶提案SOP =====
+  { from: "unit-classification", to: "rhetorical-structure-quality", methods: ["rhetorical-structure-quality（提案）"] },
+  { from: "unit-classification", to: "quality-appraisal-checklist", methods: ["rhetorical-completeness-check（提案）"] },
+  // M13修订：rhetorical-completeness-check 终点从 A2b(报告核查) 改到 A2a(质量评判族)——
+  // 它做的是标签集差集运算（部分规则），与A2b「定性无算法」不兼容；且其条目集由上游标签集反推生成
+
+  // ===== 原子单元三段链：C1a(写单元) -> C1b(匹配) -> C1c(聚合) =====
+  // S5修订：补聚合层，原C1是死胡同
+  { from: "atomic-unit-writing", to: "atomic-unit-matching", methods: ["nugget-evaluation","acu-atomic-content-unit"] },
+  { from: "atomic-unit-matching", to: "atomic-unit-recall-aggregate", methods: ["nugget-evaluation","acu-atomic-content-unit"] },
+
+  // ===== SciFact 三段链：C2a(改写claim) -> C2b(选证据句) -> C2c(判标签) =====
+  // S7修订：补 rationale 选取
+  { from: "claim-writing", to: "rationale-selection", methods: ["scifact-claim-verification"] },
+  { from: "rationale-selection", to: "claim-label-prediction", methods: ["scifact-claim-verification"] },
+
+  // ===== 提案SOP 的前置依赖 =====
+  // L20修订：第三方复现验证需先有论文所报数值的结构化抽取
+  { from: "unit-classification", to: "reproducibility-third-party-verification",
+    methods: ["reproducibility-third-party-verification（提案）"] },
+  // M14修订：engineering-config-grading 复位为独立质量评判，接在门控之后
+  { from: "study-design-tool-gate", to: "engineering-config-grading", methods: ["engineering-config-grading（提案）"] }
+];
+
+// ---------- 分组颜色 ----------
+const groupColor = {
+  shared:      { bg: "#4c8bf5", border: "#2f5fc4" },
+  aggregate:   { bg: "#f5a623", border: "#c9820f" },
+  independent: { bg: "#7ed957", border: "#4e9e30" },
+  keshav:      { bg: "#c77dff", border: "#9a4fe0" },
+  proposal:    { bg: "#ff6b6b", border: "#d13f3f" },
+  gate:        { bg: "#40c4b7", border: "#26897f" },
+  outofscope:  { bg: "#8b95a5", border: "#5f6772" }
+};
+
+const visNodes = nodes.map(n => ({
+  id: n.id,
+  label: n.label,
+  shape: "box",
+  margin: 10,
+  font: { color: "#101114", size: 13, multi: false },
+  color: { background: groupColor[n.group].bg, border: groupColor[n.group].border,
+           highlight: { background: groupColor[n.group].bg, border: "#ffffff" } },
+  widthConstraint: { minimum: 120, maximum: 220 }
+}));
+
+const visEdges = edges.map((e, i) => ({
+  id: "e" + i,
+  from: e.from,
+  to: e.to,
+  arrows: "to",
+  label: e.methods.length <= 2 ? e.methods.join(", ") : e.methods.length + "个方法",
+  font: { color: "#e6e6e6", size: 11, strokeWidth: 0, align: "middle" },
+  color: { color: "#5a5f6b", highlight: "#ffd479" },
+  smooth: { type: "cubicBezier", roundness: 0.4 }
+}));
+
+const container = document.getElementById("network");
+const data = { nodes: new vis.DataSet(visNodes), edges: new vis.DataSet(visEdges) };
+const options = {
+  layout: { hierarchical: false },
+  physics: { enabled: true, solver: "forceAtlas2Based",
+             forceAtlas2Based: { gravitationalConstant: -60, springLength: 160, springConstant: 0.06 },
+             stabilization: { iterations: 200 } },
+  interaction: { hover: true, tooltipDelay: 100 }
+};
+const network = new vis.Network(container, data, options);
+
+const nodeMap = {}; nodes.forEach(n => nodeMap[n.id] = n);
+const edgeMap = {}; edges.forEach((e, i) => edgeMap["e" + i] = e);
+
+const detail = document.getElementById("detail");
+function showNode(n) {
+  detail.innerHTML = `<b>${n.id}</b>（${n.group}） — ${n.desc}<br>覆盖方法（${n.methods.length}）：<span class="methods">${n.methods.join(" / ")}</span>`;
+}
+function showEdge(e) {
+  detail.innerHTML = `<b>${e.from} → ${e.to}</b><br>走此边的方法（${e.methods.length}）：<span class="methods">${e.methods.join(" / ")}</span>`;
+}
+
+network.on("hoverNode", params => showNode(nodeMap[params.node]));
+network.on("hoverEdge", params => showEdge(edgeMap[params.edge]));
+network.on("click", params => {
+  if (params.nodes.length) showNode(nodeMap[params.nodes[0]]);
+  else if (params.edges.length) showEdge(edgeMap[params.edges[0]]);
+});
+</script>
+
+</body>
+</html>
