@@ -7,10 +7,16 @@ judgment, then N-ary relation/triple extraction over the clustered
 mentions. Each stage consumes the FULL output of the stage before it.
 
 ## Input
-- **full_text**: the paper's full text (read directly — do not expect pre-segmented units)
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **stage_count**: how many stages this run uses (2 for a mention+relation-only cascade, 3 to add coreference, 4 to add saliency)
 - **per_stage_label_set**: the entity/relation label vocabulary for each stage
 - **saliency_layer_toggle**: whether to include a saliency-judgment stage (only some methods, e.g. SciREX, require this; SciERC's cascade doesn't)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the whole paper. Coreference resolution requires every mention;
+skipping a section silently corrupts clusters and downstream relations.
 
 ## Stages (run in this exact order — do not skip or reorder)
 

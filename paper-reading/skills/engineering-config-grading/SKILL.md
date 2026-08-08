@@ -3,7 +3,8 @@ name: engineering-config-grading
 description: (Proposal, unverified) Grade reproducibility-relevant engineering configuration items (hyperparameter search range, compute budget, seed handling, dataset splits) on a complete/partial/none scale, requiring the grader to first define what "complete" means per item before judging against it. Use this after study-design-tool-gate has dispatched an ML/CS engineering paper here; this is a graded QUALITY judgment, distinct from dual-column-self-check's binary Yes/No/NA self-audit checklists.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string), dispatched_tool (string)'
+input: 'source_path (string), meta_path (string), dispatched_tool (string)'
+reads: 'method, experiments, and appendix sections — where configuration is reported'
 output: 'grading_result (list of {item, grade, justification})'
 dependencies:
   sops:

@@ -14,8 +14,14 @@ metadata, which no existing verified checklist covers at the graded level —
 dual-column-self-check's checklists are binary Yes/No/NA, not graded).
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: confirms this gate dispatch (engineering-config-grading has a single item set, no variants)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read method, experimental setup, appendix, and supplementary sections.
+Configuration details commonly live in the appendix and must not be skipped.
 
 ## Output
 - **grading_result**: list of {item, grade: "complete" | "partial" | "none", justification} — items cover things like hyperparameter-search-range reporting, compute-budget reporting, random-seed handling, dataset-split reproducibility

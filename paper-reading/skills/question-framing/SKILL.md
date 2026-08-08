@@ -3,7 +3,8 @@ name: question-framing
 description: Fill a slot-based question-framing schema (PICO, PECO, or SPIDER) from a paper's stated research question. Use this whenever the user wants a paper's research question structured into one of these standard clinical/qualitative-research question frames; this frames what question is being asked, it does not read or evaluate the paper's content otherwise.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string), slot_definitions (string — one of PICO, PECO, SPIDER)'
+input: 'source_path (string), meta_path (string), slot_definitions (string — one of PICO, PECO, SPIDER)'
+reads: 'abstract and method sections'
 output: 'framed_question (dict — schema-specific slot names to values)'
 dependencies:
   sops:

@@ -6,8 +6,14 @@ question is being asked; it does not evaluate the paper's content beyond
 that.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **slot_definitions**: which schema to use — one of `PICO` (Population/Intervention/Comparator/Outcome), `PECO` (Population/Exposure/Comparator/Outcome), `SPIDER` (Sample/Phenomenon of Interest/Design/Evaluation/Research type)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the abstract and method sections. Leave absent slots empty rather than
+reconstructing them from discussion prose.
 
 ## Output
 - **framed_question**: dict with one key per slot in the chosen schema, each value being what the paper's own research question maps to for that slot
