@@ -1,6 +1,6 @@
 ---
 name: paper-fetch
-description: Retrieve one specified academic paper (by title, arXiv ID, DOI, or URL) and land it on disk as source.md plus a source.meta.json carrying a line-number section index. Checks context/papers/ for an existing copy first and returns its path without refetching if found; otherwise tries alphaxiv, then Semantic Scholar for channel routing, then bioRxiv/medRxiv, in that fixed order, stopping at the first success. Use this as the mandatory first step whenever any other paper-reading SOP in this package needs the actual text of a paper — it is the sole entry point of the pipeline and every downstream SOP reads the files it lands. If it returns not_found, halt immediately; do not fabricate content or guess at the paper's likely contents.
+description: Retrieve one specified academic paper (by title, arXiv ID, DOI, or URL) and land it on disk as source.md plus a source.meta.json carrying a line-number section index. Checks context/papers/ for an existing copy first; direct PDF URLs are read directly without search routing, while other references use alphaxiv, Semantic Scholar routing, then bioRxiv/medRxiv. Use this as the mandatory first step whenever any other paper-reading SOP in this package needs the actual text of a paper — it is the sole entry point of the pipeline and every downstream SOP reads the files it lands. If it returns not_found, halt immediately; do not fabricate content or guess at the paper's likely contents.
 version: 1.0.0
 category: paper-reading
 type: sop
@@ -15,7 +15,16 @@ dependencies:
 
 # Paper Fetch
 
-The pipeline's sole entry point: retrieves a paper and lands it on disk, via a cache check followed by a fixed four-channel fallback (alphaxiv → Semantic Scholar routing → bioRxiv/medRxiv → not_found). Decoupled from `literature-engine`'s `literature-research`/`literature-search`/`literature-overview` — this SOP holds its own MCP tool calls rather than delegating.
+If `paper_ref` is a direct HTTP(S) PDF URL (the URL path ends in `.pdf`, ignoring
+query and fragment), read that PDF directly before considering any search route.
+Record `source_channel: direct_pdf`. If direct reading fails, return `not_found`
+and do not fall back to alphaxiv, Semantic Scholar, bioRxiv, or medRxiv.
+
+The pipeline's sole entry point: retrieves a paper and lands it on disk. It checks
+the cache first, reads direct PDF URLs without search routing, and otherwise uses
+the fixed fallback (alphaxiv → Semantic Scholar routing → bioRxiv/medRxiv → not_found).
+Decoupled from `literature-engine`'s `literature-research`/`literature-search`/
+`literature-overview` — this SOP holds its own retrieval calls rather than delegating.
 
 ## Landed layout
 
@@ -33,7 +42,10 @@ Subagent — spawned via spawn-agent skill.
 
 ## Why Subagent
 
-Multi-step channel fallback with domain-inference judgment calls (is a Semantic-Scholar miss a bio signal or a "just not indexed anywhere" signal?) benefits from a dedicated context that can hold the whole decision tree without the noise of whatever task will consume its output next.
+Multi-step retrieval with direct-PDF handling and domain-inference judgment calls
+(is a Semantic-Scholar miss a bio signal or a "just not indexed anywhere" signal?)
+benefits from a dedicated context that can hold the whole decision tree without the
+noise of whatever task will consume its output next.
 
 ## Why it lands files instead of returning text
 

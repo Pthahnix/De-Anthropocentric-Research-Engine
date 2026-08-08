@@ -40,7 +40,22 @@ every downstream SOP in the pipeline.
   ```
 - **Miss, or `context/papers/` does not exist yet** → continue to Step 1.
 
-### Step 1: alphaxiv
+### Step 1: direct PDF URL
+
+After a cache miss, detect a direct PDF reference when `paper_ref` is an HTTP(S)
+URL whose path ends in `.pdf`, ignoring query parameters and fragments. Retrieve
+that URL directly with the available PDF/web reader, follow redirects only to the
+PDF resource, and verify that the response is actually a PDF (content type or
+the `%PDF-` signature).
+
+Extract the paper's text without summarizing or rewriting it, then use the normal
+landing step with `source_channel: direct_pdf`, `identifier: <normalized PDF URL>`,
+and the final PDF URL as `source_url`. Do not call alphaxiv, Semantic Scholar,
+bioRxiv, or medRxiv for a direct PDF URL. If the direct read fails or the
+resource is not a PDF, return `not_found` immediately; do not fall back to a
+search route.
+
+### Step 2: alphaxiv
 
 Call `mcp__alphaxiv__discover_papers` or resolve `paper_ref` directly against
 alphaxiv, then `mcp__alphaxiv__get_paper_content(fullText: true)`.
@@ -64,9 +79,9 @@ every quote taken downstream — this was observed in the v1 smoke test
 
 - **Found** → go to the landing step with `source_channel: alphaxiv`,
   `identifier: <arXiv ID>`, `source_url: <resolved URL>`.
-- **Not found** → continue to Step 2.
+- **Not found** → continue to Step 3.
 
-### Step 2: Semantic Scholar (routing lookup, not a fetch)
+### Step 3: Semantic Scholar (routing lookup, not a fetch)
 
 Call `mcp__semantic-scholar__relevanceSearch` or `mcp__semantic-scholar__paper`
 using the title/DOI from `paper_ref`. You are not trying to read the paper
@@ -74,15 +89,15 @@ here — you're reading its `venue` and `externalIds` to decide where to look
 next.
 
 - If `externalIds` contains an arXiv ID that alphaxiv didn't have indexed
-  (e.g. the paper is very new) → retry Step 1 with that specific arXiv ID.
-  Found on retry → proceed to the landing step as in Step 1.
+  (e.g. the paper is very new) → retry Step 2 with that specific arXiv ID.
+  Found on retry → proceed to the landing step as in Step 2.
 - If `venue` indicates bioRxiv / medRxiv / PubMed-family, OR Semantic Scholar
   itself returns nothing, OR `venue` is unrecognizable → in every one of
-  these cases, proceed to Step 3 carrying whatever DOI Semantic Scholar gave
+  these cases, proceed to Step 4 carrying whatever DOI Semantic Scholar gave
   you (or the raw title if it gave no DOI). Do not treat "SS found nothing"
-  as a dead end — it routes to Step 3 exactly like a bio-venue hit does.
+  as a dead end — it routes to Step 4 exactly like a bio-venue hit does.
 
-### Step 3: bioRxiv / medRxiv
+### Step 4: bioRxiv / medRxiv
 
 Call `mcp__biorxiv__search_preprints` and `mcp__medrxiv__search_preprints`
 with the title (these are keyword search tools, not direct-by-ID lookups —
@@ -94,9 +109,9 @@ confirm the DOI in the result).
   then go to the landing step with `source_channel: biorxiv` or `medrxiv`,
   `identifier: <the DOI>`, `source_url` constructed from the DOI per that
   channel's convention.
-- **No confident match in either** → continue to Step 4.
+- **No confident match in either** → continue to Step 5.
 
-### Step 4: Exhausted — report failure
+### Step 5: Exhausted — report failure
 
 Return exactly:
 ```json
@@ -108,7 +123,7 @@ your own background knowledge of the paper's likely content. A `not_found`
 result is a valid, complete, and final answer — the caller is expected to
 halt the entire downstream pipeline on it, not retry you with a vaguer query.
 
-## Landing step (reached from Step 1 or Step 3, once you have the text)
+## Landing step (reached from Step 1, Step 2, or Step 4, once you have the text)
 
 **All paths and filenames you create are lowercase.**
 
@@ -125,19 +140,20 @@ halt the entire downstream pipeline on it, not retry you with a vaguer query.
 
 ### 2. Write `source.md`
 
-The fetched text, exactly as retrieved. No reformatting, no added headers,
-no truncation. This file is what every downstream SOP quotes from, so any
-edit you make here becomes an invisible corruption of every citation taken
-downstream.
+For HTML/API retrieval, write the fetched text exactly as retrieved. For a
+direct PDF URL, write the text extracted from the PDF without summarizing,
+rewriting, added headers, or truncation. This file is what every downstream SOP
+quotes from, so any edit you make here becomes an invisible corruption of every
+citation taken downstream.
 
 ### 3. Write `source.meta.json`
 
 ```json
 {
-  "identifier": "arXiv:2607.24653",
+  "identifier": "https://example.org/paper.pdf",
   "title": "the paper's title as retrieved",
   "title_slug": "the-slug-you-built",
-  "source_channel": "alphaxiv",
+  "source_channel": "direct_pdf",
   "source_url": "https://...",
   "fetched_at": "2026-08-07T23:01",
   "total_lines": 1240,
@@ -181,7 +197,7 @@ Index rules:
 ## Output
 
 Return ONLY the JSON structure from whichever step you stopped at (Step 0,
-Step 4, or the landing step) — no additional commentary, no partial fields
+Step 5, or the landing step) — no additional commentary, no partial fields
 filled in speculatively, and never the paper's text itself.
 
 ## Instructions
