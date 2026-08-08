@@ -4,11 +4,11 @@
 
 > 🧭 **属于 [De-Anthropocentric Research Engine](https://github.com/yogsoth-ai/de-anthropocentric-research-engine)。** 与 `literature-engine`、`deep-insight`、`knowledge-acquisition` 同为独立 package——单独构建、单独测试，稳定后再注册进 DARE 主仓。
 
-## 当前状态：v2 — 30 个 SOP 已建成
+## 当前状态：v2 — 30 个 SOP、5 个 tactic 已建成
 
-`skills/` 下全部 30 个可构建 SOP（`context/2026-08-07-13-42-sop-pipeline-graph.html` 的 32 个图节点减去 `grade-out-of-scope`、`csfcube-facet` 两个无对应 skill 的节点）已按 `docs/superpowers/plans/2026-08-07-paper-reading-v2-implementation.md` 逐组写出、经 `scripts/validate_skill.py` 校验、逐组 commit。每个 SOP 都是 `execution: subagent`，经 `spawn-agent` 调度；`paper-fetch` 是唯一入口，也是唯一直接调用 alphaxiv/Semantic Scholar/bioRxiv/medRxiv 检索工具的 SOP，其余 29 个只消费它返回的 `full_text`。
+`skills/` 下有 30 个 SOP 和 5 个 tactic。每个 SOP 都是 `execution: subagent`；tactic 只声明编排，不自行执行。`paper-fetch` 是唯一检索入口：它把论文落到 `context/papers/<timestamp>-<title-slug>/source.md`，同时生成带分节行号索引的 `source.meta.json`。下游 SOP 接收路径，并按任务读取需要的范围。
 
-尚未做的：跨 SOP 组合成「策略/战术」层（spec §3 明确推迟）；skill-creator 的 with-skill/baseline 评测循环与 description-triggering 优化循环（按实现时的决定推迟到需要时再单独跑，避免一次性派生 60+ 个 subagent）。
+尚未做的：skill-creator 的 with-skill/baseline 评测循环与 description-triggering 优化循环。
 
 v1（单篇论文 → 微信公众号文章的固定三段式管线，18 个 skill）已整体暂存至 `staged/wechat-article-v1/`，见该目录下的 `STAGED.md`。分支 `v1-wechat-pipeline` 是它的恢复锚点。
 
@@ -31,7 +31,7 @@ v2 的 skill 来源分两条线，都是成文、可引的方法论，不自造�
 ## 目录
 
 ```
-skills/         v2 全部 30 个 SOP（已建成）
+skills/         v2 的 30 个 SOP、5 个 tactic
 staged/         暂存的 v1 全套
 context/        调研与设计记录（过程线 + 报告线）
 docs/           v2 设计 spec 与实现 plan（含 v1 历史，文件名带日期）
@@ -52,6 +52,29 @@ tests/          test_validate_skill.py
 | SciFact 族 | `claim-writing` → `rationale-selection` → `claim-label-prediction` |
 | 门控+偏倚风险族 | `study-design-tool-gate` → `signalling-question-answering` → `domain-level-judgment` → `worst-case-lookup`；`star-awarding` → `sum-threshold-scoring` |
 | 清单族 | `quality-appraisal-checklist`（含提案 entry_mode="completeness_check"）、`reporting-standard-checklist`、`engineering-config-grading`（提案）、`reproducibility-third-party-verification`（提案） |
+
+## Tactics
+
+| Tactic | Chain | Output |
+|---|---|---|
+| `keshav-three-pass` | fetch → skim → grasp → deep-read | 三层递进式 prose notes |
+| `qalmri-worksheet` | fetch → qalmri | 六槽阅读工作表 |
+| `argumentative-zoning` | fetch → segment → classify | 每句一个修辞标签 |
+| `acu-nugget-recall` | fetch → write units → match → aggregate | recall 分数与遗漏单元 |
+| `reforms-grading` | fetch → gate → grade | complete/partial/none 配置等级 |
+
+## Where output goes
+
+```text
+context/papers/<timestamp>-<title-slug>/
+  source.md
+  source.meta.json
+  <tactic-name>/
+    01-<sop-name>.md
+    02-<sop-name>.json
+```
+
+所有名称小写。Prose 输出使用带 frontmatter 的 Markdown；结构化结果使用 JSON。再次读取同一论文时，`paper-fetch` 先按 `identifier` 或 `title_slug` 检查缓存，避免重复抓取。
 
 ## 调研记录
 

@@ -252,3 +252,21 @@ output_dir: readings/<slug>/scifact/
 - `first-pass-skim` 的「不读正文体」算硬禁令（→ 独立子代理）还是软约束（→ 内联靠自律）？若算硬的，Keshav 链就不是纯内联，A 的 1× token 优势打折。
 - 节点名 drift 未修：图上 `third-pass-verify`，目录是 `third-pass-deep-read`。tactic 声明按目录名写。
 
+---
+
+## Checkpoint: path contract and tactic layer landed
+
+- Adopted `source.md` plus `source.meta.json` with line-indexed sections;
+  slicing remains a consumer concern rather than a `paper-fetch` concern.
+- Cache lookup uses `identifier` or `title_slug`, not timestamped directory names.
+- Nineteen reading prompts now take `source_path` and `meta_path`; narrow
+  readers name their exact ranges, while full-paper readers state why.
+- Added five tactics: `keshav-three-pass`, `qalmri-worksheet`,
+  `argumentative-zoning`, `acu-nugget-recall`, and `reforms-grading`.
+- `target_summary` remains external for ACU/Nugget recall; generating it in
+  the same tactic would contaminate the coverage check.
+- SciFact remains without a tactic because its citance is external to the
+  paper and the sole-fetch-entry rule remains intact.
+- Validation now requires DARE frontmatter keys and checks tactic-to-SOP
+  dependency closure. Runtime usefulness remains untested until a real paper
+  is run through the tactics.
