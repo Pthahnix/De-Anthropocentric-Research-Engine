@@ -5,9 +5,16 @@ verbatim-adjacent facts (ACU style) or freshly-authored short natural-
 language statements (Nugget style), per unit_source.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **unit_source**: "extracted" (ACU — pull atomic facts directly from the paper's own reference summary/abstract, phrased as close to the source as possible) | "authored" (Nugget — write short, fresh natural-language statements, averaging 7-8 tokens each, not required to quote the source verbatim)
 - **importance_tagging_toggle**: whether to additionally tag each unit as "vital" or "okay" (Nugget's optional importance binary — vital units are the ones whose omission would make a summary meaningfully incomplete)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the abstract only. Both ACU and Nugget define their reference units over
+the paper's summary. If no abstract is indexed, read the first 60 lines and
+record that degradation in the output.
 
 ## Output
 - **atomic_units**: list of {text, [importance: "vital" | "okay", only if importance_tagging_toggle is true]}

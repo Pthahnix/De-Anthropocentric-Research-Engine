@@ -3,7 +3,7 @@ name: unit-classification
 description: Classify each pre-segmented text unit independently against a fixed label set (Argumentative Zoning, CoreSC, PubMed-RCT, Swales move/step, CODA-19, TDMS, or CSFCube's facet labels), single-layer with no cross-unit dependency. Use this after unit-segmentation has split the text, whenever a sentence- or clause-level rhetorical/functional classification is needed; do not use this for methods requiring document-level coreference reasoning (see multi-stage-cascade-extraction instead).
 execution: subagent
 prompt: ./prompt.md
-input: 'units (list of strings), unit_offsets (list of {start, end}), label_set (string — name of the label vocabulary), hierarchy_toggle (boolean), output_type (string: "single_label" | "span_level" | "tuple")'
+input: 'units (list of strings), unit_offsets (list of {line, start, end}), label_set (string — name of the label vocabulary), hierarchy_toggle (boolean), output_type (string: "single_label" | "span_level" | "tuple")'
 output: 'classified_units (list of {unit_text, offset, label(s)})'
 dependencies:
   sops:
