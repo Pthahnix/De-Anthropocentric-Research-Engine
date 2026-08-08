@@ -9,8 +9,18 @@ schema.
 
 ## Input
 
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **skim_notes**: output from first-pass-skim
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+## What you may read
+
+The whole paper. This pass genuinely needs it — read `source.md` in full.
+
+`skim_notes` tells you which parts the first pass flagged as load-bearing;
+use it to decide where to slow down, not to decide what to skip.
 
 ## Instructions
 

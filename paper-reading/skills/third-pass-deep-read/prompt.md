@@ -10,9 +10,18 @@ the approach could be improved.
 
 ## Input
 
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **grasp_summary**: output from second-pass-grasp (including anything it
   flagged as needing deeper scrutiny)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+## What you may read
+
+The whole paper, including proofs, derivations, appendices, and supplementary
+sections listed in the index. Every item `grasp_summary` flagged must be
+resolved against text you actually read here, not recollection of pass 2.
 
 ## Instructions
 

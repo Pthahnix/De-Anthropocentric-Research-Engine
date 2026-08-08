@@ -3,7 +3,8 @@ name: first-pass-skim
 description: Keshav's first pass over one paper — a 5-10 minute skim of title, abstract, headings, figures, and conclusion only, producing skim notes and a read-deeper judgment. Use this as the first step whenever a paper is being read via the Keshav three-pass method; always precedes second-pass-grasp and never reads section bodies itself.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string)'
+input: 'source_path (string), meta_path (string)'
+reads: 'title, abstract, all headings, figure captions, conclusion — never section bodies'
 output: 'skim_notes (string), read_deeper (boolean)'
 dependencies:
   sops:

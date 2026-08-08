@@ -7,7 +7,21 @@ content-extraction pass.
 
 ## Input
 
-- **full_text**: the paper's full text (from paper-fetch)
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+## What you may read
+
+From the index, read only: the title, the `abstract` range, the full list of
+`sections` **keys** (the heading text alone — not the line ranges' contents),
+the lines listed in `figure_captions`, and the conclusion range.
+
+You may not read section bodies. This is not a cost optimization — it is
+what makes this a first pass. If the index is unusable (`sections: {}` or
+`index_reliable: false`), read only the first 40 lines of `source.md` plus its
+last 40, and say in `skim_notes` that you worked from a degraded index.
 
 ## Instructions
 
