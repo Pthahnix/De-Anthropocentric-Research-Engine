@@ -6,7 +6,14 @@ fit — or determine that none of these medically-descended tools applies at
 all, which is a common and entirely valid outcome for CS/ML papers.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the abstract and method sections only. Study design is declared there;
+results and discussion do not change what design was run. For CS/ML papers,
+`not_applicable` is common and usually visible from the abstract alone.
 
 ## Reference
 

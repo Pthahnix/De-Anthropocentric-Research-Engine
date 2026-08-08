@@ -3,7 +3,8 @@ name: study-design-tool-gate
 description: Classify a paper's study design (RCT, cohort, case-control, diagnostic-accuracy, systematic-review, animal-study, prediction-model, etc., or not_applicable) and dispatch to the correct downstream bias-risk/quality/reporting tool and specific variant (CASP has 8 variants, JBI ~6, RoB2 has parallel/cluster/crossover versions). Use this as the mandatory first step before running ANY of CASP, JBI, AMSTAR-2, NOS, RoB2, ROBINS-I, QUADAS-2, CONSORT, STROBE, ARRIVE, SPIRIT, TRIPOD, or engineering-config-grading — these tools are all study-design-conditional and picking the wrong variant produces meaningless results. It is entirely correct and common for this gate to determine that none of these medically-descended tools applies (e.g. most CS/ML papers) — that is a valid, complete answer, not a failure.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string)'
+input: 'source_path (string), meta_path (string)'
+reads: 'abstract and method sections only'
 output: 'study_design (string), dispatched_tool (string), applicability_reasoning (string)'
 dependencies:
   sops:

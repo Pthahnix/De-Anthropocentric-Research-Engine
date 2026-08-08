@@ -3,8 +3,9 @@ name: unit-segmentation
 description: Split a paper's text into sentence- or clause-level units (with character offsets) for downstream classification, at a caller-specified granularity and scope (full text, abstract-only, or intro-only). Use this as the mandatory first step whenever any sentence/clause-level classification method (Argumentative Zoning, CoreSC, PubMed-RCT, CSAbstruct, Swales move analysis, CODA-19) needs its input pre-segmented — always precedes unit-classification.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string), segmentation_granularity (string: "sentence" | "clause"), scope (string: "full_text" | "abstract" | "intro_only")'
-output: 'units (list of strings), unit_offsets (list of {start: int, end: int})'
+input: 'source_path (string), meta_path (string), segmentation_granularity (string: "sentence" | "clause"), scope (string: "full_text" | "abstract" | "intro_only")'
+output: 'units (list of strings), unit_offsets (list of {line: int, start: int, end: int} — line is 1-indexed into source.md, start/end are character offsets within that line)'
+reads: 'exactly the range named by scope'
 dependencies:
   sops:
   - spawn-agent
