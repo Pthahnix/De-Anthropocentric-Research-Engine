@@ -1,6 +1,9 @@
 ---
 name: research-question-appraisal
 description: Judge a paper's stated research question against the FINER criteria (Feasible, Interesting, Novel, Ethical, Relevant) — five independent judgments with justification, evaluating the question itself, not the paper's results. Use this whenever the user wants to know whether a paper is asking a good research question, distinct from whether it answered that question well.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string)'

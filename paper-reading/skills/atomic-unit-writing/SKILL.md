@@ -1,6 +1,9 @@
 ---
 name: atomic-unit-writing
 description: Extract (ACU-style) or freshly author (Nugget-style) a list of atomic content units from a paper, optionally tagged vital/okay for importance. Use this as the first step whenever building a reference set of atomic facts for later recall-checking a summary or abstract against the paper — always precedes atomic-unit-matching.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), unit_source (string: "extracted" | "authored"), importance_tagging_toggle (boolean)'

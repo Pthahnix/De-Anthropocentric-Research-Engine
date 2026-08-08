@@ -1,6 +1,9 @@
 ---
 name: claim-label-prediction
 description: Judge a three-way SUPPORTS/REFUTES/NOINFO label for an atomic claim, based only on its selected rationale sentences (SciFact's final classification step). Use this after rationale-selection has produced the evidence sentences — this is the terminal step of the SciFact chain, producing the complete (claim, abstract, label, rationale) tuple.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'atomic_claim (string), rationale_sentences (list of strings)'

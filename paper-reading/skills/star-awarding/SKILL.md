@@ -1,6 +1,9 @@
 ---
 name: star-awarding
 description: Award NOS's (Newcastle-Ottawa Scale) stars item-by-item across Selection (up to 4), Comparability (up to 2), and Outcome/Exposure (up to 3) — a binary award-or-not action per item, distinct from a 5-value signalling judgment. Use this after study-design-tool-gate has dispatched to NOS, as the first step before sum-threshold-scoring.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string)'

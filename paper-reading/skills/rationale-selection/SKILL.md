@@ -1,6 +1,9 @@
 ---
 name: rationale-selection
 description: Select the minimal set of 1-3 verbatim sentences from a candidate paper/abstract sufficient to entail or refute an atomic claim (SciFact's rationale-selection step). Use this after claim-writing has produced an atomic claim, as the evidence-gathering step before claim-label-prediction; an empty rationale set is a valid outcome, not an error.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'atomic_claim (string), source_path (string), meta_path (string)'

@@ -1,6 +1,9 @@
 ---
 name: template-slot-filling
 description: Fill a paper's reported values into an already-given comparison-template attribute schema (e.g. Task/Dataset/Metric/Value) — the executable half of ORKG's comparison-template method. Use this when a template's attribute schema is already fixed and you need one paper's row filled in; this does NOT build new templates (that half is a human-curator task, out of scope).
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), template_attribute_schema (list of strings)'

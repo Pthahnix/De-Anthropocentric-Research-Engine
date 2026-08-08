@@ -1,6 +1,9 @@
 ---
 name: atomic-unit-recall-aggregate
 description: Aggregate per-unit ACU/Nugget match judgments into a final recall score — normalized length-penalized recall for ACU, or V_strict/A_strict (+ run-level ranking, with an explicit per-topic-unreliability caveat) for Nugget. Use this as the final step of the atomic-unit chain, after atomic-unit-matching; this SOP's existence closes a gap the original pipeline design was missing — without it, per-unit match judgments were never actually summed into the score the source methodologies report.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'match_results (list of {unit_text, judgment}), atomic_units (list of {text, importance})'

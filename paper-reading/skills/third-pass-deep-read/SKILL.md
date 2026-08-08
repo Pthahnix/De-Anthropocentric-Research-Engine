@@ -1,6 +1,9 @@
 ---
 name: third-pass-deep-read
 description: Keshav's third pass — the heaviest of the three, a full sentence-by-sentence re-read including proofs/derivations, attempting a virtual re-implementation of the paper to surface implicit assumptions and concrete improvement points. Use this after second-pass-grasp, as the terminal step of the Keshav three-pass method, whenever genuine mastery of a paper (not just a summary) is needed. This is not a skippable recap — treat "nothing new to add" as suspicious, not a default outcome.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), grasp_summary (string)'

@@ -1,6 +1,9 @@
 ---
 name: qasper-evidence-qa
 description: Answer a specific question about a paper, grounding the answer in exact quoted evidence spans from the text (QASPER-style question-driven QA with span-level evidence, no schema categorization). Use this whenever the user asks a specific factual question about a paper and wants the answer traceable to exact text spans.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), question (string)'

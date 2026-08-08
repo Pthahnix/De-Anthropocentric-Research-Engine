@@ -1,6 +1,9 @@
 ---
 name: reproducibility-third-party-verification
 description: (Proposal, unverified) Attempt to verify a paper's reported results by actually executing its released code/scripts against its own reported configuration — the only SOP in this package whose action type is code execution rather than text reading/judgment. Use this after unit-classification has extracted the paper's reported configuration/hyperparameters as classified units; "not_attempted" is a correct, common output when the paper's own reporting is too incomplete to run, not a failure of this SOP.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'classified_units (list of {unit_text, offset, label})'

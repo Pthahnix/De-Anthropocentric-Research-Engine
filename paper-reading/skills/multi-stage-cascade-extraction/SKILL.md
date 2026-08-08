@@ -1,6 +1,9 @@
 ---
 name: multi-stage-cascade-extraction
 description: Run a multi-stage extraction cascade (mention detection, document-level coreference clustering, optional saliency judgment, N-ary relation/triple extraction) directly over a paper's full text — covers SciERC, SciREX, and NLP Contribution Graph. Use this whenever cross-sentence or document-level entity/relation extraction is needed (e.g. SciREX-style Task-Dataset-Metric-Score tuples); do NOT use unit-classification for this, since these methods reason over the whole document's mentions, not independently-classified sentence units.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), stage_count (integer), per_stage_label_set (dict), saliency_layer_toggle (boolean)'

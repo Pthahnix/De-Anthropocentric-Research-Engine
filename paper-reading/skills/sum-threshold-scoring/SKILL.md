@@ -1,6 +1,9 @@
 ---
 name: sum-threshold-scoring
 description: Sum NOS's item-level stars and bucket into good (≥7)/fair (4-6)/poor (≤3) — a fixed threshold lookup, structurally distinct from worst-case-lookup's take-the-worst-value approach. Use this after star-awarding has produced the per-item stars; this is NOS's terminal step.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'star_results (list of {item, stars_awarded})'

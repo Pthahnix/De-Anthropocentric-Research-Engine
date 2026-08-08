@@ -1,6 +1,9 @@
 ---
 name: reporting-standard-checklist
 description: Check whether a paper reports each item from PRISMA, CONSORT, STROBE, ARRIVE, SPIRIT, or TRIPOD (per whichever study-design-tool-gate dispatched to), citing where each item is or isn't addressed — including a/b sub-item hierarchy where the standard defines one. Use this after study-design-tool-gate has dispatched to one of these 6 reporting standards; this checks report completeness (did they say where), not methodological quality (was the study done well) — there is no overall synthesis step, judgment per item is the terminal output.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), dispatched_tool (string)'

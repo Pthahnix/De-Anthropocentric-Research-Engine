@@ -1,6 +1,9 @@
 ---
 name: claim-writing
 description: Blind-rewrite a citing sentence (citance) from another paper into a single atomic, independently-verifiable claim (SciFact's annotation protocol) — never looking at the cited paper's content while rewriting. Use this when you have a specific citing sentence and want it decomposed into checkable atomic claims, as the first step before rationale-selection and claim-label-prediction.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'citance (string — a sentence citing the paper under study, supplied by the caller)'

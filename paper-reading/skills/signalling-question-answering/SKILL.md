@@ -1,6 +1,9 @@
 ---
 name: signalling-question-answering
 description: 'Answer per-domain signalling questions (5-value scale: Yes/Probably yes/Probably no/No/No information) for RoB2, ROBINS-I, or QUADAS-2, per whichever variant study-design-tool-gate dispatched to. Use this after study-design-tool-gate has dispatched to one of these three tools; this SOP produces only the raw signalling answers, not any domain-level or overall roll-up — that happens in domain-level-judgment next.'
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), dispatched_tool (string)'

@@ -1,6 +1,9 @@
 ---
 name: domain-level-judgment
 description: Fold raw signalling-question answers into domain-level judgments for RoB2, ROBINS-I, or QUADAS-2, per each tool's own lookup rules — the first of two aggregation levels these tools define. QUADAS-2 is dual-axis (risk-of-bias AND applicability-concern per domain, D1-D3) and terminates here with no further rollup; RoB2/ROBINS-I continue on to worst-case-lookup for an overall verdict. Use this after signalling-question-answering has produced the raw answers.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'signalling_answers (list of {domain, question, answer}), dispatched_tool (string)'

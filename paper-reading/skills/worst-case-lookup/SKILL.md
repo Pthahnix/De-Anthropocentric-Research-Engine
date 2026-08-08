@@ -1,6 +1,9 @@
 ---
 name: worst-case-lookup
 description: Take the single most severe domain/item judgment as the overall verdict, for RoB2 (3-value), ROBINS-I (5-value), or AMSTAR-2 (pre-filtered by critical-domain status before worst-case). Use this after domain-level-judgment (for RoB2/ROBINS-I) or quality-appraisal-checklist (for AMSTAR-2) has produced per-domain/item judgments — this SOP has two structurally distinct upstream callers and must identify which value domain it received before applying the matching lookup rule. QUADAS-2 never reaches this SOP; it terminates one step earlier at domain-level-judgment.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'domain_judgments (list of {domain, judgment}, from RoB2/ROBINS-I) OR checklist_result (from AMSTAR-2) — exactly one of the two'

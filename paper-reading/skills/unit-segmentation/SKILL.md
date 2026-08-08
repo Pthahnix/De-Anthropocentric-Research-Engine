@@ -1,6 +1,9 @@
 ---
 name: unit-segmentation
 description: Split a paper's text into sentence- or clause-level units (with character offsets) for downstream classification, at a caller-specified granularity and scope (full text, abstract-only, or intro-only). Use this as the mandatory first step whenever any sentence/clause-level classification method (Argumentative Zoning, CoreSC, PubMed-RCT, CSAbstruct, Swales move analysis, CODA-19) needs its input pre-segmented — always precedes unit-classification.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), segmentation_granularity (string: "sentence" | "clause"), scope (string: "full_text" | "abstract" | "intro_only")'

@@ -1,6 +1,9 @@
 ---
 name: second-pass-grasp
 description: Keshav's second pass — a careful full read (ignoring proof/derivation detail) producing prose-level understanding sufficient to explain the paper's main contribution and evidence to a colleague. Use this after first-pass-skim, as the main content-grasping pass of the Keshav three-pass method; do not force its output into a structured data schema.
+version: 1.0.0
+category: paper-reading
+type: sop
 execution: subagent
 prompt: ./prompt.md
 input: 'source_path (string), meta_path (string), skim_notes (string)'
