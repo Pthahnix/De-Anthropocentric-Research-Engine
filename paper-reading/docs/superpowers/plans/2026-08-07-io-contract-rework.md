@@ -21,7 +21,7 @@
 - **No new `execution:` values.** The existing enum across DARE is `subagent`, `campaign`, `strategy`, `tactic`, `sop`, `sequential`, `dialogue`, `import`, `entry`, `reference`. Every SOP here stays `execution: subagent`; every tactic is `execution: tactic`.
 - **Do not edit files under `context/`** except where a task explicitly says to. Those are historical research records. In particular the node-name drift in `context/2026-08-07-13-42-sop-pipeline-graph.html` (`third-pass-verify` vs the real directory `third-pass-deep-read`) is left as-is; it is a record of what was decided then.
 - **Verification for every task:** `python scripts/validate_skill.py <each changed SKILL.md>` must print `No errors found`, and `python -m pytest tests/ -q` must pass. Run both before every commit.
-- **The shared read protocol is temporary.** Keep `skills/_conventions/reading-the-source.md` as the single source while Tasks 2-15 are under development. Before the final standalone sync, Task 16 must copy its complete content into each of the 19 consuming SOP prompts and change each prompt to use its local copy. Do not leave those SOPs dependent on `_conventions/` at runtime.
+- **The shared read protocol is temporary.** Keep `skills/_conventions/reading-the-source.md` as the single source while Tasks 2-15 are under development. Before the final standalone sync, Task 16 must copy that file into each of the 19 consuming SOP directories as `reading-the-source.md` and change each prompt to reference `./reading-the-source.md`. Do not leave those SOPs dependent on `_conventions/` at runtime.
 
 ## Already Done — Do Not Redo
 
@@ -2263,21 +2263,21 @@ git push origin main
 
 ---
 
-### Task 16: Inline the protocol into the 19 consuming prompts
+### Task 16: Copy the protocol into the 19 consuming skills
 
 The shared file was useful while the contract was changing, but released
-skills must be self-contained. For each of the 19 consuming SOPs, replace the
-line `Read \`../_conventions/reading-the-source.md\` before you start.` with
-the complete contents of that file, preserving the SOP-specific scope notes
-around it. The copied block must not contain a path back to `_conventions/`.
+skills must be self-contained. Copy the file into each of the 19 consuming
+SOP directories as `reading-the-source.md`, then replace the line
+`Read \`../_conventions/reading-the-source.md\` before you start.` with
+`Read \`./reading-the-source.md\` before you start.`.
 
-- [ ] **Step 1: Copy the complete protocol into all 19 prompts**
+- [ ] **Step 1: Copy the complete protocol file into all 19 SOP directories**
 - [ ] **Step 2: Verify no consuming prompt references `_conventions/`**
 - [ ] **Step 3: Run the validator and tests**
 - [ ] **Step 4: Commit and push**
 
-After the copies pass verification, the temporary `_conventions/` source may
-be removed in the same task; no released SOP may depend on it.
+After the copies pass verification, remove the temporary `_conventions/`
+source in the same task; no released SOP may depend on it.
 
 ---
 
