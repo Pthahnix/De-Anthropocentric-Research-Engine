@@ -5,13 +5,19 @@ evidence spans quoted from the text — free-text answer, no schema-driven
 categorization.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **question**: the specific question to answer about this paper
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the whole paper. You cannot know in advance which section answers the
+question, and every evidence span must be verbatim from text actually read.
 
 ## Output
 - **answer**: free-text answer to the question
-- **evidence_spans**: list of exact quoted spans from full_text that support the answer (verbatim quotes, not paraphrases)
+- **evidence_spans**: list of exact quoted spans from `source.md` that support the answer (verbatim quotes, not paraphrases)
 
 ## Instructions
-1. Every claim in `answer` must trace to at least one span in `evidence_spans` — do not answer from anything not directly quotable from full_text.
+1. Every claim in `answer` must trace to at least one span in `evidence_spans` — do not answer from anything not directly quotable from `source.md`.
 2. If the paper doesn't actually answer the question, say so explicitly rather than inferring an answer from context.

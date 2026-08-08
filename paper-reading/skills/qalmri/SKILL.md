@@ -3,7 +3,8 @@ name: qalmri
 description: Produce a six-slot QALMRI worksheet (Question, Alternatives, Logic, Method, Results, Inference) as free-text notes on one paper — a structured note-taking format, not a scored evaluation. Use this whenever the user wants a QALMRI-style reading worksheet for a specific paper.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string)'
+input: 'source_path (string), meta_path (string)'
+reads: 'full paper — all six QALMRI slots draw on different parts'
 output: 'qalmri_worksheet (dict — six string fields: question, alternatives, logic, method, results, inference)'
 dependencies:
   sops:

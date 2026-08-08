@@ -5,7 +5,14 @@ independent judgments, not a slot-filling exercise. You are evaluating the
 question itself, not the paper's execution of it.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the abstract and introduction ranges, plus any limitations, ethics, or
+broader-impact section. If none exists, report that absence rather than
+reading further to hunt for one.
 
 ## Output — one judgment + one-sentence justification per criterion
 - **feasible**: can this question realistically be answered with the resources/data a study like this would need?

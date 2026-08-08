@@ -7,8 +7,16 @@ here: it's "labor-intensive and inconsistent among human domain-expert
 curators" even for humans, per the documented ORKG constraint).
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **template_attribute_schema**: the pre-given list of attributes to fill (e.g. for a leaderboard-style template: Task, Dataset, Metric, Value — this mirrors SciREX's four-slot structure)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Use the index to choose sections that could carry each requested attribute.
+When an attribute could be anywhere, read the whole paper rather than
+guessing. A missing value is valid only after the relevant locations were
+actually checked.
 
 ## Output
 - **filled_template**: dict mapping each attribute in template_attribute_schema to the value this paper reports for it (or `null` + a one-line reason if the paper doesn't report that attribute)
