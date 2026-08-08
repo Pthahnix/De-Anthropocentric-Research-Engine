@@ -21,7 +21,7 @@
 - **No new `execution:` values.** The existing enum across DARE is `subagent`, `campaign`, `strategy`, `tactic`, `sop`, `sequential`, `dialogue`, `import`, `entry`, `reference`. Every SOP here stays `execution: subagent`; every tactic is `execution: tactic`.
 - **Do not edit files under `context/`** except where a task explicitly says to. Those are historical research records. In particular the node-name drift in `context/2026-08-07-13-42-sop-pipeline-graph.html` (`third-pass-verify` vs the real directory `third-pass-deep-read`) is left as-is; it is a record of what was decided then.
 - **Verification for every task:** `python scripts/validate_skill.py <each changed SKILL.md>` must print `No errors found`, and `python -m pytest tests/ -q` must pass. Run both before every commit.
-- **The shared read protocol is temporary.** Keep `skills/_conventions/reading-the-source.md` as the single source while Tasks 2-15 are under development. Before the final standalone sync, Task 16 must copy that file into each of the 19 consuming SOP directories as `reading-the-source.md` and change each prompt to reference `./reading-the-source.md`. Do not leave those SOPs dependent on `_conventions/` at runtime.
+- **The shared read protocol is temporary.** Keep `skills/_conventions/reading-the-source.md` as the single source while Tasks 2-15 are under development. Before the final standalone sync, Task 16 must copy that file into each of the 19 consuming SOPs under `references/reading-the-source.md` and change each prompt to reference `./references/reading-the-source.md`. Do not leave those SOPs dependent on `_conventions/` at runtime.
 
 ## Already Done — Do Not Redo
 
@@ -31,7 +31,7 @@
 
 | Path | Responsibility |
 |---|---|
-| `skills/_conventions/reading-the-source.md` | **Temporary during development.** The shared section-index read protocol, copied into all 19 consuming prompts by Task 16 before release. |
+| `skills/_conventions/reading-the-source.md` | **Temporary during development.** The shared section-index read protocol, copied into all 19 consuming SOP `references/` directories by Task 16 before release. |
 | `skills/<19 sops>/SKILL.md` + `prompt.md` | Contract migrated from `full_text` to `source_path` + `meta_path`. |
 | `skills/<30 sops>/SKILL.md` | Three frontmatter keys added. |
 | `skills/keshav-three-pass/SKILL.md` | **New tactic.** 4-SOP accumulating chain. |
@@ -2267,9 +2267,9 @@ git push origin main
 
 The shared file was useful while the contract was changing, but released
 skills must be self-contained. Copy the file into each of the 19 consuming
-SOP directories as `reading-the-source.md`, then replace the line
+SOP directories as `references/reading-the-source.md`, then replace the line
 `Read \`../_conventions/reading-the-source.md\` before you start.` with
-`Read \`./reading-the-source.md\` before you start.`.
+`Read \`./references/reading-the-source.md\` before you start.`.
 
 - [ ] **Step 1: Copy the complete protocol file into all 19 SOP directories**
 - [ ] **Step 2: Verify no consuming prompt references `_conventions/`**

@@ -11,7 +11,7 @@ curators" even for humans, per the documented ORKG constraint).
 - **meta_path**: path to its section index (`source.meta.json`)
 - **template_attribute_schema**: the pre-given list of attributes to fill (e.g. for a leaderboard-style template: Task, Dataset, Metric, Value — this mirrors SciREX's four-slot structure)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Use the index to choose sections that could carry each requested attribute.
 When an attribute could be anywhere, read the whole paper rather than

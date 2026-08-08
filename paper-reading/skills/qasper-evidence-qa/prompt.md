@@ -9,7 +9,7 @@ categorization.
 - **meta_path**: path to its section index (`source.meta.json`)
 - **question**: the specific question to answer about this paper
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the whole paper. You cannot know in advance which section answers the
 question, and every evidence span must be verbatim from text actually read.

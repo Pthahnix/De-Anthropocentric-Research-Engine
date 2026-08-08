@@ -15,7 +15,7 @@ the approach could be improved.
 - **grasp_summary**: output from second-pass-grasp (including anything it
   flagged as needing deeper scrutiny)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 ## What you may read
 

@@ -17,7 +17,7 @@ instruction to the paper's own authors.
 - **meta_path**: path to its section index (`source.meta.json`)
 - **item_set**: which checklist to run (name it explicitly, e.g. "ML Reproducibility Checklist")
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the whole paper. A completeness audit asks whether each item appears
 anywhere, so partial reading would turn "not checked" into a false "No".

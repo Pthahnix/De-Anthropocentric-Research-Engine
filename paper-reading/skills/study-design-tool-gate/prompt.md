@@ -9,7 +9,7 @@ all, which is a common and entirely valid outcome for CS/ML papers.
 - **source_path**: path to the landed paper (`source.md`)
 - **meta_path**: path to its section index (`source.meta.json`)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the abstract and method sections only. Study design is declared there;
 results and discussion do not change what design was run. For CS/ML papers,

@@ -18,7 +18,7 @@ dual-column-self-check's checklists are binary Yes/No/NA, not graded).
 - **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: confirms this gate dispatch (engineering-config-grading has a single item set, no variants)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read method, experimental setup, appendix, and supplementary sections.
 Configuration details commonly live in the appendix and must not be skipped.

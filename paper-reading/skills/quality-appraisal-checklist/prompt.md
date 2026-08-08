@@ -13,7 +13,7 @@ which.
 - **classified_units** (completeness_check mode): labelled units from unit-classification
 - **target_checklist_labels** (completeness_check mode): labels required for completeness
 
-Read `../_conventions/reading-the-source.md` before you start when in
+Read `./references/reading-the-source.md` before you start when in
 checklist mode. Read method and results. In completeness_check mode, do not
 read the paper; judge only coverage of the supplied classified units.
 

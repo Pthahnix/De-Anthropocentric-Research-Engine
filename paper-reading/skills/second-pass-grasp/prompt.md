@@ -13,7 +13,7 @@ schema.
 - **meta_path**: path to its section index (`source.meta.json`)
 - **skim_notes**: output from first-pass-skim
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 ## What you may read
 

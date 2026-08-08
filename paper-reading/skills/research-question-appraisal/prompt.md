@@ -8,7 +8,7 @@ question itself, not the paper's execution of it.
 - **source_path**: path to the landed paper (`source.md`)
 - **meta_path**: path to its section index (`source.meta.json`)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the abstract and introduction ranges, plus any limitations, ethics, or
 broader-impact section. If none exists, report that absence rather than

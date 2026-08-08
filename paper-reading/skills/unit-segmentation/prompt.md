@@ -9,7 +9,7 @@ will label one-by-one. This SOP does no labeling itself — only splitting.
 - **segmentation_granularity**: "sentence" or "clause" (clause = further split on commas/semicolons within a sentence, matching CODA-19's own approach: 103,978 sentences → 168,286 clause-level fragments)
 - **scope**: "full_text" | "abstract" | "intro_only" — which part of the paper to segment (Swales move analysis, for instance, is scoped to the introduction only)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Map `scope` directly onto the index and read exactly that range: abstract,
 introduction, or the whole file. Do not segment outside the requested scope.

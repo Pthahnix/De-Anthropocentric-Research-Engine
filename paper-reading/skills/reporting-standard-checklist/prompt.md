@@ -9,7 +9,7 @@ reported.
 - **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: which specific standard (from study-design-tool-gate)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the whole paper. A reporting item may appear anywhere, so a skipped
 section cannot honestly be judged "not reported".

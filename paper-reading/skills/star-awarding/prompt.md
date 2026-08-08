@@ -7,7 +7,7 @@ per item, not a 5-value signalling judgment.
 - **source_path**: path to the landed paper (`source.md`)
 - **meta_path**: path to its section index (`source.meta.json`)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the method and results sections. NOS items concern selection,
 comparability, exposure, follow-up, and outcomes reported there.

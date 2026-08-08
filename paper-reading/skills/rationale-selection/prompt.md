@@ -8,7 +8,7 @@ that, together, are sufficient to entail or refute the atomic claim.
 - **source_path**: path to the landed paper (`source.md`) being checked against the claim
 - **meta_path**: path to its section index (`source.meta.json`)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the whole paper. The entailing or refuting sentence may occur anywhere,
 and every returned sentence must be verbatim from a range actually read.

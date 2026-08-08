@@ -10,7 +10,7 @@ that.
 - **meta_path**: path to its section index (`source.meta.json`)
 - **slot_definitions**: which schema to use — one of `PICO` (Population/Intervention/Comparator/Outcome), `PECO` (Population/Exposure/Comparator/Outcome), `SPIDER` (Sample/Phenomenon of Interest/Design/Evaluation/Research type)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the abstract and method sections. Leave absent slots empty rather than
 reconstructing them from discussion prose.

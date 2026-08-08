@@ -8,7 +8,7 @@ note-taking format, not an evaluation.
 - **source_path**: path to the landed paper (`source.md`)
 - **meta_path**: path to its section index (`source.meta.json`)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the whole paper. The six slots draw on different parts of it, so there
 is no useful subset to restrict to.

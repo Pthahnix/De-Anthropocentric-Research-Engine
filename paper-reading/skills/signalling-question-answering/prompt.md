@@ -9,7 +9,7 @@ question sets differ per tool and, for RoB2, per trial-design version).
 - **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: which specific tool+variant to run (from study-design-tool-gate)
 
-Read `../_conventions/reading-the-source.md` before you start.
+Read `./references/reading-the-source.md` before you start.
 
 Read the method and results sections. These questions ask what the study did,
 not how the introduction or discussion interpreted it.
