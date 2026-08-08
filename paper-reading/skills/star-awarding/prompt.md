@@ -4,7 +4,13 @@ Award stars per NOS's own item set: this is a "give a star, yes/no" action
 per item, not a 5-value signalling judgment.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the method and results sections. NOS items concern selection,
+comparability, exposure, follow-up, and outcomes reported there.
 
 ## NOS item set (cohort-study version; case-control version has an analogous but distinct item list — confirm which via dispatched_tool if the caller specifies)
 - Selection (up to 4 stars): representativeness of exposed cohort, selection of non-exposed cohort, ascertainment of exposure, demonstration outcome not present at start

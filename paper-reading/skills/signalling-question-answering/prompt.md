@@ -5,8 +5,14 @@ study-design-tool-gate dispatched to (RoB2, ROBINS-I, or QUADAS-2 — the
 question sets differ per tool and, for RoB2, per trial-design version).
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: which specific tool+variant to run (from study-design-tool-gate)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the method and results sections. These questions ask what the study did,
+not how the introduction or discussion interpreted it.
 
 ## Output
 - **signalling_answers**: list of {domain, question, answer} — one entry per signalling question in the dispatched tool's own question set, `answer` drawn from exactly this 5-value domain: "Yes" | "Probably yes" | "Probably no" | "No" | "No information"

@@ -3,7 +3,8 @@ name: signalling-question-answering
 description: 'Answer per-domain signalling questions (5-value scale: Yes/Probably yes/Probably no/No/No information) for RoB2, ROBINS-I, or QUADAS-2, per whichever variant study-design-tool-gate dispatched to. Use this after study-design-tool-gate has dispatched to one of these three tools; this SOP produces only the raw signalling answers, not any domain-level or overall roll-up — that happens in domain-level-judgment next.'
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string), dispatched_tool (string)'
+input: 'source_path (string), meta_path (string), dispatched_tool (string)'
+reads: 'method and results sections — signalling questions ask what was done, not what it meant'
 output: 'signalling_answers (list of {domain, question, answer})'
 dependencies:
   sops:

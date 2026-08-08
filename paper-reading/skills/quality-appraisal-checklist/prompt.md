@@ -6,14 +6,16 @@ already-classified rhetorical labels — check `entry_mode` first to know
 which.
 
 ## Input
+- **entry_mode**: `"checklist"` | `"completeness_check"`
+- **source_path** (checklist mode): path to the landed paper (`source.md`)
+- **meta_path** (checklist mode): path to its section index (`source.meta.json`)
+- **dispatched_tool** (checklist mode): exact tool and variant from study-design-tool-gate
+- **classified_units** (completeness_check mode): labelled units from unit-classification
+- **target_checklist_labels** (completeness_check mode): labels required for completeness
 
-### Mode (a): item-set checklist (entry_mode = "checklist", the default if unspecified)
-- **full_text**: the paper's full text
-- **dispatched_tool**: which specific checklist+variant (from study-design-tool-gate)
-
-### Mode (b): completeness check (entry_mode = "completeness_check", proposal)
-- **classified_units**: output from unit-classification
-- **target_checklist_labels**: the label set a caller-specified target checklist expects to see represented
+Read `../_conventions/reading-the-source.md` before you start when in
+checklist mode. Read method and results. In completeness_check mode, do not
+read the paper; judge only coverage of the supplied classified units.
 
 ## Reference
 

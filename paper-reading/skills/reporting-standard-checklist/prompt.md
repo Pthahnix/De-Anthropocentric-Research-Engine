@@ -5,8 +5,14 @@ standard (PRISMA/CONSORT/STROBE/ARRIVE/SPIRIT/TRIPOD), and cite WHERE it's
 reported.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **dispatched_tool**: which specific standard (from study-design-tool-gate)
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the whole paper. A reporting item may appear anywhere, so a skipped
+section cannot honestly be judged "not reported".
 
 ## Reference
 

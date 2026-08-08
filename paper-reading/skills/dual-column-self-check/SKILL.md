@@ -3,7 +3,8 @@ name: dual-column-self-check
 description: Run one of the ML/CS reproducibility checklists (ML Reproducibility Checklist, REFORMS, NeurIPS Paper Checklist, Model Cards, Datasheets for Datasets) against a paper as a reader-side audit, producing a category (Yes/No/NA) plus free-text reason per item. Use this whenever the user wants a reproducibility/completeness self-check run on an ML or CS paper — invoke this directly, it has no study-design gate in this package since these checklists are engineering self-audits, not clinical-study tools.
 execution: subagent
 prompt: ./prompt.md
-input: 'full_text (string), item_set (string — name of the specific checklist)'
+input: 'source_path (string), meta_path (string), item_set (string — name of the specific checklist)'
+reads: 'full paper — a completeness self-audit asks whether each item appears anywhere'
 output: 'checklist_result (list of {item, category, reason})'
 dependencies:
   sops:

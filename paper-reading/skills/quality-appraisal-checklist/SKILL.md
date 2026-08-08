@@ -3,7 +3,8 @@ name: quality-appraisal-checklist
 description: 'Run CASP (8 study-type variants), JBI (~6 variants), or AMSTAR-2 quality-appraisal checklists — each ending in the tool''s own required integrated judgment, not just item tallies. Also runs a proposal "rhetorical-completeness-check" mode (entry_mode="completeness_check") that instead diffs unit-classification''s rhetorical labels against a target checklist''s expected label set. Use this after study-design-tool-gate has dispatched to CASP/JBI/AMSTAR-2 (mode a), or directly after unit-classification when checking for missing argumentative moves (mode b, proposal/unverified).'
 execution: subagent
 prompt: ./prompt.md
-input: '(mode a) full_text (string), dispatched_tool (string) — OR (mode b) classified_units (list), target_checklist_labels (list of strings), entry_mode ("checklist" | "completeness_check")'
+input: 'entry_mode (string: "checklist" | "completeness_check"), source_path (string) and meta_path (string) and dispatched_tool (string) when entry_mode is "checklist", OR classified_units (list) and target_checklist_labels (list of strings) when entry_mode is "completeness_check"'
+reads: 'method and results sections in checklist mode; nothing in completeness_check mode'
 output: 'checklist_result (list of {item, judgment}), overall_appraisal (string, mode a only)'
 dependencies:
   sops:

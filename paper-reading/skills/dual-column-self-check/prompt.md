@@ -13,8 +13,14 @@ be read as a question about what the paper actually did/reported, not as an
 instruction to the paper's own authors.
 
 ## Input
-- **full_text**: the paper's full text
+- **source_path**: path to the landed paper (`source.md`)
+- **meta_path**: path to its section index (`source.meta.json`)
 - **item_set**: which checklist to run (name it explicitly, e.g. "ML Reproducibility Checklist")
+
+Read `../_conventions/reading-the-source.md` before you start.
+
+Read the whole paper. A completeness audit asks whether each item appears
+anywhere, so partial reading would turn "not checked" into a false "No".
 
 ## Output
 Per item in the chosen checklist:
