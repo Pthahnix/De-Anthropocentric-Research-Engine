@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- **Work in `d:\YOGSOTH-AI\de-anthropocentric-research-engine\paper-reading\`.** This is the development location. The standalone repo `d:\YOGSOTH-AI\paper-reading\` receives a sync at the very end (Task 16) and must not be edited before then.
+- **Work in `d:\YOGSOTH-AI\de-anthropocentric-research-engine\paper-reading\`.** This is the development location. The standalone repo `d:\YOGSOTH-AI\paper-reading\` receives a sync at the very end (Task 17) and must not be edited before then.
 - **Commit and push after every single task.** One task = one commit = one `git push`. Never batch two tasks into one commit. Commits happen from the DARE repo root (`d:\YOGSOTH-AI\de-anthropocentric-research-engine\`) with paths prefixed `paper-reading/`.
 - **Push target is `origin main`** on the DARE repo. This repo is maintained publicly; frequent small commits are intentional, not accidental.
 - **Every landed filename and directory name is lowercase.** Slugs: lowercase, runs of non-alphanumerics collapsed to a single hyphen, Windows-illegal characters (`: * ? " < > |`) dropped, truncated to 60 chars at a hyphen boundary (Windows 260-char path limit).
@@ -21,6 +21,7 @@
 - **No new `execution:` values.** The existing enum across DARE is `subagent`, `campaign`, `strategy`, `tactic`, `sop`, `sequential`, `dialogue`, `import`, `entry`, `reference`. Every SOP here stays `execution: subagent`; every tactic is `execution: tactic`.
 - **Do not edit files under `context/`** except where a task explicitly says to. Those are historical research records. In particular the node-name drift in `context/2026-08-07-13-42-sop-pipeline-graph.html` (`third-pass-verify` vs the real directory `third-pass-deep-read`) is left as-is; it is a record of what was decided then.
 - **Verification for every task:** `python scripts/validate_skill.py <each changed SKILL.md>` must print `No errors found`, and `python -m pytest tests/ -q` must pass. Run both before every commit.
+- **The shared read protocol is temporary.** Keep `skills/_conventions/reading-the-source.md` as the single source while Tasks 2-15 are under development. Before the final standalone sync, Task 16 must copy its complete content into each of the 19 consuming SOP prompts and change each prompt to use its local copy. Do not leave those SOPs dependent on `_conventions/` at runtime.
 
 ## Already Done — Do Not Redo
 
@@ -30,7 +31,7 @@
 
 | Path | Responsibility |
 |---|---|
-| `skills/_conventions/reading-the-source.md` | **New.** The shared section-index read protocol. Written once, referenced by all 19 migrated prompts, so the protocol is not copy-pasted 19 times. |
+| `skills/_conventions/reading-the-source.md` | **Temporary during development.** The shared section-index read protocol, copied into all 19 consuming prompts by Task 16 before release. |
 | `skills/<19 sops>/SKILL.md` + `prompt.md` | Contract migrated from `full_text` to `source_path` + `meta_path`. |
 | `skills/<30 sops>/SKILL.md` | Three frontmatter keys added. |
 | `skills/keshav-three-pass/SKILL.md` | **New tactic.** 4-SOP accumulating chain. |
@@ -45,9 +46,9 @@
 
 ---
 
-### Task 1: The shared read protocol
+### Task 1: The shared read protocol (development source)
 
-Nineteen prompts need to be told how to read a paper via the index. Writing that explanation into each one means nineteen copies drifting apart. Write it once here.
+Nineteen prompts need to be told how to read a paper via the index. Keep one canonical copy during development; Task 16 inlines it into every consuming prompt before release.
 
 **Files:**
 - Create: `skills/_conventions/reading-the-source.md`
@@ -2262,7 +2263,25 @@ git push origin main
 
 ---
 
-### Task 16: Sync to the standalone repo
+### Task 16: Inline the protocol into the 19 consuming prompts
+
+The shared file was useful while the contract was changing, but released
+skills must be self-contained. For each of the 19 consuming SOPs, replace the
+line `Read \`../_conventions/reading-the-source.md\` before you start.` with
+the complete contents of that file, preserving the SOP-specific scope notes
+around it. The copied block must not contain a path back to `_conventions/`.
+
+- [ ] **Step 1: Copy the complete protocol into all 19 prompts**
+- [ ] **Step 2: Verify no consuming prompt references `_conventions/`**
+- [ ] **Step 3: Run the validator and tests**
+- [ ] **Step 4: Commit and push**
+
+After the copies pass verification, the temporary `_conventions/` source may
+be removed in the same task; no released SOP may depend on it.
+
+---
+
+### Task 17: Sync to the standalone repo
 
 The standalone repo `d:\YOGSOTH-AI\paper-reading\` is published separately. It has been untouched through Tasks 1-15 and now needs everything.
 
@@ -2384,4 +2403,3 @@ After every task: `python scripts/validate_skill.py <changed SKILL.md>` prints `
 After Task 14, the whole surface: 35 skills validate clean, tests pass.
 
 **What is not verified by any of this:** no tactic has been run against a real paper. Every task above checks structure — frontmatter validity, contract shape, dependency closure — and none checks that a chain actually produces useful output end to end. A real run needs network access and the caller's go-ahead. Expect the first one to surface things static validation cannot: whether alphaxiv's markdown is regular enough to index reliably, whether heading-name matching by meaning works in practice, and whether the `read_deeper` gate ever actually fires. Do not report this plan's completion as "the pipeline works" — report it as "the pipeline is built and structurally sound, unrun."
-
