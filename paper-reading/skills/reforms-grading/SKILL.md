@@ -5,7 +5,7 @@ version: 1.0.0
 category: paper-reading
 type: tactic
 execution: tactic
-input: 'paper_ref (string — title, arXiv ID, DOI, or URL)'
+input: 'paper_ref (string — title, arXiv ID, DOI, URL, or local .md/.txt/.pdf path)'
 output: '01-study-design-tool-gate.json and 02-engineering-config-grading.json under context/papers/<dir>/reforms-grading/'
 sops:
 - paper-fetch

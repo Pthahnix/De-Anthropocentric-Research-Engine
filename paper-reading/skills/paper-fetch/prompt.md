@@ -11,7 +11,8 @@ Never return the paper's content in your reply.
 
 ## Input
 
-- **paper_ref**: title, arXiv ID, DOI, or URL — any one of these, caller's choice
+- **paper_ref**: title, arXiv ID, DOI, URL, or a local file path to a `.md` /
+  `.txt` / `.pdf` already on disk — any one of these, caller's choice
 
 ## Decision flow (follow in this exact order — do not skip or reorder steps)
 
@@ -23,6 +24,8 @@ and `title_slug`. Match `paper_ref` against them:
 - `paper_ref` is an arXiv ID / DOI / URL → match against `identifier`
   (normalize first: strip `arXiv:` prefixes, `https://doi.org/` prefixes,
   and trailing version suffixes like `v2` before comparing)
+- `paper_ref` is a local file path → resolve it to an absolute path with
+  forward slashes and match that against `identifier`
 - `paper_ref` is a title → slugify it by the rules in the landing step below
   and match against `title_slug`
 
@@ -40,20 +43,49 @@ every downstream SOP in the pipeline.
   ```
 - **Miss, or `context/papers/` does not exist yet** → continue to Step 1.
 
-### Step 1: direct PDF URL
+### Step 1: the caller already has the paper — local file, or direct PDF URL
 
-After a cache miss, detect a direct PDF reference when `paper_ref` is an HTTP(S)
-URL whose path ends in `.pdf`, ignoring query parameters and fragments. Retrieve
-that URL directly with the available PDF/web reader, follow redirects only to the
-PDF resource, and verify that the response is actually a PDF (content type or
-the `%PDF-` signature).
+Three forms of `paper_ref` mean "no search is needed, the text is already
+identified". Detect them in this order, before any search route:
 
-Extract the paper's text without summarizing or rewriting it, then use the normal
-landing step with `source_channel: direct_pdf`, `identifier: <normalized PDF URL>`,
-and the final PDF URL as `source_url`. Do not call alphaxiv, Semantic Scholar,
-bioRxiv, or medRxiv for a direct PDF URL. If the direct read fails or the
-resource is not a PDF, return `not_found` immediately; do not fall back to a
-search route.
+1. **Local markdown/text path** — `paper_ref` names an existing file on disk
+   ending in `.md`, `.markdown`, or `.txt`. Read it as-is.
+2. **Local PDF path** — `paper_ref` names an existing file on disk ending in
+   `.pdf`. Read it with the available PDF reader and extract its text without
+   summarizing or rewriting.
+3. **Direct PDF URL** — `paper_ref` is an HTTP(S) URL whose path ends in `.pdf`,
+   ignoring query parameters and fragments. Retrieve it directly with the
+   available PDF/web reader, follow redirects only to the PDF resource, and
+   verify the response is actually a PDF (content type or the `%PDF-`
+   signature).
+
+A path that looks local but does not exist is NOT a title — return `not_found`
+rather than searching for it as a query string, since a typo'd path silently
+becoming a keyword search is how the wrong paper enters the pipeline.
+
+Then use the normal landing step, with:
+
+| form | `source_channel` | `identifier` | `source_url` |
+| --- | --- | --- | --- |
+| local md/txt | `local_file` | absolute path, forward slashes | `null` |
+| local pdf | `local_pdf` | absolute path, forward slashes | `null` |
+| direct PDF URL | `direct_pdf` | normalized PDF URL | final PDF URL |
+
+For all three, do not call alphaxiv, Semantic Scholar, bioRxiv, or medRxiv. If
+the read fails, or a `.pdf` is not actually a PDF, return `not_found`
+immediately; do not fall back to a search route.
+
+The landing step still applies in full — the paper is copied into
+`context/papers/<dir>/source.md` and indexed into `source.meta.json`. Do not
+hand a caller's own path back as `source_path`: 13 downstream SOPs read section
+line ranges from the index rather than the whole file, the caller's file may
+move or change, and landing keeps the cache and every output path uniform
+across channels. For a local md/txt file this copy is byte-identical, so the
+cost is one file write.
+
+Title for the slug: prefer the document's own title (first H1 for markdown, the
+PDF's title metadata or first-page title line). If neither is recoverable, use
+the input file's basename without extension.
 
 ### Step 2: alphaxiv
 
@@ -206,7 +238,9 @@ filled in speculatively, and never the paper's text itself.
    is in a particular domain — the routing logic exists precisely because a
    guess ("this sounds biomedical, skip straight to bioRxiv") would miss a
    cross-domain paper (e.g. ML applied to genomics) that alphaxiv actually
-   does index.
+   does index. Step 1 is the one exception, and it is not a guess: a local
+   file or a direct PDF URL identifies the paper exactly, so searching for it
+   could only find a different copy.
 2. Stop at the first success. Do not continue checking further channels
    "just to be thorough" once you have the text.
 3. `source_anchor`-level precision is not this SOP's job — that happens

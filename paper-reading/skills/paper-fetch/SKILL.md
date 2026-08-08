@@ -1,13 +1,13 @@
 ---
 name: paper-fetch
-description: Retrieve one specified academic paper (by title, arXiv ID, DOI, or URL) and land it on disk as source.md plus a source.meta.json carrying a line-number section index. Checks context/papers/ for an existing copy first; direct PDF URLs are read directly without search routing, while other references use alphaxiv, Semantic Scholar routing, then bioRxiv/medRxiv. Use this as the mandatory first step whenever any other paper-reading SOP in this package needs the actual text of a paper — it is the sole entry point of the pipeline and every downstream SOP reads the files it lands. If it returns not_found, halt immediately; do not fabricate content or guess at the paper's likely contents.
+description: Retrieve one specified academic paper (by title, arXiv ID, DOI, URL, or a local .md/.txt/.pdf path the caller already has) and land it on disk as source.md plus a source.meta.json carrying a line-number section index. Checks context/papers/ for an existing copy first; local files and direct PDF URLs are read directly with no search at all, while other references use alphaxiv, Semantic Scholar routing, then bioRxiv/medRxiv. Use this as the mandatory first step whenever any other paper-reading SOP in this package needs the actual text of a paper — it is the sole entry point of the pipeline and every downstream SOP reads the files it lands, so do not bypass it even when the caller already has the file. If it returns not_found, halt immediately; do not fabricate content or guess at the paper's likely contents.
 version: 1.0.0
 category: paper-reading
 type: sop
 execution: subagent
 prompt: ./prompt.md
-input: 'paper_ref (string — title, arXiv ID, DOI, or URL)'
-output: 'status (string: "found" | "not_found"), cache_hit (boolean), source_path (string | null), meta_path (string | null), identifier (string | null), source_channel (string | null), source_url (string | null)'
+input: 'paper_ref (string — title, arXiv ID, DOI, URL, or local .md/.txt/.pdf path)'
+output: 'status (string: "found" | "not_found"), cache_hit (boolean), source_path (string | null), meta_path (string | null), identifier (string | null), source_channel (string: "local_file" | "local_pdf" | "direct_pdf" | "alphaxiv" | "biorxiv" | "medrxiv" | null), source_url (string | null)'
 dependencies:
   sops:
   - spawn-agent
@@ -15,16 +15,31 @@ dependencies:
 
 # Paper Fetch
 
-If `paper_ref` is a direct HTTP(S) PDF URL (the URL path ends in `.pdf`, ignoring
-query and fragment), read that PDF directly before considering any search route.
-Record `source_channel: direct_pdf`. If direct reading fails, return `not_found`
+If the caller already has the paper — a local `.md`/`.txt`/`.pdf` path, or a direct
+HTTP(S) PDF URL (path ends in `.pdf`, ignoring query and fragment) — read it
+directly before considering any search route. Record `source_channel` as
+`local_file`, `local_pdf`, or `direct_pdf`. If the read fails, return `not_found`
 and do not fall back to alphaxiv, Semantic Scholar, bioRxiv, or medRxiv.
 
 The pipeline's sole entry point: retrieves a paper and lands it on disk. It checks
-the cache first, reads direct PDF URLs without search routing, and otherwise uses
-the fixed fallback (alphaxiv → Semantic Scholar routing → bioRxiv/medRxiv → not_found).
+the cache first, reads already-identified sources (local files, direct PDF URLs)
+with no search at all, and otherwise uses the fixed fallback (alphaxiv → Semantic
+Scholar routing → bioRxiv/medRxiv → not_found).
 Decoupled from `literature-engine`'s `literature-research`/`literature-search`/
 `literature-overview` — this SOP holds its own retrieval calls rather than delegating.
+
+## Why an already-supplied file still enters through this SOP
+
+Skipping straight to a reading SOP with the caller's own path looks like it saves
+a step, but 13 downstream SOPs take `meta_path` and read only section line ranges
+(`star-awarding` reads method + results; `first-pass-skim`'s "headings only, never
+bodies" constraint holds *because* it is handed shallow ranges). A bare path
+carries no index, and a bare `.pdf` carries no extracted text at all.
+
+So the thing to skip is the **four-channel search**, not the landing and indexing.
+That is what Step 1 does: no network lookup, same landing step, same output
+contract. Tactics keep passing `paper_ref` through unchanged and never learn there
+was a new input form.
 
 ## Landed layout
 
@@ -59,7 +74,7 @@ This also makes `first-pass-skim`'s defining constraint (skim headings and capti
 
 ## Cache lookup is by identifier, not directory name
 
-Directories are named `<timestamp>-<title-slug>`, but `paper_ref` may arrive as an arXiv ID, a DOI, a URL, or a title, and matching an arXiv ID against a title-derived directory name fails. So the lookup scans `context/papers/*/source.meta.json` and matches on `identifier` or `title_slug` — both are recorded precisely so either form of `paper_ref` resolves.
+Directories are named `<timestamp>-<title-slug>`, but `paper_ref` may arrive as an arXiv ID, a DOI, a URL, a local file path, or a title, and matching an arXiv ID against a title-derived directory name fails. So the lookup scans `context/papers/*/source.meta.json` and matches on `identifier` or `title_slug` — both are recorded precisely so any form of `paper_ref` resolves. For a local file, `identifier` is its absolute path, so re-running a tactic on the same file is a cache hit rather than a second copy.
 
 Matching tolerates case and punctuation differences in titles but is deliberately not fuzzy: a missed cache hit costs one redundant fetch, while a false hit silently reads the wrong paper for the rest of the pipeline.
 
