@@ -37,7 +37,7 @@ For each strategy listed in "Execution Steps":
 - Invoke the named skill
 - Focus on the areas specified in "Focus Areas"
 - Use prior context as described in "Expected Input"
-- After each strategy completes: invoke `context-checkpoint` (≥500 lines)
+- After each strategy completes: invoke `context-checkpoint`
 
 ### 4. Campaign End Checkpoint
 After all strategies in the Stage complete, invoke one final `context-checkpoint` as a safety net.

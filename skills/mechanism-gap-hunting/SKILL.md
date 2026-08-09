@@ -1,13 +1,12 @@
 ---
 name: mechanism-gap-hunting
-description: Mechanism-Gap Hunting Campaign — hunt the specific link where
-  scientific progress is BLOCKED, not where literature is empty. Use this
-  instead of gap-analysis whenever the goal is truth-seeking / AI4S research
-  rather than finding a publishable white-space — i.e. when the user asks
-  "where is progress actually stuck", "what mechanism is blocking this", or
-  wants a complete blocker set rather than a ranked gap list. 4 stages over
-  reused deep-insight SOPs, with injected per-stage directives. Exhaustive
-  (no prioritization/ranking).
+description: Mechanism-Gap Hunting Campaign — hunt the specific link where scientific
+  progress is BLOCKED, not where literature is empty. Use this instead of gap-analysis
+  whenever the goal is truth-seeking / AI4S research rather than finding a publishable
+  white-space — i.e. when the user asks "where is progress actually stuck", "what
+  mechanism is blocking this", or wants a complete blocker set rather than a ranked
+  gap list. 4 stages over reused deep-insight SOPs, with injected per-stage directives.
+  Exhaustive (no prioritization/ranking).
 execution: campaign
 dependencies:
   strategies:
@@ -104,3 +103,31 @@ Pseudo-blockers are archived separately with a one-line note: why they were disq
 - the injected directive that was active for that stage
 
 Accumulated state persists across stages within a campaign run.
+
+<!-- BEGIN available-tables (generated) -->
+
+## Available Strategies
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| Strategy | When to use |
+| --- | --- |
+| assumption-audit | Surface all assumptions, classify by vulnerability (load-bearing × likely-false), validate causal logic. Focus on dangerous assumptions — high load-bearing + non-explicit. |
+| dialectical-reformulation | Surface Argyris governing variables and test whether the problem dissolves under alternative governing variables (double-loop learning). |
+| failure-mode-analysis | Systematically catalog failure modes — generate edge cases, observe failures, cluster by mechanism, identify triggers and frequency. |
+
+## Available SOPs
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| SOP | When to use |
+| --- | --- |
+| abstraction-laddering | Move between concrete and abstract framings — 3 levels up (Why?) and 3 levels down (How?) to find the most productive research level. |
+| context-checkpoint | Append research process and results to the current Phase's context file. Covers both process and results with genuine substance. Use this skill at plan-designated checkpoint points — typically after each strategy completes or at key decision nodes within a research Phase. |
+| context-init | Create a new context file for a research Phase. Called once at Phase start to initialize the file that subsequent context-checkpoint calls will append to. Use this skill whenever a new research Phase begins and a fresh context file is needed. |
+| current-reality-tree | Build TOC Current Reality Trees — connect Undesirable Effects via sufficient-cause logic to identify 1-3 root causes. |
+| deep-insight-assumption-surfacing | Systematically extract implicit assumptions from methods, frameworks, or arguments. Identifies what is taken for granted without explicit justification. |
+| failure-clustering | Group observed failures by mechanism (not symptom), identify common triggers per cluster, estimate frequency and severity. |
+| five-whys-drilling | Iterative "Why?" questioning (5+ levels) to drill from surface phenomenon to actionable root cause. Each level verified against evidence. |
+
+<!-- END available-tables (generated) -->

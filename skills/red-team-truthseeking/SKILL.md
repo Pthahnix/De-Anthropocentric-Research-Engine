@@ -1,6 +1,10 @@
 ---
 name: red-team-truthseeking
-description: "Strategy: Systematic adversarial probing retuned for truth-seeking. Threat surface = the set of load-bearing claims. Output is NOT a resilience score and NOT a hardening list — it is, per claim, the specific observation/computation that would refute it, plus which attacks succeeded. Methods: UFMCS Key Assumptions Check (repurposed), CIA Devil's Advocacy, Platt strong inference."
+description: 'Strategy: Systematic adversarial probing retuned for truth-seeking.
+  Threat surface = the set of load-bearing claims. Output is NOT a resilience score
+  and NOT a hardening list — it is, per claim, the specific observation/computation
+  that would refute it, plus which attacks succeeded. Methods: UFMCS Key Assumptions
+  Check (repurposed), CIA Devil''s Advocacy, Platt strong inference.'
 type: strategy
 produces: RefutationSurfaceMap
 dependencies:
@@ -58,3 +62,18 @@ One dedicated subagent argues the strongest case that the WHOLE artifact is a se
 ## Output
 
 `RefutationSurfaceMap`: per load-bearing claim → {load rank | hidden assumptions classified SUPPORTED/ASSERTED/CONVENIENT | refutation-condition (clean / oracle-only / none) | if attacked: refutation attempted + outcome bucket}. Plus the devil's-advocate brief on the artifact-as-framing-artifact risk.
+
+<!-- BEGIN available-tables (generated) -->
+
+## Available SOPs
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| SOP | When to use |
+| --- | --- |
+| devils-advocacy | Construct the strongest possible counter-argument against a position, steelmanning the opposition before attacking. |
+| key-assumptions-check | Military ACT: systematically enumerate all assumptions, classify by type, and evaluate evidence strength supporting each. |
+| probe-execution | Execute a single attack probe against an artifact, record the result with evidence and severity classification. |
+| threat-surface-mapping | Enumerate all attackable surfaces of an artifact — logical, empirical, methodological, social, and practical dimensions. |
+
+<!-- END available-tables (generated) -->

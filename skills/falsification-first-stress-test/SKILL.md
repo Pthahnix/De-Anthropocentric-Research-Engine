@@ -1,9 +1,19 @@
 ---
 name: falsification-first-stress-test
-description: "Campaign: Truth-seeking adversarial validation for scientific research artifacts (NOT publication defense). Core question: Where have we fooled ourselves, and is each load-bearing claim even falsifiable? Win-condition is INVERTED from survival/resilience to active refutation. Methods: Popper falsificationism, Lakatos Proofs and Refutations, Mayo severe testing, Platt strong inference."
+description: 'Campaign: Truth-seeking adversarial validation for scientific research
+  artifacts (NOT publication defense). Core question: Where have we fooled ourselves,
+  and is each load-bearing claim even falsifiable? Win-condition is INVERTED from
+  survival/resilience to active refutation. Methods: Popper falsificationism, Lakatos
+  Proofs and Refutations, Mayo severe testing, Platt strong inference.'
 type: campaign
 produces: FalsificationLedger
-artifact-types: [theory-map, claim, isomorphism-claim, convergence-claim, validation-design, proposition]
+artifact-types:
+- theory-map
+- claim
+- isomorphism-claim
+- convergence-claim
+- validation-design
+- proposition
 dependencies:
   strategies:
   - adversarial-debate-truthseeking
@@ -97,3 +107,32 @@ Each attack subagent runs in isolated context to prevent the defender's framing 
 ## Output
 
 Produces `FalsificationLedger`: a table of every load-bearing claim → {falsifiable? (Y/N) | what observation/computation would refute it | attacks attempted | outcome bucket | if BROKEN: the refutation + revision/demotion | if CORROBORATED: what was forbidden-and-held + severity of the test passed}. Plus a top-level honest-residue list: claims that are irreducibly unfalsifiable by compute and require an external oracle.
+
+<!-- BEGIN available-tables (generated) -->
+
+## Available Strategies
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| Strategy | When to use |
+| --- | --- |
+| adversarial-debate-truthseeking | Strategy: Dialectic engine retuned for truth-seeking, not survival. A defender steelmans a claim into its MOST falsifiable form, a critic attacks to refute it, a judge classifies the exchange into BROKEN/CORROBORATED/UNFALSIFIABLE — the judge does NOT pick a winner or score persuasiveness. Methods: Irving debate (repurposed), Toulmin argumentation, Mayo severe testing. |
+| circular-validation-audit | Strategy: Run BEFORE building any validator (sandbox/simulation/benchmark). Builds a non-circularity matrix of theory-claim × validator-assumption to detect when a validator would 'confirm' a theory only because it was built on the theory's own premises. A circular validator's PASS carries zero evidential weight. Methods: Cartwright nomological machines, Winsberg sanctioning-of-simulations, tautology detection. |
+| elegance-trap-probe | Strategy: Attack a beautiful unified result on the suspicion that its beauty is the bug. Distinguishes EARNED simplicity (forbids/predicts/subsumes) from DECORATIVE simplicity (re-describes/relabels/accommodates). Directly serves the Occam aesthetic by making it a falsifiable bar, not a vibe. Methods: Sober parsimony-as-evidence, MDL, Meehl risky prediction, accommodation-vs-prediction. |
+| independent-convergence-audit | Strategy: Attack the evidential weight of an 'independent convergence' claim. When N reasoning paths all reach the same conclusion, the confidence boost is real only if the paths were actually independent. Measures shared-prior / shared-blindspot contamination and corrects the over-counted confidence. Methods: Bayesian agreement-as-evidence, correlated-error analysis, jury theorem assumptions. |
+| isomorphism-falsification | Strategy: Attack an isomorphism claim by demanding an explicit structure-preserving map and trying to break it. Targets any multi-language claim of the form 'X ≅ Y ≅ … across N mathematical languages'. Forces the claim to either earn the word 'isomorphism' or be demoted to 'analogy'. Methods: category theory (functor/natural-iso criteria), model theory, Lakatos monster-barring. |
+| red-team-truthseeking | Strategy: Systematic adversarial probing retuned for truth-seeking. Threat surface = the set of load-bearing claims. Output is NOT a resilience score and NOT a hardening list — it is, per claim, the specific observation/computation that would refute it, plus which attacks succeeded. Methods: UFMCS Key Assumptions Check (repurposed), CIA Devil's Advocacy, Platt strong inference. |
+
+## Available SOPs
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| SOP | When to use |
+| --- | --- |
+| context-checkpoint | Append research process and results to the current Phase's context file. Covers both process and results with genuine substance. Use this skill at plan-designated checkpoint points — typically after each strategy completes or at key decision nodes within a research Phase. |
+| context-init | Create a new context file for a research Phase. Called once at Phase start to initialize the file that subsequent context-checkpoint calls will append to. Use this skill whenever a new research Phase begins and a fresh context file is needed. |
+| stress-test-saturation-detection | Determines whether validation has reached saturation — no new weaknesses or failure modes being discovered. Used by all 5 campaigns as termination signal. |
+| verdict-synthesis | Synthesizes findings from a completed campaign into typed verdict reports. Produces DebateVerdict, RedTeamReport, FailureAnticipationReport, CounterfactualMap, or AdversarialStressReport depending on campaign. Also supports cross-campaign StressTestSummary. |
+| weakness-classification | Classifies discovered weaknesses into severity tiers (fatal/major/minor/cosmetic) with structured justification and exploitability assessment. |
+
+<!-- END available-tables (generated) -->

@@ -1,6 +1,10 @@
 ---
 name: adversarial-debate-truthseeking
-description: "Strategy: Dialectic engine retuned for truth-seeking, not survival. A defender steelmans a claim into its MOST falsifiable form, a critic attacks to refute it, a judge classifies the exchange into BROKEN/CORROBORATED/UNFALSIFIABLE — the judge does NOT pick a winner or score persuasiveness. Methods: Irving debate (repurposed), Toulmin argumentation, Mayo severe testing."
+description: 'Strategy: Dialectic engine retuned for truth-seeking, not survival.
+  A defender steelmans a claim into its MOST falsifiable form, a critic attacks to
+  refute it, a judge classifies the exchange into BROKEN/CORROBORATED/UNFALSIFIABLE
+  — the judge does NOT pick a winner or score persuasiveness. Methods: Irving debate
+  (repurposed), Toulmin argumentation, Mayo severe testing.'
 type: strategy
 produces: DebateBucketing
 dependencies:
@@ -59,3 +63,16 @@ A test/attack is severe to the degree that the claim would probably have FAILED 
 ## Output
 
 `DebateBucketing`: per claim → {most-falsifiable form produced (or "none — UNFALSIFIABLE") | critic's committed refuter | cross-exam findings | severity of attack | bucket | recorded refutation-or-forbidden-content}.
+
+<!-- BEGIN available-tables (generated) -->
+
+## Available SOPs
+
+Optional, no fixed order; the final leaf is always a sop.
+
+| SOP | When to use |
+| --- | --- |
+| cross-examination | Probes defender responses for inconsistencies, logical gaps, and unsupported claims. Acts as follow-up interrogation after initial defense. |
+| debate-architect | Designs debate structure based on artifact type — selects attack vectors, assigns perspectives, determines escalation ladder, and configures round parameters. |
+
+<!-- END available-tables (generated) -->
