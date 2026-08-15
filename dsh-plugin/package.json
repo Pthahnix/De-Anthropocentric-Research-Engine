@@ -1,0 +1,61 @@
+{
+  "name": "@yogsoth-ai/dare-dsh",
+  "version": "1.0.0",
+  "description": "DeepSeek Harness plugin for the De-Anthropocentric Research Engine: 920 research skills, with an opt-in MCP server fleet",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./mcp": "./src/mcp.js",
+    "./servers": "./src/servers.js",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "skills",
+    "research",
+    "mcp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yogsoth-ai/de-anthropocentric-research-engine.git",
+    "directory": "dsh-plugin"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "payload",
+    "cordis.example.yml",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-mcp-client": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-skill": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-skill-filesystem": "^0.1.0-rc.6"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-mcp-client": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test test/",
+    "prepublishOnly": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-skill": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-skill-filesystem": "^0.1.0-rc.6"
+  }
+}

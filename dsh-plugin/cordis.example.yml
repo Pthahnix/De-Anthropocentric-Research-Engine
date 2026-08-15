@@ -1,0 +1,27 @@
+# DeepSeek Harness overlay for the De-Anthropocentric Research Engine.
+#
+# Usage:
+#   npx @deepseek-ai/dsh web --patch ./cordis.example.yml
+#
+# The skill row alone needs no credentials. The MCP row is optional: it
+# requires `@deepseek-ai/dsh-mcp-client` and skips any server whose
+# credentials are absent, warning once per skipped server at load.
+
+- insert:
+    # 920 research skills on `ctx.skills`, at bundled rank.
+    - id: dare
+      name: '@yogsoth-ai/dare-dsh'
+
+    # Research MCP fleet. Drop this row to run skills-only.
+    # Credentials read from the environment:
+    #   SS_API_KEY       semantic-scholar
+    #   BRAVE_API_KEY    brave-search
+    #   TAVILY_API_KEY   tavily-search
+    #   APIFY_TOKEN      apify
+    #   VAULT_ROOT       wiki-vault  (path to your vault)
+    # alphaxiv and keenable are credential-free HTTP servers.
+    - id: dare-mcp
+      name: '@yogsoth-ai/dare-dsh/mcp'
+      # config:
+      #   only: ['alphaxiv', 'semantic-scholar']
+      #   exclude: ['apify']
