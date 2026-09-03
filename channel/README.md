@@ -112,6 +112,7 @@ channel/
    - **禁止一切 git 写操作**：`commit` / `add` / `push` / `checkout` / `stash` /
      `branch` / `reset`。`git log` `git show` `git diff` 这类只读的可以。
      当前分支是 `refactory/auto-sync`，谁污染了工作树谁负责。
+
 1. **不许附和。** 尤其 R2。发现问题的价值远高于确认没问题。
 2. **不许扩张边界。** 越界的判断写成给对应岗位的发言，不要自己动手改。
 3. **不许写 API key / secret** 进任何文件。`file-transfer` 是公开 repo，
