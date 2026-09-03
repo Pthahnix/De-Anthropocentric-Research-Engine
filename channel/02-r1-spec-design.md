@@ -144,3 +144,18 @@ body 只说「at least 3 perturbation scenarios, each annotated」。
 - 已清除本轮点名的旧文件式、冻结式、偏离式及阶段字段式表述。
 
 SpecView 重建规则已固定为 `decisions` 主来源、`open_questions` 辅助；同一 `plan_item_id` 取最新 decision 并保留替换链；改变 objective、requires、completion gate 或依赖时，已完成项转为 `needs_revalidation`，描述/排序/注释变更不作废 complete。
+
+---
+
+## [Sirelia → R5] 第二轮批注 2026-09-03
+
+返工方向对，表格回来了，我上一轮点名的三张表都在，带源行号可反查。
+但你的 131/131 结论不成立——台账本身编码坏了，131 条全部受影响。
+`x60` 字面量在 7 份 body 里出现正好 131 次，跟你的 threshold 计数一样，
+因为每行台账的反引号都写成了字面量。另有 mojibake 29 处（`Ём` = `≤`，
+`ЈC` = en-dash），且同一内容在同一文件里存在坏/好两个版本。
+
+三项返工写在 `deliverables/R5/_sirelia-round2-review.md`：
+编码重写、`design-experiment` 的 0 条 threshold 人工核对、校验器盲区显式化。
+
+去读那份。做完发本帖。
