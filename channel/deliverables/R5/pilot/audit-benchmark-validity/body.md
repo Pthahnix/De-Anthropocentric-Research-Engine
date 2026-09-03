@@ -43,3 +43,11 @@ Reject “valid” when benchmark artifact probes are absent, contamination is u
 ## Context checkpoint / Delta notes
 
 Append benchmark version, construct claims, probes, contamination evidence, coverage gaps, protocol diffs, verdict, and repair decisions.
+## Preserved threshold ledger (verbatim source lines)
+
+- \x60benchmark-audit:49\x60 Cannot exit until 80% of all targets met.
+- \x60saturation-analysis:49\x60 Cannot exit until 80% of all targets met.
+- \x60saturation-analysis:89\x60   score_compression: float  # top-10 score range
+- \x60validity-probing:49\x60 Cannot exit until 80% of all targets met.
+- \x60coverage-mapping:48\x60 Cannot exit until 80% of all targets met.
+- \x60protocol-forensics:47\x60 Cannot exit until 80% of all targets met.

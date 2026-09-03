@@ -45,3 +45,35 @@ Reject rankings with undefined criterion direction, unhandled missing values, or
 ## Context checkpoint / Delta notes
 
 Append candidate set hash, criteria/weights, rule, ranking, sensitivity scenarios, exclusions, and unresolved trade-offs.
+## Preserved threshold ledger (verbatim source lines)
+
+- \x60multi-criteria-ranking:51\x60 **Sensitivity check**: perturb weights by ЁР20%; if the ranking is unchanged the conclusion is robust; if the ranking flips it must be flagged as "weight-sensitive".
+- \x60multi-criteria-ranking:57\x60 | S | 5ЈC8 | Ён3 dimensions | Optional | Ranking table + attack suggestions for top 2 gaps |
+- \x60multi-criteria-ranking:58\x60 | M | 9ЈC15 | Ён4 dimensions | Required | Ranking table + attack suggestions for top 3 gaps |
+- \x60multi-criteria-ranking:59\x60 | L | 16ЈC20 | Ён5 dimensions | Required (multi-weight scenarios) | Ranking table + attack suggestions for top 5 gaps + weight-sensitivity report |
+- \x60evidence-based-prioritization:55\x60 | S | 3ЈC8 | all 6 dimensions | Ён2 supporting references per gap | ranking table + evidence-void report |
+- \x60evidence-based-prioritization:56\x60 | M | 9ЈC15 | all 6 dimensions | Ён3 supporting references per gap | ranking table + evidence-void report + attack suggestions for top 3 gaps |
+- \x60evidence-based-prioritization:57\x60 | L | 16ЈC20 | all 6 dimensions | Ён5 supporting references per gap | ranking table + detailed evidence map + attack suggestions for top 5 gaps |
+- \x60stakeholder-weighted-ranking:62\x60 | S | 5ЈC10 | 2ЈC3 classes | Simple average | Per-perspective rankings + consensus top-3 |
+- \x60stakeholder-weighted-ranking:63\x60 | M | 11ЈC20 | 3ЈC5 classes | Borda count | Per-perspective rankings + consensus top-5 + divergence analysis |
+- \x60rapid-triage:62\x60 | S | 50ЈC80 | Ём60% | top-15 | Candidate set + elimination-rationale summary |
+- \x60rapid-triage:63\x60 | M | 81ЈC150 | Ём50% | top-20 | Candidate set + elimination-rationale summary |
+- \x60rapid-triage:64\x60 | L | 150+ | Ём40% | top-30 | Candidate set + elimination-rationale summary + category statistics |
+- \x60priority-sensitivity-testing:28\x60 This tactic first establishes baseline weights (AHP or equal weights), then systematically perturbs the weights (ЁР20%), observes the ranking changes, and finally gives a stability verdict.
+- \x60priority-sensitivity-testing:35\x60 | weight-perturbation | Apply ЁР20% perturbations to each dimension weight and recompute the ranking | Second step, systematic perturbation |
+- \x60priority-sensitivity-testing:42\x60 2. weight-perturbation: apply +20% and -20% perturbations to each dimension in turn (the remaining dimensions are adjusted proportionally to keep the sum at 1), producing a ranking for each perturbation scenario
+- \x60priority-sensitivity-testing:47\x60 - Perturb only the highest-weight dimension (ЁР20%), producing 2 perturbation scenarios
+- \x60priority-sensitivity-testing:52\x60 - weight-perturbation expands the perturbation range to ЁР30% and adds extreme scenarios (one dimension's weight set to 0)
+- \x60priority-sensitivity-testing:58\x60 - Ranking results for at least 3 perturbation scenarios (each scenario annotated with its perturbation content)
+- \x60best-option-selection:21\x60 | Base SOP | Target | ЁР10% Range |
+- \x60full-ranking:22\x60 | Base SOP | Target | ЁР10% Range |
+- \x60full-ranking:64\x60 2. Select >=2 ranking methods (recommended: PROMETHEE II + MAVT)
+- \x60category-sorting:22\x60 | Base SOP | Target | ЁР10% Range |
+- \x60non-compensatory-screening:27\x60 | Base SOP | Target | ЁР10% Range |
+- \x60weight-elicitation:23\x60 | Base SOP | Target | ЁР10% Range |
+- \x60weight-elicitation:26\x60 | weight-elicitation-sop | Ён2 methods | 2-3 |
+- \x60weight-elicitation:60\x60 2. Select >=2 weighting methods (recommended: AHP + BWM or Swing + Simos)
+- \x60direction-narrowing:36\x60 - `broad-paper-search`: at least 80 papers scanned
+- \x60direction-narrowing:37\x60 - `deep-web-search`: at least 30 web pages read in full
+- \x60direction-narrowing:51\x60 | deep-web-search | Full-page web reading for non-academic perspectives ЁЊ blogs, tech reports, product pages, industry analysis. Spawns a subagent to read pages in isolated context. Hard constraint: at least 30 web pages read in full. |
+- \x60direction-narrowing:52\x60 | north-star-crystallization-broad-paper-search | Paper landscape scan within selected field(s). Strict import of literature-engine/literature-overview skill. Hard constraint: at least 80 papers scanned. |

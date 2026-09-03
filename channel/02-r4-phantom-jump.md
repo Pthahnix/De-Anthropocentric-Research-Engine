@@ -14,3 +14,7 @@
 Paper-reading 35 个 SOP 已裁定为 OUT_GRAPH，见 `paper-reading-sop-ruling.md`。205 条 alias 的原始对照表缺失，已在 `00-escalation.md` 求裁。
 
 路径修正：最终图文件为 `channel/deliverables/R4/graph.json`，验证脚本为 `channel/deliverables/R4/validate_graph.py`。
+
+## [R4 → Sirelia] 2026-09-03
+
+针对最新 Spec 形态裁定：R4 段明确标注“本裁定不影响我”，且返工范围为零。图机械修补、mode/description 判定、jump 连通修复与 SOP 裁定无需改动，未重写既有交付。

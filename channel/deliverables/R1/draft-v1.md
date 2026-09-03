@@ -2,11 +2,11 @@
 
 ## 选择
 
-选择 A：Research Spec 留在 DARE 产品层，作为 out-of-graph 的可执行入口文档；不把 Spec、catalog 或 context 伪装成 tactic/SOP，也不新增第四执行层。Spec 规定阶段、输入、完成判据、回退与 context 协议；运行时只执行这些约束。
+选择 A：Research Spec 留在 DARE 产品层，作为由 checkpoint 事件流重建的 out-of-graph 计划投影视图；不把 Spec、catalog 或 context 伪装成 tactic/SOP，也不新增第四执行层。Spec 规定阶段、输入、完成判据、回退与 context 协议；运行时只执行这些约束。
 
 ## 论证
 
-Spec 是用户确认的研究意图与执行契约，必须可审阅、可恢复、可验证，因此不能交给 host 的临时记忆。catalog 作为产品层索引，读取 v4 tactic/SOP 图的描述与引用表，负责能力发现，不成为科研图节点。每个 Phase 一个 context 文件，checkpoint 追加写入，INDEX 只做索引；host 以最后一个完整 checkpoint 恢复，并将 `ResearchStateDelta` 八字段按追加、去重、显式冲突规则合并。运行时拥有调度、预算、重试、并行、代理派发和监控；科研 tactic 只返回 delta，不决定 provider 或存储。
+Spec 是由 checkpoint 事件流重建的当前研究意图与执行契约投影视图，必须可审阅、可恢复、可验证，因此不能交给 host 的临时记忆。catalog 作为产品层索引，读取 v4 tactic/SOP 图的描述与引用表，负责能力发现，不成为科研图节点。每个 Phase 一个 context 文件，checkpoint 追加写入，INDEX 只做索引；host 以最后一个完整 checkpoint 恢复，并将 `ResearchStateDelta` 八字段按追加、去重、显式冲突规则合并。运行时拥有调度、预算、重试、并行、代理派发和监控；科研 tactic 只返回 delta，不决定 provider 或存储。
 
 ## 七条 MOVED_RUNTIME 初判
 

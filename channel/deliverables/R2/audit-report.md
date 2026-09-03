@@ -5,7 +5,7 @@ Scope: 146 capability contracts in architecture JSON, cross-checked with refacto
 | Contract ID | v3 capability | v4 path | Verdict | Evidence / reason |
 |---|---|---|---|---|
 | 1 | cold-start / warm-start / hot-start | entry-depth policy ? profile / landscape / rank / obstacles / goal | PASS-with-caveat | path locatable; semantic equivalence not assumed; architecture contract 1; source_status=COVERED_MODE |
-| 2 | actor-profiling | research-context input contract | PASS-with-caveat | path locatable; semantic equivalence not assumed; architecture contract 2; source_status=MOVED_RUNTIME |
+| 2 | actor-profiling | research-context input contract | UNCERTAIN | R1/Sirelia裁定要求重定验收条件；旧的 runtime-boundary.md:2.1 不再作为最终证据 |
 | 3 | landscape-reconnaissance | map-research-landscape | PASS-with-caveat | path locatable; semantic equivalence not assumed; architecture contract 3; source_status=FULLY_COVERED |
 | 4 | direction-narrowing | rank-candidates(object=research-direction) | PASS-with-caveat | path locatable; semantic equivalence not assumed; architecture contract 4; source_status=COVERED_MODE |
 | 5 | obstacle-analysis | analyze-constraints-readiness(mode=obstacle-triage) | PASS-with-caveat | path locatable; semantic equivalence not assumed; architecture contract 5; source_status=COVERED_MODE |
@@ -157,7 +157,7 @@ Scope: 146 capability contracts in architecture JSON, cross-checked with refacto
 
 ## 3. Object-mismatch findings
 
-Sequence: C2 moves actor-profiling from v3 startup elicitation to a product input contract; R1 accepts the boundary, not scientific-node coverage (runtime-boundary.md:2.1).
+Sequence: C2 moves actor-profiling from v3 startup elicitation to a product input contract. Sirelia裁定已废止 R1 §2 的旧 Spec 形态描述；actor-profiling 验收条件待 R1 重定，当前 UNCERTAIN。
 
 Granularity: C19 collapses v3 literature-survey paradigms into one v4 node with no modes (architecture:6195,597). REJECT.
 
@@ -171,7 +171,7 @@ Strength: C70 v3 MCDA includes veto and sensitivity gates; v4 rank-candidates do
 
 | Contract | R1 result | R2 verdict | Evidence |
 |---|---|---|---|
-| 2 | MOVED_PRODUCT | PASS-with-caveat | runtime-boundary.md:2.1 |
+| 2 | PENDING_R1_REJUDGMENT | UNCERTAIN | Sirelia裁定：actor-profiling 验收条件待重定 |
 | 9 | MOVED_RUNTIME | PASS-with-caveat | runtime-boundary.md:3-4 |
 | 10 | MOVED_RUNTIME | PASS-with-caveat | runtime-boundary.md:5.5-6 |
 | 85 | MOVED_ARTIFACT | PASS-with-caveat | runtime-boundary.md:6 |
@@ -182,9 +182,8 @@ Strength: C70 v3 MCDA includes veto and sensitivity gates; v4 rank-candidates do
 ## 5. Reversal statistics
 
 - REJECT: 18
-- UNCERTAIN: 1
-- PASS-with-caveat: 127
+- UNCERTAIN: 2
+- PASS-with-caveat: 126
 - Unqualified PASS: 0
 
 No completion declaration written. Sirelia must review and write the exact GOAL ACHIEVED line in 00-escalation.md.
-

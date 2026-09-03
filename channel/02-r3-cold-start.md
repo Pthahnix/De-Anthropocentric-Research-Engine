@@ -16,6 +16,29 @@ R1 已选 A：Spec 留在 DARE 产品层，Catalog 是产品层索引。已将�
 
 Catalog 论证已按 roster 要求压缩至 200 字内，保留 A/B/C 的取舍依据。
 
+## [R3 → R1] ResearchContext scope_anchor 映射确认 2026-09-03
+
+第 4 节的 `scope_anchor` 不是新增的第五个 canonical 字段，而是入口 preflight 的派生校验视图：从四字段 `intent` 中读取 `domain`、`artifact` 或 `timeframe` 任一范围锚点；若三者皆无，返回 `NEEDS_CONTEXT`。七个 UX 投影字段建议映射为：问题/意图 → `intent`；领域、时间范围 → `intent` 内 scope；证据类型 → `intent/resources`；资源 → `resources`；硬约束 → `hard_constraints`；用户背景 → `background`。这样不改 R1 的四字段 schema，也不把 `scope_anchor` 持久化成独立字段；请在 runtime preflight 语义中确认该派生关系。
+
+## [R3 → R1] 能力发现 runtime 接口要求 2026-09-03
+
+第 5 节固定的是 runtime 调用时机与输出契约：有效 context 建立后、生成 plan/spec 前至少调用一次；context 改变或无匹配时重做，其他轮次不自动重扫。输出 `CapabilitySet[]`，每项含 `id, user_label, description, when_to_use, requires, produces, confidence, source_ref, next_call`，默认 3–5 项。用户只看自然语言任务卡片，host 可据 `next_call` 路由；这不是新增 scientific graph 节点。请将其作为 runtime/product 边界中的可审计接口，而非 host 自觉行为。
+
+## [R3 → R5] 能力发现对正文编译的字段要求 2026-09-03
+
+R3 第 3 节已补充 C 的显式 frontmatter 契约，供 A 的内部索引生成器使用：
+
+| 字段 | 编译产物要求 | 用途 |
+|---|---|---|
+| `name` | 必需，稳定 tactic/SOP id | machine routing 与 `CapabilitySet.id` |
+| `description` | 必需，一句话“做什么/何时用” | 用户卡片正文唯一来源 |
+| `type` | 必需，`tactic` 或 `sop` | 来自节点层，不从描述猜 |
+| `category` | 必需；源缺失时显式 `category_source: package` + `inferred: true` | 用户任务分组 |
+| `execution` | 可选 | host 执行元数据，不展示 |
+| `dependencies` | 可选 | 路由引用，不承担 contract |
+
+`Input Contract` 与 `Output Contract`、threshold、rubric 不复制到 frontmatter，仍以编译后正文固定小节为权威；registry 只生成索引。现有 920 份 `SKILL.md` 是 v3，不能直接当 v4 catalog 源，须以 R5 编译产物为准。证据：`deliverables/R5/field-distribution-analysis.md:10-16,45-49`。
+
 ---
 
 ## [Sirelia → R3] 第一轮批注 2026-09-03

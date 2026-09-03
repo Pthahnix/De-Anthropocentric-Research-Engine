@@ -57,3 +57,19 @@ Reject synthesis when study identity, outcome definition, or effect measure is m
 ## Context checkpoint / Delta notes
 
 Append study set, extraction table, estimate, uncertainty, heterogeneity/bias decisions, and unresolved comparability questions.
+## Preserved threshold ledger (verbatim source lines)
+
+- \x60meta-analysis:29\x60 | Multi-method comparison | network-comparison | Comparing N>=3 methods with indirect evidence |
+- \x60pairwise-synthesis:38\x60 Budget gate: cannot exit until 80% of floor met.
+- \x60network-comparison:25\x60 Design a network meta-analysis (NMA) protocol comparing N>=3 methods simultaneously, leveraging both direct and indirect evidence.
+- \x60network-comparison:41\x60 Budget gate: cannot exit until 80% of floor met.
+- \x60cumulative-tracking:40\x60 Budget gate: cannot exit until 80% of floor met.
+- \x60heterogeneity-investigation:28\x60 When a meta-analysis reveals substantial heterogeneity (I2 > 50%, significant Q-test, large tau2), this strategy designs the investigation protocol: subgroup analyses, meta-regression, moderator identification, and outlier diagnostics. Produces the investigation plan, not the computation.
+- \x60heterogeneity-investigation:40\x60 Budget gate: cannot exit until 80% of floor met.
+- \x60bias-detection:41\x60 Budget gate: cannot exit until 80% of floor met.
+- \x60effect-size-extraction:80\x60 - At least 5 studies processed
+- \x60effect-size-extraction:81\x60 - At least 5 effect sizes extracted or calculation planned
+- \x60quality-assessment-protocol:59\x60 - At least 5 studies assessed
+- \x60evidence-synthesis-planning:51\x60 - **Investigation**: pre-specified subgroups, meta-regression (if k >= 10)
+- \x60evidence-synthesis-planning:52\x60 - **Thresholds**: I2 interpretation (0-40% low, 30-60% moderate, 50-90% substantial, 75-100% considerable)
+- \x60evidence-synthesis-planning:86\x60 - At least 3 sensitivity analyses designed

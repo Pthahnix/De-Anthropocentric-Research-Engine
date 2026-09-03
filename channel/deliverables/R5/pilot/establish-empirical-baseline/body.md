@@ -46,3 +46,10 @@ Do not call a baseline fair when conditions are missing, metrics are incomparabl
 ## Context checkpoint / Delta notes
 
 Append method IDs, normalized records, excluded records with reasons, discrepancy pairs, progress model, and headroom uncertainty.
+## Preserved threshold ledger (verbatim source lines)
+
+- \x60method-inventory:41\x60 Cannot exit until methods_discovered >= 40 (80% of target).
+- \x60performance-extraction:44\x60 Cannot exit until data_points >= 120 (80% of target).
+- \x60condition-standardization:44\x60 Cannot exit until data_points_standardized >= 48 (80% of target).
+- \x60discrepancy-analysis:43\x60 Cannot exit until score_pairs_compared >= 36 (80% of target).
+- \x60progress-quantification:46\x60 Cannot exit until historical_data_points >= 80 (80% of target).

@@ -37,7 +37,20 @@ v3 的优点是入口和收敛路径明确；代价是冷启动用户要经历�
 
 ## 3. Catalog 机制（选择：A，R1 已确认）
 
-选择 **A：Catalog 留在 DARE 产品层，作为 Spec 的能力索引**。R1 已确认 Spec 是 out-of-graph 产品入口；A 能表达阶段/确认门并保持可审计。B 把 267 个 JSON 节点责任退给 host，入口不可见；C 仅扫描 frontmatter，无法表达 Spec 状态。frontmatter 只作内部生成器；用户按任务看到 3–5 个候选，不见 slug。
+选择 **A：Catalog 留在 DARE 产品层，作为 Spec 的能力索引**。v4 实际有 51 个 tactic、216 个 SOP；A 的依据是把这组节点及 Spec 阶段/确认门统一投影为可审计索引。B 把 267 个 JSON 节点责任退给 host，入口不可见；C 依赖当前 920 份 v3 `SKILL.md`，而非 v4 的 267 节点，且无法表达 Spec 状态。frontmatter 只能作内部生成器；用户按任务看到 3–5 个候选，不见 slug。
+
+### C 的显式 frontmatter 契约（仅作内部生成器/备用实现）
+
+| 字段 | 必需性 | 语义与来源 |
+|---|---|---|
+| `name` | 必需 | 稳定 machine id；来自 v4 tactic/SOP 节点名 |
+| `description` | 必需 | 一句话“做什么/何时用”；用户卡片正文唯一来源 |
+| `type` | 必需（编译产物） | `tactic` 或 `sop`；来自节点层，不从自然语言猜 |
+| `category` | 必需（编译产物） | 用户任务组；源缺失时只能写 `category_source: package` 并标注 inferred |
+| `execution` | 可选 | host 执行元数据，不展示给用户 |
+| `dependencies` | 可选 | 机器路由引用，不承担 input/output contract |
+
+`Input Contract`/`Output Contract` 仍以 R5 编译后的正文固定小节为权威；frontmatter 不复制 threshold、rubric 或完整 contract。C 当前不可直接上线：现有 920 份文件是 v3，`category` 仅部分存在；待 R5 产出 v4 索引后，才可作为 A 的生成器。
 
 ## 4. ResearchContext 处理
 
@@ -92,5 +105,7 @@ Hard gate 的强制力来自两道可审计门：DARE 产品层先确认用户�
 - v3 catalog/Spec/执行链：`skills/research-catalog/SKILL.md:10-16`、`skills/writing-specs/SKILL.md:17-33`、`skills/executing-specs/SKILL.md:18-42`。
 - v4 删除 catalog 后的发现缺口：`file-transfer/2026-08-24-14-22-dare-v4-capability-coverage-audit.md:241-262`。
 - v4 cold-start 与 context 缺口、hard gate 降级：同审计 `:266-290`。
+- v4 节点规模：`file-transfer/2026-08-23-22-16-dare-v4-architecture.json:60-68`（51 tactics、216 SOPs、146 contracts）；v3 entry 节点：`scripts/refactory_source.json:3022-3026`。
+- frontmatter 不能承接完整 contract：`channel/deliverables/R5/field-distribution-analysis.md:45-49`。
 - v4 canonical context 四字段：同审计 `:268-276`；v4 runtime/product 边界：`file-transfer/2026-08-23-22-16-dare-v4-architecture.json:39-48`。
 - v3 entry 节点：`scripts/refactory_source.json` 中唯一 `"layer": "entry"` 节点（`de-anthropocentric-research-engine`）。
