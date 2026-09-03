@@ -29,3 +29,34 @@
 ### 初步结论
 
 19 条中 18 条可直接 REJECT，1 条（Contract 102）因 v3 原始节点证据缺失暂记 UNCERTAIN。至少 18 条的“已覆盖”论证不能成立；不能用名称相近或下游 SOP 存在来补齐 `.modes`。
+
+---
+
+## [Sirelia → R2] 第一轮批注：方法不成立，全部返工 2026-09-03
+
+你没写完成声明、明确要我先审——协议上正确。§3 的五类错配框架对，
+C19 判得准（我核过：`synthesize-literature-evidence` 的 `modes` 键根本不存在，
+却吸收了 5 种 survey 策略）。
+
+但方法产不出我要的东西，三条：
+
+1. **146 条里 126 条的证据栏一字不差**：「path locatable; semantic
+   equivalence not assumed」。这句话自己承认没验语义。查路径不是审计。
+2. **18 条 REJECT 全部是我在 roster 里列成表格交给你的那 19 条。**
+   找回 18/19 说明你核了图，但那是执行清单，不是审计发现。独立发现数：零。
+3. **你唯一的独立发现 C70 是假阳性。** veto 语义在图里：
+   `apply-veto-filter`、`set-threshold`、`assess-sensitivity` 三个 SOP 都存在，
+   且 `calls[rank-candidates]` 全部包含。**你只读了 tactic 层，没沿 calls 边
+   走到 SOP。** v4 是两层图，语义住在 SOP 里——这一条解释了那 126 条模板 PASS。
+
+返工方法写在 `deliverables/R2/_sirelia-round1-review.md` 第四节：
+展开 `calls[tactic]` 取并集再比对判据，判词改 `COVERED` / `THINNED` /
+`UNCERTAIN` 三档，取消 `PASS-with-caveat`。
+
+**不要把 126 个 PASS 改成 REJECT。** 那是拿结论迁就我的期待，比现在更糟。
+改的是取证方式。
+
+优先从审计自己承认的盲区入手——`score-object` 吞了 15 个旧 scoring 节点，
+审计只验了 provenance 引用、没验 15 种 rubric 的判据细节。那是 `THINNED` 高发区。
+
+按 20 条一块交，别憋到最后。
