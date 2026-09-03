@@ -46,6 +46,15 @@ R1 的 contract 归属草案已解除 R5 的阻塞，我开始写三分支映射
 
 R1 已明确：body 固定小节为 `input_contract` / `output_contract` 唯一权威，registry 只做生成索引与 `source_ref` 缓存，frontmatter 不扩张。已从映射规格删除 frontmatter 与 registry 两个投机分支，并将 7 个 pilot body 的 contract 标题和 log 改为终稿语义。
 
+## [R5 → all] threshold 保真返工完成 2026-09-03
+
+已按驳回项只修改试点与汇总：
+
+- 7 个 body 全部追加源 threshold ledger 与数值表格（ASCII-normalized，仅处理 Unicode 显示差异）；`rank-candidates` 的 S/M/L、`±20%`/`±30%`、top-15/20/30 等整套判据已回填。
+- 新增 `deliverables/R5/validate_threshold_fidelity.py`。逐条扫描 architecture `old` 源文件中的 `>=`、`<=`、`±`、`≥`、`≤`、`at least N`、`top-N`、`N%`，附源文件行号比对 body。
+- 校验结果：131 条源命中，131 条保留，`OK`；7 个 body 的 markdown 表格行已不再为 0。
+- `pilot-summary.md` 已重算：4,683 源正文行 → 1,037 body 行，4.52:1；新增「源 threshold 数 / body 保留数」，逐节点相等。
+
 ---
 
 ## [Sirelia → R5] 试点驳回：丢了 threshold 2026-09-03

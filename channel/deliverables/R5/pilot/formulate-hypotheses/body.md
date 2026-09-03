@@ -127,3 +127,25 @@ Append candidate list, selected hypotheses, operational definitions, predictions
 | competing-hypothesis-matrix | 49 | - All 3 SOPs execute; competing-hypothesis-generation additional requirement: at least 1 competing hypothesis comes from a completely different theoretical framework; discriminating-prediction-design additional requirement: each discriminating prediction annotates the required experiment scale and difficulty; hypothesis-comparison-matrix additional output: recommended experiment priority (most discriminating predictions ranked first) |
 | competing-hypothesis-matrix | 54 | - ≥3 competing hypotheses (explaining the same phenomenon as the primary hypothesis but with different mechanisms) |
 | competing-hypothesis-matrix | 55 | - ≥2 discriminating predictions (each prediction produces different expected outcomes for at least 2 hypotheses) |
+## Preserved numeric tables (ASCII-normalized from source)
+
+| source | line | source table row |
+|---|---:|---|
+| hypothesis-formulation | 72 | \| S \| ≥2 structured hypotheses \| ≥2 relevant theories \| 1 falsification scenario per hypothesis \| Optional \| |
+| hypothesis-formulation | 73 | \| M \| ≥3 structured hypotheses \| ≥3 theories + ≥5 mechanisms \| ≥1 scenario + boundary conditions per hypothesis \| ≥2 competing hypotheses \| |
+| hypothesis-formulation | 74 | \| L \| ≥5 structured hypotheses \| ≥5 theories + ≥8 mechanisms \| Complete falsifiability audit \| ≥3 competing hypotheses + discriminating predictions \| |
+| deductive-hypothesis-generation | 60 | \| S \| ≥2 named theories \| ≥3 causal mechanisms \| ≥2 structured hypotheses \| 1 falsification scenario per hypothesis \| |
+| deductive-hypothesis-generation | 61 | \| M \| ≥3 named theories \| ≥5 causal mechanisms \| ≥3 structured hypotheses \| ≥1 scenario + boundary conditions per hypothesis \| |
+| deductive-hypothesis-generation | 62 | \| L \| ≥5 named theories \| ≥8 causal mechanisms \| ≥5 structured hypotheses \| full falsifiability audit + competing-theory comparison \| |
+| inductive-hypothesis-generation | 59 | \| S \| ≥3 independent observation patterns \| ≥2 regularities \| ≥2 structured hypotheses \| Each hypothesis specifies its sample source \| |
+| inductive-hypothesis-generation | 60 | \| M \| ≥5 independent observation patterns \| ≥3 regularities \| ≥3 structured hypotheses \| Generalization boundary + falsification scenario \| |
+| inductive-hypothesis-generation | 61 | \| L \| ≥8 independent observation patterns \| ≥5 regularities \| ≥4 structured hypotheses \| Complete generalization boundary + comparison of competing regularities \| |
+| abductive-hypothesis-generation | 56 | \| S \| 1 precisely described anomaly \| ≥2 candidate explanations \| 1 best-explanation hypothesis \| ≥1 competing hypothesis retained \| |
+| abductive-hypothesis-generation | 57 | \| M \| 1–2 anomalies \| ≥3 candidate explanations \| ≥2 structured hypotheses \| complete plausibility ranking \| |
+| abductive-hypothesis-generation | 58 | \| L \| ≥2 related anomalies \| ≥5 candidate explanations \| ≥3 structured hypotheses \| complete ranking + discriminating prediction design \| |
+| hypothesis-operationalization | 58 | \| S \| All abstract terms have operational definitions \| All variables have draft measurement methods \| Main boundary conditions specified \| 1 falsification scenario \| |
+| hypothesis-operationalization | 59 | \| M \| Above + justification of operationalization validity \| Variable measurement includes reliability/validity considerations \| Complete boundary conditions \| ≥2 falsification scenarios \| |
+| competing-hypothesis-construction | 55 | \| S \| ≥2 genuinely competing hypotheses \| ≥1 discriminating prediction \| simplified version (2×2) \| 1 falsification scenario per hypothesis \| |
+| competing-hypothesis-construction | 56 | \| M \| ≥3 competing hypotheses \| ≥2 discriminating predictions \| full matrix (hypotheses × predictions) \| full falsification per hypothesis \| |
+| competing-hypothesis-construction | 57 | \| L \| ≥4 competing hypotheses \| ≥3 discriminating predictions \| full matrix + experiment design suggestions \| full falsifiability audit \| |
+| competing-hypothesis-matrix | 34 | \| competing-hypothesis-generation \| Based on the primary hypothesis, generate ≥3 alternative hypotheses competing with it (different mechanisms, same or similar phenomenon prediction range) \| Required in all modes, execute first \| |

@@ -91,3 +91,77 @@ Append study set, extraction table, estimate, uncertainty, heterogeneity/bias de
 | evidence-synthesis-planning | 51 | - **Investigation**: pre-specified subgroups, meta-regression (if k >= 10) |
 | evidence-synthesis-planning | 52 | - **Thresholds**: I2 interpretation (0-40% low, 30-60% moderate, 50-90% substantial, 75-100% considerable) |
 | evidence-synthesis-planning | 86 | - At least 3 sensitivity analyses designed |
+## Preserved numeric tables (ASCII-normalized from source)
+
+| source | line | source table row |
+|---|---:|---|
+| meta-analysis | 29 | \| Multi-method comparison \| network-comparison \| Comparing N>=3 methods with indirect evidence \| |
+| meta-analysis | 62 | \| risk-of-bias-assessment \| Assess methodological bias (RoB2/PROBAST/QUADAS-2) \| |
+| meta-analysis | 73 | \| pairwise-synthesis \| 30 \| 30 \| 40 \| |
+| meta-analysis | 74 | \| network-comparison \| 50 \| 80 \| 60 \| |
+| meta-analysis | 75 | \| cumulative-tracking \| 40 \| 40 \| 30 \| |
+| meta-analysis | 76 | \| heterogeneity-investigation \| 30 \| 30 \| 50 \| |
+| meta-analysis | 77 | \| bias-detection \| 40 \| 40 \| 40 \| |
+| meta-analysis | 103 | \| bias-detection \| Assess systematic biases in the evidence body — publication bias, reporting bias, and selective outcome reporting. Budget: 40 studies, 40 effect sizes, 40 web searches. \| |
+| meta-analysis | 104 | \| cumulative-tracking \| Track evidence accumulation over time — cumulative meta-analysis protocol design. Budget: 40 studies, 40 effect sizes, 30 web searches. \| |
+| meta-analysis | 105 | \| heterogeneity-investigation \| Explain why different studies reach different conclusions — heterogeneity investigation protocol. Budget: 30 studies, 30 effect sizes, 50 web searches. \| |
+| meta-analysis | 106 | \| network-comparison \| Compare N methods simultaneously including indirect evidence — network meta-analysis protocol design. Budget: 50 studies, 80 effect sizes, 60 web searches. \| |
+| meta-analysis | 107 | \| pairwise-synthesis \| Compare two methods across multiple studies — paired meta-analysis protocol design. Budget: 30 studies, 30 effect sizes, 40 web searches. \| |
+| pairwise-synthesis | 33 | \| Studies identified \| 20 \| 30 \| |
+| pairwise-synthesis | 34 | \| Effect sizes extracted \| 20 \| 30 \| |
+| pairwise-synthesis | 35 | \| Web searches \| 25 \| 40 \| |
+| pairwise-synthesis | 36 | \| Quality assessments \| 15 \| 30 \| |
+| pairwise-synthesis | 46 | \| Studies found \| 0 \| 20 \| 30 \| BLOCKED \| |
+| pairwise-synthesis | 47 | \| Effect sizes planned \| 0 \| 20 \| 30 \| BLOCKED \| |
+| pairwise-synthesis | 48 | \| Web searches done \| 0 \| 25 \| 40 \| BLOCKED \| |
+| pairwise-synthesis | 49 | \| Quality assessed \| 0 \| 15 \| 30 \| BLOCKED \| |
+| pairwise-synthesis | 125 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| network-comparison | 35 | \| Studies identified \| 35 \| 50 \| |
+| network-comparison | 36 | \| Effect sizes extracted \| 55 \| 80 \| |
+| network-comparison | 37 | \| Web searches \| 40 \| 60 \| |
+| network-comparison | 38 | \| Network nodes (methods) \| 3 \| N \| |
+| network-comparison | 39 | \| Quality assessments \| 25 \| 50 \| |
+| network-comparison | 49 | \| Studies found \| 0 \| 35 \| 50 \| BLOCKED \| |
+| network-comparison | 50 | \| Effect sizes planned \| 0 \| 55 \| 80 \| BLOCKED \| |
+| network-comparison | 51 | \| Web searches done \| 0 \| 40 \| 60 \| BLOCKED \| |
+| network-comparison | 52 | \| Network nodes \| 0 \| 3 \| N \| BLOCKED \| |
+| network-comparison | 53 | \| Quality assessed \| 0 \| 25 \| 50 \| BLOCKED \| |
+| network-comparison | 142 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| cumulative-tracking | 34 | \| Studies identified \| 28 \| 40 \| |
+| cumulative-tracking | 35 | \| Effect sizes extracted \| 28 \| 40 \| |
+| cumulative-tracking | 36 | \| Web searches \| 20 \| 30 \| |
+| cumulative-tracking | 37 | \| Temporal coverage (years) \| 5 \| 10+ \| |
+| cumulative-tracking | 38 | \| Quality assessments \| 20 \| 40 \| |
+| cumulative-tracking | 48 | \| Studies found \| 0 \| 28 \| 40 \| BLOCKED \| |
+| cumulative-tracking | 49 | \| Effect sizes planned \| 0 \| 28 \| 40 \| BLOCKED \| |
+| cumulative-tracking | 50 | \| Web searches done \| 0 \| 20 \| 30 \| BLOCKED \| |
+| cumulative-tracking | 51 | \| Year range covered \| 0 \| 5 \| 10+ \| BLOCKED \| |
+| cumulative-tracking | 52 | \| Quality assessed \| 0 \| 20 \| 40 \| BLOCKED \| |
+| cumulative-tracking | 138 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| heterogeneity-investigation | 34 | \| Studies identified \| 20 \| 30 \| |
+| heterogeneity-investigation | 35 | \| Effect sizes extracted \| 20 \| 30 \| |
+| heterogeneity-investigation | 36 | \| Web searches \| 35 \| 50 \| |
+| heterogeneity-investigation | 37 | \| Moderator candidates \| 5 \| 10+ \| |
+| heterogeneity-investigation | 38 | \| Quality assessments \| 15 \| 30 \| |
+| heterogeneity-investigation | 48 | \| Studies found \| 0 \| 20 \| 30 \| BLOCKED \| |
+| heterogeneity-investigation | 49 | \| Effect sizes planned \| 0 \| 20 \| 30 \| BLOCKED \| |
+| heterogeneity-investigation | 50 | \| Web searches done \| 0 \| 35 \| 50 \| BLOCKED \| |
+| heterogeneity-investigation | 51 | \| Moderators identified \| 0 \| 5 \| 10+ \| BLOCKED \| |
+| heterogeneity-investigation | 52 | \| Quality assessed \| 0 \| 15 \| 30 \| BLOCKED \| |
+| heterogeneity-investigation | 136 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| bias-detection | 35 | \| Studies identified \| 28 \| 40 \| |
+| bias-detection | 36 | \| Effect sizes extracted \| 28 \| 40 \| |
+| bias-detection | 37 | \| Web searches \| 28 \| 40 \| |
+| bias-detection | 38 | \| Bias domains assessed \| 5 \| 8 \| |
+| bias-detection | 39 | \| Quality assessments \| 20 \| 40 \| |
+| bias-detection | 49 | \| Studies found \| 0 \| 28 \| 40 \| BLOCKED \| |
+| bias-detection | 50 | \| Effect sizes planned \| 0 \| 28 \| 40 \| BLOCKED \| |
+| bias-detection | 51 | \| Web searches done \| 0 \| 28 \| 40 \| BLOCKED \| |
+| bias-detection | 52 | \| Bias domains assessed \| 0 \| 5 \| 8 \| BLOCKED \| |
+| bias-detection | 53 | \| Quality assessed \| 0 \| 20 \| 40 \| BLOCKED \| |
+| bias-detection | 62 | \| quality-assessment-protocol \| Full RoB2 assessment per study \| |
+| bias-detection | 148 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| effect-size-extraction | 109 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |
+| quality-assessment-protocol | 24 | \| RCT \| RoB 2.0 \| Randomization, deviations, missing data, measurement, selection \| |
+| quality-assessment-protocol | 26 | \| Diagnostic accuracy \| QUADAS-2 \| Patient selection, index test, reference standard, flow/timing \| |
+| quality-assessment-protocol | 95 | \| risk-of-bias-assessment \| Assess methodological bias using RoB2, PROBAST, or QUADAS-2 validated tools \| |

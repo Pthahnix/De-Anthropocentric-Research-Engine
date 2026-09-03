@@ -138,3 +138,56 @@ Append dimension scores/evidence, constraint IDs, bottleneck rationale, resource
 | conflict-resolution | 72 | \| Output size \| ≤3000 tokens \| EC + injection + FRT summary \| |
 | constraint-tree-building | 42 | - **When to escalate**: If >10 UDEs found, prioritize top-5 by severity before tracing |
 | constraint-breaking | 54 | - **Success criterion**: At least one injection that resolves the conflict with ≤2 manageable side effects |
+## Preserved numeric tables (ASCII-normalized from source)
+
+| source | line | source table row |
+|---|---:|---|
+| feasibility-assessment | 42 | \| maturity-diagnosis \| Assess current readiness using TRL 9-level, NASSS 7-dimension, and Innovation Readiness Level frameworks \| |
+| feasibility-assessment | 75 | \| Dimensions assessed \| >= 5 (technical, market, regulatory, resource, organizational) \| |
+| feasibility-assessment | 76 | \| Blockers identified \| >= 3 per candidate \| |
+| feasibility-assessment | 77 | \| Estimate precision \| from +/-30% to +/-10% through iteration \| |
+| feasibility-assessment | 78 | \| Gates evaluated \| >= 3 stage gates \| |
+| feasibility-assessment | 107 | \| maturity-diagnosis \| Assess current readiness of candidates using TRL 9-level, NASSS 7-dimension, and Innovation Readiness Level frameworks. \| |
+| maturity-diagnosis | 23 | \| Dimensions scored \| >= 5 \| |
+| maturity-diagnosis | 24 | \| Evidence items per dimension \| >= 2 \| |
+| maturity-diagnosis | 25 | \| Bottlenecks identified \| >= 1 \| |
+| constraint-identification | 23 | \| Constraints identified \| >= 3 per candidate \| |
+| constraint-identification | 24 | \| Hard constraints classified \| >= 1 \| |
+| constraint-identification | 25 | \| Removal paths designed \| >= 1 per removable constraint \| |
+| resource-envelope-estimation | 24 | \| Estimate dimensions \| >= 3 (time, cost, personnel) \| |
+| resource-envelope-estimation | 25 | \| Precision range \| +/-30% initial, +/-10% refined \| |
+| resource-envelope-estimation | 26 | \| Reference analogies \| >= 2 per estimate \| |
+| comparative-feasibility-ranking | 27 | \| Candidates compared \| >= 2 \| |
+| comparative-feasibility-ranking | 28 | \| Dimensions in radar \| >= 5 \| |
+| comparative-feasibility-ranking | 29 | \| Weight justifications \| 1 per dimension \| |
+| maturation-pathway-design | 27 | \| Stage gates defined \| >= 3 \| |
+| maturation-pathway-design | 28 | \| Milestones per stage \| >= 2 \| |
+| maturation-pathway-design | 29 | \| Resource estimates per stage \| 1 per stage \| |
+| multi-dimensional-readiness-scan | 29 | \| dimension-assessment \| 1 \| Score a single readiness dimension \| |
+| multi-dimensional-readiness-scan | 30 | \| radar-synthesis \| 2 \| Combine scores into radar chart data \| |
+| multi-dimensional-readiness-scan | 31 | \| bottleneck-identification \| 3 \| Identify limiting dimensions \| |
+| constraint-drilling | 32 | \| constraint-identification-sop \| 1 \| Discover constraints using structured methods \| |
+| constraint-drilling | 33 | \| constraint-classification \| 2 \| Categorize constraints by type \| |
+| constraint-drilling | 34 | \| removability-assessment \| 3 \| Score removability of each constraint \| |
+| constraint-drilling | 35 | \| removal-path \| 4 \| Design removal steps and timeline \| |
+| staged-gate-evaluation | 29 | \| gate-criteria-definition \| 1 \| Define criteria and pass thresholds \| |
+| staged-gate-evaluation | 30 | \| gate-judgment \| 2 \| Evaluate and render verdict \| |
+| staged-gate-evaluation | 31 | \| feasibility-synthesis \| 3 \| Synthesize into final recommendation \| |
+| obstacle-analysis | 57 | \| ask-obstacle-acceptance \| Present obstacles with their severity assessments and proposed mitigations to the user. Ask whether they can accept these obstacles. If unacceptable after 2 rounds, return to present-candidates. \| |
+| constraint-analysis | 82 | \| Subagent calls \| ≤15 per strategy \| Pause and report partial \| |
+| constraint-analysis | 83 | \| Wall-clock time \| ≤30 min per strategy \| Checkpoint and continue \| |
+| constraint-analysis | 84 | \| Context tokens \| ≤80k per strategy \| Summarize and spawn fresh \| |
+| constraint-analysis | 85 | \| Total campaign \| ≤5 strategies \| Skip if constraint already resolved \| |
+| constraint-analysis | 125 | \| experiment-execution-bottleneck-identification \| Where is the system bottleneck>= — TOC 5 Focusing Steps + Current Reality Tree to find the binding constraint \| |
+| resource-constraint | 67 | \| Subagent calls \| ≤6 \| 3 SOPs + synthesis \| |
+| resource-constraint | 68 | \| Iterations \| ≤2 \| Re-quantify if estimates change \| |
+| resource-constraint | 69 | \| Output size \| ≤3000 tokens \| Gap table + recommendation \| |
+| assumption-constraint | 62 | \| Subagent calls \| ≤5 \| 2 SOPs + synthesis \| |
+| assumption-constraint | 63 | \| Iterations \| ≤2 \| Re-rank if new assumptions surface \| |
+| assumption-constraint | 64 | \| Output size \| ≤3000 tokens \| Ranked table + validation plan \| |
+| dependency-constraint | 64 | \| Subagent calls \| ≤5 \| 2 SOPs + synthesis \| |
+| dependency-constraint | 65 | \| Iterations \| ≤2 \| Re-build if tasks change \| |
+| dependency-constraint | 66 | \| Output size \| ≤3000 tokens \| Graph summary + critical chain \| |
+| conflict-resolution | 70 | \| Subagent calls \| ≤8 \| 3 SOPs + injection generation + validation \| |
+| conflict-resolution | 71 | \| Iterations \| ≤3 \| May need multiple injection attempts \| |
+| conflict-resolution | 72 | \| Output size \| ≤3000 tokens \| EC + injection + FRT summary \| |

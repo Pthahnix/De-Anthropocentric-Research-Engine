@@ -111,3 +111,53 @@ Append candidate set hash, criteria/weights, rule, ranking, sensitivity scenario
 | direction-narrowing | 37 | - `deep-web-search`: at least 30 web pages read in full |
 | direction-narrowing | 51 | \| deep-web-search \| Full-page web reading for non-academic perspectives — blogs, tech reports, product pages, industry analysis. Spawns a subagent to read pages in isolated context. Hard constraint: at least 30 web pages read in full. \| |
 | direction-narrowing | 52 | \| north-star-crystallization-broad-paper-search \| Paper landscape scan within selected field(s). Strict import of literature-engine/literature-overview skill. Hard constraint: at least 80 papers scanned. \| |
+## Preserved numeric tables (ASCII-normalized from source)
+
+| source | line | source table row |
+|---|---:|---|
+| multi-criteria-ranking | 57 | \| S \| 5–8 \| ≥3 dimensions \| Optional \| Ranking table + attack suggestions for top 2 gaps \| |
+| multi-criteria-ranking | 58 | \| M \| 9–15 \| ≥4 dimensions \| Required \| Ranking table + attack suggestions for top 3 gaps \| |
+| multi-criteria-ranking | 59 | \| L \| 16–20 \| ≥5 dimensions \| Required (multi-weight scenarios) \| Ranking table + attack suggestions for top 5 gaps + weight-sensitivity report \| |
+| evidence-based-prioritization | 55 | \| S \| 3–8 \| all 6 dimensions \| ≥2 supporting references per gap \| ranking table + evidence-void report \| |
+| evidence-based-prioritization | 56 | \| M \| 9–15 \| all 6 dimensions \| ≥3 supporting references per gap \| ranking table + evidence-void report + attack suggestions for top 3 gaps \| |
+| evidence-based-prioritization | 57 | \| L \| 16–20 \| all 6 dimensions \| ≥5 supporting references per gap \| ranking table + detailed evidence map + attack suggestions for top 5 gaps \| |
+| stakeholder-weighted-ranking | 62 | \| S \| 5–10 \| 2–3 classes \| Simple average \| Per-perspective rankings + consensus top-3 \| |
+| stakeholder-weighted-ranking | 63 | \| M \| 11–20 \| 3–5 classes \| Borda count \| Per-perspective rankings + consensus top-5 + divergence analysis \| |
+| stakeholder-weighted-ranking | 64 | \| L \| 20+ \| 5+ classes \| Weighted Borda + sensitivity \| Full perspective matrix + consensus ranking + divergence heatmap \| |
+| rapid-triage | 60 | \| Tier \| Input gap count \| Round-1 retention rate \| Round-2 output \| Final output \| |
+| rapid-triage | 62 | \| S \| 50–80 \| ≤60% \| top-15 \| Candidate set + elimination-rationale summary \| |
+| rapid-triage | 63 | \| M \| 81–150 \| ≤50% \| top-20 \| Candidate set + elimination-rationale summary \| |
+| rapid-triage | 64 | \| L \| 150+ \| ≤40% \| top-30 \| Candidate set + elimination-rationale summary + category statistics \| |
+| priority-sensitivity-testing | 35 | \| weight-perturbation \| Apply ±20% perturbations to each dimension weight and recompute the ranking \| Second step, systematic perturbation \| |
+| best-option-selection | 21 | \| Base SOP \| Target \| ±10% Range \| |
+| best-option-selection | 23 | \| criterion-definition \| 5-8 criteria \| 4-9 \| |
+| best-option-selection | 24 | \| weight-elicitation-sop \| 1 weight vector \| 1 \| |
+| best-option-selection | 25 | \| alternative-scoring \| 1 score matrix \| 1 \| |
+| best-option-selection | 26 | \| normalization \| 1 normalized matrix \| 1 \| |
+| best-option-selection | 27 | \| scoring-synthesis \| 1 recommendation \| 1 \| |
+| full-ranking | 22 | \| Base SOP \| Target \| ±10% Range \| |
+| full-ranking | 24 | \| criterion-definition \| 5-8 criteria \| 4-9 \| |
+| full-ranking | 25 | \| weight-elicitation-sop \| 1 weight vector \| 1 \| |
+| full-ranking | 26 | \| alternative-scoring \| 1 score matrix \| 1 \| |
+| full-ranking | 27 | \| normalization \| 1 normalized matrix \| 1 \| |
+| full-ranking | 28 | \| rank-comparison \| 1 agreement matrix \| 1 \| |
+| full-ranking | 29 | \| scoring-synthesis \| 1 full ranking \| 1 \| |
+| full-ranking | 97 | \| multi-method-triangulation \| Apply 2-3 MCDA methods to the same candidates, compare rankings, and identify method-sensitive options. \| |
+| category-sorting | 22 | \| Base SOP \| Target \| ±10% Range \| |
+| category-sorting | 24 | \| criterion-definition \| 5-8 criteria \| 4-9 \| |
+| category-sorting | 25 | \| weight-elicitation-sop \| 1 weight vector \| 1 \| |
+| category-sorting | 26 | \| threshold-setting \| 1 threshold set \| 1 \| |
+| category-sorting | 27 | \| alternative-scoring \| 1 score matrix \| 1 \| |
+| category-sorting | 28 | \| scoring-synthesis \| 1 classification \| 1 \| |
+| non-compensatory-screening | 27 | \| Base SOP \| Target \| ±10% Range \| |
+| non-compensatory-screening | 29 | \| criterion-definition \| 3-5 screening criteria \| 2-6 \| |
+| non-compensatory-screening | 30 | \| threshold-setting \| 1 threshold set \| 1 \| |
+| non-compensatory-screening | 31 | \| conjunctive-filter \| 1 pass/fail list \| 1 \| |
+| non-compensatory-screening | 32 | \| dominance-check \| 1 dominance report \| 1 \| |
+| weight-elicitation | 23 | \| Base SOP \| Target \| ±10% Range \| |
+| weight-elicitation | 25 | \| criterion-definition \| 5-8 criteria \| 4-9 \| |
+| weight-elicitation | 26 | \| weight-elicitation-sop \| ≥2 methods \| 2-3 \| |
+| weight-elicitation | 27 | \| rank-comparison \| 1 comparison \| 1 \| |
+| weight-elicitation | 95 | \| multi-method-triangulation \| Apply 2-3 MCDA methods to the same candidates, compare rankings, and identify method-sensitive options. \| |
+| direction-narrowing | 51 | \| deep-web-search \| Full-page web reading for non-academic perspectives — blogs, tech reports, product pages, industry analysis. Spawns a subagent to read pages in isolated context. Hard constraint: at least 30 web pages read in full. \| |
+| direction-narrowing | 52 | \| north-star-crystallization-broad-paper-search \| Paper landscape scan within selected field(s). Strict import of literature-engine/literature-overview skill. Hard constraint: at least 80 papers scanned. \| |

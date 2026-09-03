@@ -14,14 +14,14 @@
 
 | v4 节点 | 源节点/正文行数 | v4 body | 源 threshold 数 | body 保留数 | 压缩比（源/body） | 缩减 |
 |---|---:|---:|---:|---:|---:|---:|
-| synthesize-meta-analytic-evidence | 9 / 805 | 93 | 14 | 14 | 8.66:1 | 88.4% |
-| design-experiment | 8 / 304 | 50 | 0 | 0 | 6.08:1 | 83.6% |
-| formulate-hypotheses | 9 / 493 | 129 | 33 | 33 | 3.82:1 | 73.8% |
-| analyze-constraints-readiness | 22 / 1,051 | 140 | 43 | 43 | 7.51:1 | 86.7% |
-| rank-candidates | 13 / 734 | 113 | 30 | 30 | 6.50:1 | 84.6% |
-| establish-empirical-baseline | 9 / 696 | 64 | 5 | 5 | 10.88:1 | 90.8% |
-| audit-benchmark-validity | 7 / 600 | 63 | 6 | 6 | 9.52:1 | 89.5% |
-| **合计** | **77 / 4,683** | **652** | **131** | **131** | **7.18:1** | **86.1%** |
+| synthesize-meta-analytic-evidence | 9 / 805 | 167 | 14 | 14 | 4.82:1 | 79.3% |
+| design-experiment | 8 / 304 | 87 | 0 | 0 | 3.49:1 | 71.4% |
+| formulate-hypotheses | 9 / 493 | 151 | 33 | 33 | 3.26:1 | 69.4% |
+| analyze-constraints-readiness | 22 / 1,051 | 193 | 43 | 43 | 5.45:1 | 81.6% |
+| rank-candidates | 13 / 734 | 163 | 30 | 30 | 4.50:1 | 77.8% |
+| establish-empirical-baseline | 9 / 696 | 137 | 5 | 5 | 5.08:1 | 80.3% |
+| audit-benchmark-validity | 7 / 600 | 139 | 6 | 6 | 4.32:1 | 76.8% |
+| **合计** | **77 / 4,683** | **1,037** | **131** | **131** | **4.52:1** | **77.9%** |
 
 `design-experiment` 的 roster 估算为 6 个旧节点/~702 行，而当前 architecture 列出 9 个 `old`、8 个可解析正文；该差异记录为边界 case，不用静默修正。阈值列由 `validate_threshold_fidelity.py` 逐条核验；所有 131 条源命中均保留。
 
