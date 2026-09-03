@@ -178,6 +178,26 @@ R1 落锤后只保留一支。无论选哪一支，以下不变：八字段 Delt
 - `score-object` rubric 在试点阶段可见且带来源编号。
 - 运行时字段只表达输入/输出与 Delta，不把 retry、parallelism、monitoring 写进科研步骤。
 
+## 10.1 字段处置矩阵
+
+| v3 信息 | v4 body 处置 | contract 分支处置 | 丢弃条件 |
+|---|---|---|---|
+| When to use | 保留为适用条件 | 可复制到 `requires` | 仅重复 v4 desc 时压缩 |
+| Not applicable | 保留为拒绝/转路由条件 | 不得变成 optional | 无来源证据不得新增 |
+| 编号步骤 | 按顺序保留 | 不放 runtime | 仅重复步骤标题可合并 |
+| 阈值/数字 | 原值逐字保留 | 可镜像到 constraints | 不得四舍五入/平均 |
+| Rubric 分档 | 保留维度、分值、方向 | 可镜像 quality metadata | 缺一项即 UNCERTAIN |
+| 失败/反例 | 保留触发与出口 | 可镜像 failure predicates | 装饰性叙述可压缩 |
+| Provider 名称 | 只保留能力要求 | 不写进科学 contract | 实现细节移 runtime |
+| 例子 | 保留边界/字段例 | 可作为 examples 引用 | 纯展示例可删并记 log |
+| Context checkpoint | 映射到 Delta notes | 八字段固定 | 不把事实放 INDEX |
+
+## 10.2 重放与审计要求
+
+编译器或人工复核应能从同一 source 集合重放同一章节顺序。重放键为 `(v4_node, mode, source_ref.start_line)`；相同键的文本只保留首次版本，后续版本进入冲突表。每个 drop 必须有原因代码：`duplicate-explanation`、`runtime-only`、`generated-index`、`unresolved-alias` 或 `decorative-example`。原因代码不是删除许可：若被删单元含 threshold/rubric/failure，操作必须失败并要求重新分配。
+
+试点完成后，先运行静态检查，再由 host AI 读取 body 做一次字段解析演练。静态检查验证标题、YAML 可解析性、八字段名称、数字判据反查和 provenance 文件存在；解析演练验证缺失 required、违反 gate、mode 不匹配时是否产生 blocked/uncertainties，而不是生成自由文本补丁。
+
 ## 11. 已知边界
 
 `systematic-literature-review/SKILL.md` 在当前仓库缺失，无法作为模板证据；paper-reading 30 个 v2 SOP 也尚未完成图内/图外裁定。两项不阻塞本规格，但进入 Phase 2 前必须补 provenance 或标记未决。

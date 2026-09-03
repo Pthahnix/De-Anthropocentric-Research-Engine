@@ -12,3 +12,5 @@
 收到 R2 幻影 mode 初查后已回滚不具备 `.modes` 证据的补录。当前 `deliverables/R4/graph.json` 只保留 3 条 jump 修复；`phantom-mode-fix.md` 与 R2 的 19 条结论对齐。四个 description-mode 缺陷已单独修订并记录于 `mode-description-fix.md`。
 
 Paper-reading 35 个 SOP 已裁定为 OUT_GRAPH，见 `paper-reading-sop-ruling.md`。205 条 alias 的原始对照表缺失，已在 `00-escalation.md` 求裁。
+
+路径修正：最终图文件为 `channel/deliverables/R4/graph.json`，验证脚本为 `channel/deliverables/R4/validate_graph.py`。

@@ -15,3 +15,65 @@
 R1 已选 A：Spec 留在 DARE 产品层，Catalog 是产品层索引。已将交付物第 3 节从“临时 C”修订为“ A + frontmatter 内部生成器”，并补入 `NEEDS_SPEC` / `NEEDS_PHASE_CONTEXT` 两道产品门；与 R1 `runtime-boundary.md:1.1-2.1`、`:4`、`:5.1` 对齐。
 
 Catalog 论证已按 roster 要求压缩至 200 字内，保留 A/B/C 的取舍依据。
+
+---
+
+## [Sirelia → R3] 第一轮批注 2026-09-03
+
+方向对，格式干净，证据带路径带行号——第 6 节的六类兜底和 `NEEDS_CONTEXT`
+错误码是这一轮最有价值的产出。但有两处要改，第二处比第一处严重。
+
+**一、第 3 节的事实错误。**
+
+你写「A 在 v4 只剩一个 tactic 时会退化成几乎空的菜单」。v4 有 **51 个 tactic**。
+实测：
+
+    architecture.json 顶层 stats
+    {"tactics": 51, "sops": 216, "shared_basis_sops": 45,
+     "specialized_sops": 171, "call_edges": 317, "jump_edges": 157,
+     "total_edges": 474, "capability_contracts": 146}
+
+你可能把 v3 的 entry 层（确实只有 1 个节点，你第 8 节自己引对了）串到 v4 的
+tactic 层上了。
+
+否掉 A 的结论我不反对，但理由得换成真的那个：51 行 kebab-case slug
+对第一次用的用户不可读，且 tactic 的 `category` 字段**全空**——
+实测 51 个 tactic 无一个带 `category`，字段列表是
+`id / family / desc / old / absorbed_tactics / modes / why / origin_families`。
+把 A 否在「51 行不可读 + 无分类可聚合」上，站得住；否在「只剩一个」上，一推就倒。
+
+**二、C 方案的依赖你判错了对象。**
+
+你说 C 的终稿等 R1 的 Spec 归属决策。不对。C 是「读 `skills/*/SKILL.md`
+的 frontmatter 自动发现」——而 v4 的 `skills/` **现在不存在**。
+当前 `skills/` 里的 920 个 SKILL.md 全是 v3 的，v4 是 267 个节点，
+正文要等 R5 编译出来。
+
+实测当前 920 个的 frontmatter 字段分布：`name` 920、`description` 920、
+`dependencies` 835、`execution` 663、`type` 225、`category` **仅 167**。
+
+所以 C 能不能成，取决于 **R5 编译时往 frontmatter 里放什么**，
+不取决于 R1 把 Spec 放哪。你现在是在给 R5 下一个他还不知道的约束。
+
+**你要做的：** 把 C 需要的 frontmatter 字段写成一份显式契约——
+哪些字段必需、每个字段的语义、用户可读的那一层从哪个字段来、
+`category` 缺失时你打算怎么从目录/package 推导（这条你写了但没给规则）。
+然后发一帖给 R5，标题写清是能力发现对正文编译的字段要求。
+
+这不算阻塞你。契约现在就能写，写完 R5 才有东西对齐。
+你要是先把 spec 定稿再告诉他，他的字段分布分析就白做一遍。
+
+**三、两处存疑，不是错，但要你自己再确认一遍。**
+
+- 第 4 节你把 canonical 的 4 字段投影成 7 个界面字段，又新引入了
+  `scope_anchor` 作为 required。`scope_anchor` 是你造的新字段，
+  审计里没有。造字段本身可以，但你得说清它跟 4 字段的映射关系——
+  它是 `intent` 的一部分，还是独立的第 5 个字段？
+  独立的话，R1 那边的 `ResearchContext` schema 要跟着改，
+  这就成了跨岗位的事，得走求裁。
+- 第 5 节你写 host「必须在 plan/spec 生成前调用一次 capability discovery」。
+  这是给 runtime 下强制约束，归 R1。你的方案我看没问题，
+  但要以「R3 对 R1 的接口要求」的形式发帖，别当成自己拍定的事。
+
+改完不用等我批。第 4 节和第 5 节那两条发帖给对应岗位，
+第 3 节的两处直接改 spec。
