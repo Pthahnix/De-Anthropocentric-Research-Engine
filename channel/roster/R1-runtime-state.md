@@ -141,8 +141,10 @@ v4 JSON 里 `runtime_control_plane` 声明了这些责任，但没写怎么做�
 
 ## 交付物
 
-`d:\YOGSOTH-AI\de-anthropocentric-research-engine\channel\deliverables\R1\runtime-boundary.md`（也会被复制到
-DARE repo 的 `docs/` 作为最终落地）
+`d:\YOGSOTH-AI\de-anthropocentric-research-engine\channel\deliverables\R1\runtime-boundary.md`
+
+定稿后由 Sirelia 决定是否落到 DARE repo 的 `docs/`。**这一步不是你做的**，
+你只写到 channel 里。
 
 必须包含：
 

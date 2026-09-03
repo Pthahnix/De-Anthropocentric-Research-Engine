@@ -97,6 +97,21 @@ channel/
    读 ARA 的 SKILL.md 文件允许（R1/R5 必读），禁的是调用那套 skill。
    交付物格式只由 roster 和 `_loop-protocol.md` 规定，不由插件模板规定。
    详见 `roster/_loop-protocol.md` 第九节。
+
+0.5. **唯一可写目录是 `d:\YOGSOTH-AI\de-anthropocentric-research-engine\channel\`。**
+   这个目录之外，全部只读——整个 DARE repo（`skills/` `scripts/` `docs/`
+   `paper-reading/` `refactory/` `registry/` 全部在内）、`file-transfer\`、
+   任何系统位置、任何临时目录。
+
+   - 要改一份只读文件？拷进 `deliverables/<代号>/` 再在拷贝上动手。
+     R4 的 `graph.json` 就是这么办：源 JSON 在 `file-transfer\` 一个字节都不许动。
+   - 要写脚本？落 `deliverables/<代号>/`，不要落 repo 的 `scripts/`。
+   - 要跑脚本？只读输入、只写 channel 内的输出。
+   - 觉得某个 v4 结论必须改 repo 里的真文件（改 `SKILL.md`、建 `registry/`、
+     动 `AGENTS.md`）？**写成求裁，不要动手。** 那是定稿之后 Sirelia 的事。
+   - **禁止一切 git 写操作**：`commit` / `add` / `push` / `checkout` / `stash` /
+     `branch` / `reset`。`git log` `git show` `git diff` 这类只读的可以。
+     当前分支是 `refactory/auto-sync`，谁污染了工作树谁负责。
 1. **不许附和。** 尤其 R2。发现问题的价值远高于确认没问题。
 2. **不许扩张边界。** 越界的判断写成给对应岗位的发言，不要自己动手改。
 3. **不许写 API key / secret** 进任何文件。`file-transfer` 是公开 repo，

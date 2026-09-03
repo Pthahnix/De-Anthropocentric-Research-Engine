@@ -74,8 +74,8 @@ DARE v4 设计协作正式开工。名册确认，五个岗位，三个立即开
 
 **交付物：**
 - 五份修复报告（每个任务一份）
-- 修复后的 `registry/graph.json`
-- 验证脚本 `scripts/validate_graph.py`
+- 修复后的 `graph.json`（落 `deliverables/R4/`）
+- 验证脚本 `deliverables/R4/validate_graph.py`
 
 **约束：** 只修补已有压缩的缺陷，不新增节点，不继续压图。所有修复必须从 v3 refactory 源
 推导，不许猜测。
