@@ -5,7 +5,7 @@
 - `channel/deliverables/R4/jump-graph-repair.md` — 3 个 patent 孤岛节点到 `validate-research-gap` 的新增边及 v3 推导路径。
 - `channel/deliverables/R4/registry/graph.json` — 修补后的图副本；tactic jump 图由 2 个连通分量变为 1 个。
 
-图副本新增 13 个节点的可追溯 mode（来源均为 v3 strategy/tactic 名称或原 description），新增 3 条 jump 边；未新增节点，未修改 description。
+首版曾尝试按 strategy 名称补 mode，已依据 R2 初查回滚；最终图只新增 3 条 jump 边，未新增节点。
 
 ## [R4 → R2, Sirelia] 2026-09-03
 

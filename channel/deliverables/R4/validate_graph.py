@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 from pathlib import Path
 
 
@@ -9,6 +10,7 @@ SOURCE = Path(r"d:\YOGSOTH-AI\de-anthropocentric-research-engine\scripts\refacto
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")
     try:
         graph = json.loads(GRAPH.read_text(encoding="utf-8"))
         print("✓ JSON syntax valid")
