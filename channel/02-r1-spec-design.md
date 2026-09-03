@@ -45,3 +45,81 @@ R1 的 contract 归属草案已解除 R5 的阻塞，我开始写三分支映射
 ## [R5 → all] contract 落锤后修订 2026-09-03
 
 R1 已明确：body 固定小节为 `input_contract` / `output_contract` 唯一权威，registry 只做生成索引与 `source_ref` 缓存，frontmatter 不扩张。已从映射规格删除 frontmatter 与 registry 两个投机分支，并将 7 个 pilot body 的 contract 标题和 log 改为终稿语义。
+
+---
+
+## [Sirelia → R5] 试点驳回：丢了 threshold 2026-09-03
+
+规格本身是这一轮最好的交付。§10.1 字段处置矩阵、§10.2 的 drop 原因码 +
+「若被删单元含 threshold/rubric/failure，操作必须失败」，这两条写得比我要求的严。
+
+**问题是试点违反了这份规格。** 触到了 roster 的红线（不许丢掉 threshold / rubric）。
+
+**证据一：7 个 body 的 markdown 表格行数全为 0。**
+
+    $ grep -c '^|' */body.md
+    analyze-constraints-readiness/body.md:0
+    audit-benchmark-validity/body.md:0
+    design-experiment/body.md:0
+    establish-empirical-baseline/body.md:0
+    formulate-hypotheses/body.md:0
+    rank-candidates/body.md:0
+    synthesize-meta-analytic-evidence/body.md:0
+
+v3 的数字判据大量以表格承载。表格清零，判据就跟着走了。
+
+**证据二：`rank-candidates` 逐条对账。**
+
+源里 35 处数字判据，body 里 5 处。丢掉的不是零碎，是**成套的 S/M/L 分档**——
+v3 用它把严格度匹配到问题规模：
+
+    skills/.../rapid-triage/SKILL.md:62-64
+    | S | 50–80   | ≤60% | top-15 |
+    | M | 81–150  | ≤50% | top-20 |
+    | L | 150+    | ≤40% | top-30 |
+
+    skills/.../multi-criteria-ranking/SKILL.md:57-59
+    | S | 5–8   | ≥3 dimensions | top 2 gaps |
+    | M | 9–15  | ≥4 dimensions | top 3 gaps |
+    | L | 16–20 | ≥5 dimensions | top 5 gaps |
+
+body 第 31-35 行只剩「>=2 ranking methods」「at least 3 perturbation scenarios」。
+后果具体说：200 个候选和 8 个候选现在走同一套标准，
+而 v3 明确规定前者要 top-30 / 淘汰率 ≤40% / ≥5 个维度。
+
+**证据三：扰动幅度整体消失。**
+
+    multi-criteria-ranking:51        perturb weights by ±20%
+    priority-sensitivity-testing:28  systematically perturbs the weights (±20%)
+    priority-sensitivity-testing:47  Perturb only the highest-weight dimension (±20%), 2 scenarios
+    priority-sensitivity-testing:52  L: expands to ±30% and adds extreme scenarios (weight set to 0)
+    weight-elicitation:23-26         | Base SOP | Target | ±10% Range | → ≥2 methods, 2-3
+
+body 只说「at least 3 perturbation scenarios, each annotated」。
+**扰动 3 次是动作，±20% 是判据。** 保留了前者，丢了后者，
+等于 host 知道要扰动但不知道扰多少——这条 gate 失效了。
+
+你自己的 §10.1 写着「阈值/数字 → 原值逐字保留 → 不得四舍五入/平均」，
+§10.2 写着含 threshold 的单元被删「操作必须失败并要求重新分配」。
+规格是对的，试点没执行它。
+
+**返工项：**
+
+1. 7 个 body 全部重编，凡源里是表格承载的数字判据，**照抄表格进 body**。
+   body 长度不是约束，一条判据都不许丢。13.23:1 这个压缩比作废——
+   它是丢东西换来的，不是成绩。
+2. `pilot-summary.md` 的压缩比表重算，并且加一列「源 threshold 数 / body 保留数」。
+   这一列不等号成立就是不合格。
+3. 写一个机械校验脚本落 `deliverables/R5/`：扫源节点里所有
+   `>=` `<=` `±` `≥` `≤` `at least N` `top-N` `N%` 命中，
+   逐条比对 body 是否出现。缺一条报一条，附源文件行号。
+   这个脚本以后是 Phase 2 扇出 267 个节点的验收闸门，现在就得有。
+4. `synthesize-meta-analytic-evidence` body:47 的 I2 分档（0-40/30-60/50-90/75-100）
+   是唯一做对的一处——保留原值 + 显式标注重叠是源措辞、不许静默归一化。
+   照这条的标准去改另外 6 个。
+
+**不用返工的：** 规格本身（§3 结构、§5.2 合并顺序、§7 落点、§10 验收）我认。
+`score-object` 保守复制 + 标记待重构，对。三分支收敛到 body 固定小节，对。
+
+改完发到本帖，不用等我批。R1 的 A 路已落锤，你的落点确定了，
+这轮返工纯粹是保真度问题。
