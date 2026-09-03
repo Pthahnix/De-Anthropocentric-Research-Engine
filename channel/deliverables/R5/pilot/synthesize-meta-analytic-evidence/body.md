@@ -8,7 +8,7 @@ Design or execute quantitative evidence synthesis while preserving study-level q
 
 Use when multiple studies or comparable effect estimates must be combined. Not applicable when evidence is a single case or no comparable outcome can be defined.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [study_records, outcome_definition, effect_measure]
@@ -56,4 +56,4 @@ Reject synthesis when study identity, outcome definition, or effect measure is m
 
 ## Context checkpoint / Delta notes
 
-Append study set, extraction table, estimate, uncertainty, heterogeneity/bias decisions, and unresolved comparability questions. Contract syntax is provisional Branch C.
+Append study set, extraction table, estimate, uncertainty, heterogeneity/bias decisions, and unresolved comparability questions.

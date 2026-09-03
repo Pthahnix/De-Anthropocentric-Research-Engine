@@ -4,7 +4,7 @@
 
 Assess feasibility and readiness by identifying constraints, resources, dependencies, bottlenecks, and maturation gates.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [candidate_or_plan, readiness_dimensions]
@@ -45,4 +45,4 @@ Do not label a candidate ready with missing evidence, unclassified hard constrai
 
 ## Context checkpoint / Delta notes
 
-Append dimension scores/evidence, constraint IDs, bottleneck rationale, resources, gates, and unresolved conflicts. Contract syntax is provisional Branch C.
+Append dimension scores/evidence, constraint IDs, bottleneck rationale, resources, gates, and unresolved conflicts.

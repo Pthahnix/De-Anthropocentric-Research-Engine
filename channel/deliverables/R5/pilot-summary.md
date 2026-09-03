@@ -42,7 +42,7 @@
 
 ## 发现的边界 case
 
-1. R1 尚未在 frontmatter 与 `capabilities.json` 之间选择最终 contract 机器落点；7 个 body 以 Branch C（body YAML）试编，并在每个 log 标为 provisional。
+1. R1 已落锤：contract 以 body 固定小节为唯一权威，registry 只做生成索引与 source_ref 缓存，frontmatter 不扩张。
 2. `systematic-literature-review/SKILL.md` 不存在，无法验证 roster 指定的典型模板。
 3. architecture 的 `old` 含跨 package/历史别名；当前目录无法解析的名称被列入 log，不猜测正文。
 4. source gate 有 XML-like、Markdown、表格三种写法；统一章节但保留原数字/比较符。
@@ -56,4 +56,3 @@
 - 每个 body 都有 Input/Output contract、执行步骤、gate、failure、provenance、Delta 说明。
 - 7 个 body 的数字门槛可在对应 log 与 v3 源节点中反查；无法解析的源名未被伪造为已继承。
 - body 只描述科研变换；retry、parallelism、dispatch、monitoring 未写入科学步骤。
-

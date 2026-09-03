@@ -4,4 +4,4 @@
 - Kept: all numeric dimension/evidence/blocker/gate thresholds, five modes, sensitivity binding rule.
 - Compressed: duplicated feasibility prose and runtime scheduling language.
 - Boundary case: several source names are architecture-only aliases; no substitute text was fabricated.
-- Contract: Branch C pending R1 final choice.
+- Contract: body fixed section, per R1 2026-09-03 ruling; registry is generated index only.

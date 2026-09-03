@@ -8,7 +8,7 @@ Generate and refine testable hypotheses from a gap, theory, induction, anomaly, 
 
 Use when a research gap or insight can be stated. Select `deductive`, `inductive`, `abductive`, or `competing-hypotheses`; operationalization may follow any generation mode.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [research_gap_or_observation]
@@ -54,4 +54,4 @@ Reject unfalsifiable wording, variables without operational definitions, and “
 
 ## Context checkpoint / Delta notes
 
-Append candidate list, selected hypotheses, operational definitions, predictions, falsification tests, and unresolved theory conflicts. Contract syntax is provisional Branch C.
+Append candidate list, selected hypotheses, operational definitions, predictions, falsification tests, and unresolved theory conflicts.

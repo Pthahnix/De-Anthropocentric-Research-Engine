@@ -1,6 +1,6 @@
 # Provenance → body 映射规格（R5）
 
-状态：R1 归属草案已发布；contract 语法保留三分支，待 R1 最终落锤后删除两支。  
+状态：R1 已落锤；`input_contract` / `output_contract` 以 tactic/SOP body 固定小节为唯一权威，registry 只做生成索引与 `source_ref` 缓存，frontmatter 不扩张。  
 适用范围：v3 `SKILL.md` 正文 → v4 tactic/SOP `body.md`。本规格不生成 267 个节点的正文。
 
 ## 1. 目标与不变量
@@ -89,38 +89,9 @@ architecture JSON 的一个 v4 tactic 吸收多个 v3 节点（`old` 数组）�
 4. 一个旧节点同时服务多个 mode 时，拆出最小语义单元并在 provenance map 多重引用，不复制正文。
 5. mode 之间若写入相同 state key，按 R1 Delta 合并规则处理，不在 body 内规定调度顺序。
 
-## 7. Contract 落点投机分支
+## 7. Contract 落点（R1 终稿）
 
-R1 已确定 runtime 只接收八字段 `ResearchStateDelta`，catalog 可由 frontmatter 或引用索引生成；以下三支共用本规格其余规则。
-
-### Branch A：frontmatter 字段
-
-```yaml
-input_contract:
-  required: [<field>]
-  optional: [<field>]
-  constraints: [<verbatim threshold>]
-output_contract:
-  produces: [<field>]
-  delta_fields: [findings, evidence_updates, ...]
-```
-
-解析器在 frontmatter 后读取 body。body 仍保留人可读 Input/Output contract；机器字段为规范副本，冲突以编译失败处理。
-
-### Branch B：`registry/capabilities.json`
-
-```json
-{
-  "node": "<id>",
-  "input_contract": {"required": [], "optional": [], "constraints": []},
-  "output_contract": {"produces": [], "delta_fields": []},
-  "source_refs": []
-}
-```
-
-body 不重复完整 schema，只写 `Contract ref: capabilities.json#<node>` 加自然语言约束；threshold/rubric 仍必须在 body 可见。
-
-### Branch C：body 结构化块
+contract 只写在 body 的固定小节；registry 由 body 生成，不反向覆盖正文。runtime 仍只接收八字段 `ResearchStateDelta`。
 
 ````markdown
 ## Input contract
@@ -138,9 +109,32 @@ delta_fields: []
 
 解析器以标题和 fenced YAML/JSON 为唯一机器入口。frontmatter 与 registry 不新增 contract 字段；catalog 通过扫描 body 或单独索引生成。
 
-### Branch 收敛规则
+### 7.1 固定小节解析规则
 
-R1 落锤后只保留一支。无论选哪一支，以下不变：八字段 Delta 名称、threshold/rubric 原值、source_ref、mode 顺序、冲突处理和验收测试。删除其余支时不得删除对应示例与 log。
+1. 标题匹配大小写不敏感，但规范输出统一为 `## Input contract` 与 `## Output contract`。
+2. 每个固定小节必须恰好包含一个 YAML 或 JSON fenced block；缺失、重复或无法解析均为编译错误。
+3. `required`、`optional`、`constraints`、`produces`、`delta_fields` 是保留键；未知键进入警告，不得覆盖保留键。
+4. `constraints` 中的比较符、数值、单位、范围、枚举和条件表达式按字符串保存，避免 YAML 类型转换损失原文。
+5. `delta_fields` 只能使用 R1 定义的八个字段；body 可只列实际产生字段，但不得改名或嵌套新字段。
+6. body 的自然语言段落是解释层；机器解析失败时不得从解释层猜 schema。
+7. registry 生成器写入 `node`、解析后的 contract 和 `source_refs`，但任何反向修改必须回写 body 后再重新生成。
+
+### 7.2 Body 与 registry 的一致性
+
+生成索引时，对 body contract 计算规范化 hash。下列任一情况都阻止发布：body hash 与 registry 缓存不一致、source_ref 指向不存在行、required 与正文步骤矛盾、produces 未在 Output 段出现、或 delta_fields 超出八字段集合。索引缺失时 host 仍可直接读取 body；body 缺失时不得用 registry 缓存冒充正文。
+
+### 7.3 版本与变更
+
+contract 变更增加 `contract_revision` 与变更原因，旧 body 不原地覆盖历史 checkpoint。threshold/rubric 的数值变更视为语义变更，必须产生新的 source_ref 或 `v4-design` 注记，并在 compilation-log 中说明影响的 mode。仅标题、空白或解释压缩可视为非语义变更。
+
+### 7.4 字段语义速查
+
+- `required`：缺失即 `blocked`，不得由 host 临场补造。
+- `optional`：缺失可继续，但必须在 Delta 的 `uncertainties` 或 `open_questions` 记录影响。
+- `constraints`：执行前验证；违反时返回失败原因与 source_ref。
+- `produces`：完成判据所需的最小结果集合，不等同于所有自然语言解释。
+- `delta_fields`：允许写入的研究状态切片；未列出的状态不得暗写入 context。
+- `source_refs`：至少包含一个 v3 或明确 `v4-design` 来源；空数组只允许零 provenance 新节点。
 
 ## 8. Rubric 分配（含 `score-object`）
 

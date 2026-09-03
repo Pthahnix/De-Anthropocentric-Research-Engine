@@ -4,7 +4,7 @@
 
 Rank, classify, screen, or select typed candidates under explicit criteria and hard constraints.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [candidates, criteria, decision_rule]
@@ -44,4 +44,4 @@ Reject rankings with undefined criterion direction, unhandled missing values, or
 
 ## Context checkpoint / Delta notes
 
-Append candidate set hash, criteria/weights, rule, ranking, sensitivity scenarios, exclusions, and unresolved trade-offs. Contract syntax is provisional Branch C.
+Append candidate set hash, criteria/weights, rule, ranking, sensitivity scenarios, exclusions, and unresolved trade-offs.

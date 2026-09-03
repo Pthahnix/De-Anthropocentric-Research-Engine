@@ -4,7 +4,7 @@
 
 Establish a fair empirical baseline by inventorying methods, extracting comparable performance, normalizing conditions/compute, checking discrepancies, and estimating progress/headroom.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [method_records, benchmark_or_task, performance_measure]
@@ -45,4 +45,4 @@ Do not call a baseline fair when conditions are missing, metrics are incomparabl
 
 ## Context checkpoint / Delta notes
 
-Append method IDs, normalized records, excluded records with reasons, discrepancy pairs, progress model, and headroom uncertainty. Contract syntax is provisional Branch C.
+Append method IDs, normalized records, excluded records with reasons, discrepancy pairs, progress model, and headroom uncertainty.

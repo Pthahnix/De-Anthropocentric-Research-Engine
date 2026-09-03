@@ -4,7 +4,7 @@
 
 Treat benchmarks as scientific measurement instruments: audit construct validity, contamination, metric pathology, coverage, leaderboard dynamics, and protocol drift.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [benchmark_spec, task_definition, metric_definition, evaluation_records]
@@ -42,4 +42,4 @@ Reject “valid” when benchmark artifact probes are absent, contamination is u
 
 ## Context checkpoint / Delta notes
 
-Append benchmark version, construct claims, probes, contamination evidence, coverage gaps, protocol diffs, verdict, and repair decisions. Contract syntax is provisional Branch C.
+Append benchmark version, construct claims, probes, contamination evidence, coverage gaps, protocol diffs, verdict, and repair decisions.

@@ -8,7 +8,7 @@ Translate a falsifiable hypothesis into a statistically defensible experiment. F
 
 Use after a hypothesis has an operational construct and discriminating prediction. Not applicable when the hypothesis or measurable outcome is absent.
 
-## Input contract (speculative branch C)
+## Input contract
 
 ```yaml
 required: [falsifiable_hypothesis, outcome, factors, constraints]
@@ -47,4 +47,4 @@ Reject post-hoc factor selection, outcome leakage, missing control, unpowered co
 
 ## Context checkpoint / Delta notes
 
-Record hypothesis ID, design mode, factors/levels, analysis plan, budget, preregistration status, and unresolved threats. Contract syntax is provisional Branch C.
+Record hypothesis ID, design mode, factors/levels, analysis plan, budget, preregistration status, and unresolved threats.

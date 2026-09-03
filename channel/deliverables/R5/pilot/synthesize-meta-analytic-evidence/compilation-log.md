@@ -5,4 +5,4 @@
 - Compressed: repeated campaign prose and provider/tool instructions.
 - Not copied: generated `available-*` tables; runtime retry/dispatch.
 - Boundary case: source I2 bands overlap. Preserved verbatim and marked for later normalization.
-- Contract: Branch C pending R1 final choice.
+- Contract: body fixed section, per R1 2026-09-03 ruling; registry is generated index only.
