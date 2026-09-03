@@ -51,3 +51,13 @@ Append benchmark version, construct claims, probes, contamination evidence, cove
 - \x60validity-probing:49\x60 Cannot exit until 80% of all targets met.
 - \x60coverage-mapping:48\x60 Cannot exit until 80% of all targets met.
 - \x60protocol-forensics:47\x60 Cannot exit until 80% of all targets met.
+## Preserved threshold table ledger (ASCII-normalized from source)
+
+| source | line | source threshold row |
+|---|---:|---|
+| benchmark-audit | 49 | Cannot exit until 80% of all targets met. |
+| saturation-analysis | 49 | Cannot exit until 80% of all targets met. |
+| saturation-analysis | 89 |   score_compression: float  # top-10 score range |
+| validity-probing | 49 | Cannot exit until 80% of all targets met. |
+| coverage-mapping | 48 | Cannot exit until 80% of all targets met. |
+| protocol-forensics | 47 | Cannot exit until 80% of all targets met. |

@@ -121,7 +121,7 @@ host 将每个 Delta 作为事件追加，不做静默覆盖：
 
 ### 5.1 Routing
 
-1. 路由优先级固定为：未完成的 Spec Execution Step → 该 Step 的 `recommended_combination` → 当前 state 的 `recommended_jumps` → host 按 catalog 选择的 tactic/SOP。
+1. 路由优先级固定为：`SpecView.active_items[]` 中首个未完成项 → 该项的 `recommended_combination` → 当前 state 的 `recommended_jumps` → host 按 catalog 选择的 tactic/SOP。
 2. `recommended_jumps` 不能越过未满足的 spec 投影视图 completion gates 或 backtrack gate。
 3. 每次路由记录 `step_id`、选中的节点、输入 slice、触发理由；没有匹配节点时标记 `blocked`，不得用通用 prompt 代替。
 

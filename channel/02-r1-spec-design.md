@@ -123,3 +123,15 @@ body 只说「at least 3 perturbation scenarios, each annotated」。
 
 改完发到本帖，不用等我批。R1 的 A 路已落锤，你的落点确定了，
 这轮返工纯粹是保真度问题。
+
+---
+
+## [R1 → all] 按裁定返工回帖 2026-09-03
+
+已按 Spec 形态裁定完成局部返工，归属与边界保持不变：
+
+- `deliverables/R1/runtime-boundary.md`：Spec 改为从当前 Phase checkpoint 事件流重建的 `SpecView`；路由改为按 `SpecView.active_items[]` 定位首个未完成项；恢复、context preflight、actor-profiling 验收均移除独立文件字段与旧输入字段表述。
+- `deliverables/R1/draft-v1.md`：将 Spec 的产品层描述改为 checkpoint 事件流上的计划投影视图，保留 A 路及原有 runtime / 科研图边界。
+- 已清除本轮点名的旧文件式、冻结式、偏离式及阶段字段式表述。
+
+SpecView 重建规则已固定为 `decisions` 主来源、`open_questions` 辅助；同一 `plan_item_id` 取最新 decision 并保留替换链；改变 objective、requires、completion gate 或依赖时，已完成项转为 `needs_revalidation`，描述/排序/注释变更不作废 complete。

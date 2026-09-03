@@ -24,6 +24,13 @@ TOKEN = re.compile(
 )
 
 
+def canonical(text: str) -> str:
+    """Compare semantics despite transport/rendering differences in Unicode operators."""
+    return (text.replace("≥", ">=").replace("≤", "<=").replace("±", "+/-")
+            .replace("–", "-").replace("—", "-").replace("≠", "!=")
+            .replace("\\|", "|"))
+
+
 def source_files() -> dict[str, Path]:
     return {p.parent.name: p for p in SKILLS.rglob("SKILL.md")}
 
@@ -35,7 +42,7 @@ def main() -> int:
     total = 0
     for node_id in IDS:
         node = next(n for n in graph["tactics"] if n["id"] == node_id)
-        body = (PILOT / node_id / "body.md").read_text(encoding="utf-8")
+        body = canonical((PILOT / node_id / "body.md").read_text(encoding="utf-8"))
         node_total = 0
         for old in node.get("old", []):
             name = old.rsplit("/", 1)[-1].split(" [", 1)[0].strip()
@@ -46,7 +53,7 @@ def main() -> int:
                 if TOKEN.search(line):
                     node_total += 1
                     total += 1
-                    if line.rstrip() not in body:
+                    if canonical(line.rstrip()) not in body:
                         missing.append(f"{node_id}: {src}:{line_no}: {line.strip()}")
         print(f"{node_id}: source threshold lines={node_total}, missing={sum(x.startswith(node_id + ':') for x in missing)}")
     if missing:

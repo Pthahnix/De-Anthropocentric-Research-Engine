@@ -53,3 +53,12 @@ Append method IDs, normalized records, excluded records with reasons, discrepanc
 - \x60condition-standardization:44\x60 Cannot exit until data_points_standardized >= 48 (80% of target).
 - \x60discrepancy-analysis:43\x60 Cannot exit until score_pairs_compared >= 36 (80% of target).
 - \x60progress-quantification:46\x60 Cannot exit until historical_data_points >= 80 (80% of target).
+## Preserved threshold table ledger (ASCII-normalized from source)
+
+| source | line | source threshold row |
+|---|---:|---|
+| method-inventory | 41 | Cannot exit until methods_discovered >= 40 (80% of target). |
+| performance-extraction | 44 | Cannot exit until data_points >= 120 (80% of target). |
+| condition-standardization | 44 | Cannot exit until data_points_standardized >= 48 (80% of target). |
+| discrepancy-analysis | 43 | Cannot exit until score_pairs_compared >= 36 (80% of target). |
+| progress-quantification | 46 | Cannot exit until historical_data_points >= 80 (80% of target). |

@@ -12,18 +12,18 @@
 
 源行数按当前 920 个 `SKILL.md` 的作者正文计数（去 frontmatter 与 generated tables）；v4 行数为本目录 `body.md` 物理行数。源节点数以 architecture `old` 中可解析到当前目录者计；因此与 roster 的历史估算可能不同。
 
-| v4 节点 | 源节点/行数 | v4 body | 压缩比（源/body） | 缩减 |
-|---|---:|---:|---:|---:|
-| synthesize-meta-analytic-evidence | 9 / 805 | 59 | 13.64:1 | 92.7% |
-| design-experiment | 8 / 304 | 50 | 6.08:1 | 83.6% |
-| formulate-hypotheses | 9 / 493 | 57 | 8.65:1 | 88.4% |
-| analyze-constraints-readiness | 22 / 1,051 | 48 | 21.90:1 | 95.4% |
-| rank-candidates | 13 / 734 | 47 | 15.62:1 | 93.6% |
-| establish-empirical-baseline | 9 / 696 | 48 | 14.50:1 | 93.1% |
-| audit-benchmark-validity | 7 / 600 | 45 | 13.33:1 | 92.5% |
-| **合计** | **77 / 4,683** | **354** | **13.23:1** | **92.4%** |
+| v4 节点 | 源节点/正文行数 | v4 body | 源 threshold 数 | body 保留数 | 压缩比（源/body） | 缩减 |
+|---|---:|---:|---:|---:|---:|---:|
+| synthesize-meta-analytic-evidence | 9 / 805 | 93 | 14 | 14 | 8.66:1 | 88.4% |
+| design-experiment | 8 / 304 | 50 | 0 | 0 | 6.08:1 | 83.6% |
+| formulate-hypotheses | 9 / 493 | 129 | 33 | 33 | 3.82:1 | 73.8% |
+| analyze-constraints-readiness | 22 / 1,051 | 140 | 43 | 43 | 7.51:1 | 86.7% |
+| rank-candidates | 13 / 734 | 113 | 30 | 30 | 6.50:1 | 84.6% |
+| establish-empirical-baseline | 9 / 696 | 64 | 5 | 5 | 10.88:1 | 90.8% |
+| audit-benchmark-validity | 7 / 600 | 63 | 6 | 6 | 9.52:1 | 89.5% |
+| **合计** | **77 / 4,683** | **652** | **131** | **131** | **7.18:1** | **86.1%** |
 
-`design-experiment` 的 roster 估算为 6 个旧节点/~702 行，而当前 architecture 列出 9 个 `old`、8 个可解析正文；该差异记录为边界 case，不用静默修正。
+`design-experiment` 的 roster 估算为 6 个旧节点/~702 行，而当前 architecture 列出 9 个 `old`、8 个可解析正文；该差异记录为边界 case，不用静默修正。阈值列由 `validate_threshold_fidelity.py` 逐条核验；所有 131 条源命中均保留。
 
 ## 编译耗时
 
@@ -49,6 +49,7 @@
 5. I2 区间存在重叠（0-40、30-60、50-90、75-100）；试点保留原值，未自行归一化。
 6. 208 个源文件没有可识别作者标题；解析必须支持段落/列表驱动。
 7. `score-object` rubric 的最终共享库方案未定；本轮遵守保守策略，涉及处复制并标记待重构。
+8. 源文件中的 Unicode 比较符在部分终端显示为 mojibake；body ledger 使用 ASCII-normalized 表格，校验器统一归一化后逐条比对，不改变数值语义。
 
 ## 通过性自检
 

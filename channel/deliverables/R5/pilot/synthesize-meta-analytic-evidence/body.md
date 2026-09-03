@@ -73,3 +73,21 @@ Append study set, extraction table, estimate, uncertainty, heterogeneity/bias de
 - \x60evidence-synthesis-planning:51\x60 - **Investigation**: pre-specified subgroups, meta-regression (if k >= 10)
 - \x60evidence-synthesis-planning:52\x60 - **Thresholds**: I2 interpretation (0-40% low, 30-60% moderate, 50-90% substantial, 75-100% considerable)
 - \x60evidence-synthesis-planning:86\x60 - At least 3 sensitivity analyses designed
+## Preserved threshold table ledger (ASCII-normalized from source)
+
+| source | line | source threshold row |
+|---|---:|---|
+| meta-analysis | 29 | \| Multi-method comparison \| network-comparison \| Comparing N>=3 methods with indirect evidence \| |
+| pairwise-synthesis | 38 | Budget gate: cannot exit until 80% of floor met. |
+| network-comparison | 25 | Design a network meta-analysis (NMA) protocol comparing N>=3 methods simultaneously, leveraging both direct and indirect evidence. |
+| network-comparison | 41 | Budget gate: cannot exit until 80% of floor met. |
+| cumulative-tracking | 40 | Budget gate: cannot exit until 80% of floor met. |
+| heterogeneity-investigation | 28 | When a meta-analysis reveals substantial heterogeneity (I2 > 50%, significant Q-test, large tau2), this strategy designs the investigation protocol: subgroup analyses, meta-regression, moderator identification, and outlier diagnostics. Produces the investigation plan, not the computation. |
+| heterogeneity-investigation | 40 | Budget gate: cannot exit until 80% of floor met. |
+| bias-detection | 41 | Budget gate: cannot exit until 80% of floor met. |
+| effect-size-extraction | 80 | - At least 5 studies processed |
+| effect-size-extraction | 81 | - At least 5 effect sizes extracted or calculation planned |
+| quality-assessment-protocol | 59 | - At least 5 studies assessed |
+| evidence-synthesis-planning | 51 | - **Investigation**: pre-specified subgroups, meta-regression (if k >= 10) |
+| evidence-synthesis-planning | 52 | - **Thresholds**: I2 interpretation (0-40% low, 30-60% moderate, 50-90% substantial, 75-100% considerable) |
+| evidence-synthesis-planning | 86 | - At least 3 sensitivity analyses designed |
