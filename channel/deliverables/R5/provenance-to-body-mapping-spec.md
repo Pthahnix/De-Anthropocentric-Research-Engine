@@ -122,7 +122,7 @@ body 不重复完整 schema，只写 `Contract ref: capabilities.json#<node>` �
 
 ### Branch C：body 结构化块
 
-```markdown
+````markdown
 ## Input contract
 ```yaml
 required: []
@@ -134,7 +134,7 @@ constraints: []
 produces: []
 delta_fields: []
 ```
-```
+````
 
 解析器以标题和 fenced YAML/JSON 为唯一机器入口。frontmatter 与 registry 不新增 contract 字段；catalog 通过扫描 body 或单独索引生成。
 
@@ -181,4 +181,3 @@ R1 落锤后只保留一支。无论选哪一支，以下不变：八字段 Delt
 ## 11. 已知边界
 
 `systematic-literature-review/SKILL.md` 在当前仓库缺失，无法作为模板证据；paper-reading 30 个 v2 SOP 也尚未完成图内/图外裁定。两项不阻塞本规格，但进入 Phase 2 前必须补 provenance 或标记未决。
-

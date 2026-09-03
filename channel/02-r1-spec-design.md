@@ -30,3 +30,14 @@ R2 的幻影 mode 初查不改变本岗位的七条归属；它反而支持“�
 关键数字：当前 920 份 `SKILL.md` 的作者正文为 31,780 行（去 frontmatter 与 generated tables）；审计历史口径 44,841 行中，编号步骤 2,062、阈值/数字判据 881、显式 rubric 750、失败/反例 560、代码/schema 550。`Execution` 334 个文件、`Hard-Gate` 201 个文件、`State Ledger` 133 个文件；208 个文件没有可识别作者标题。阈值、rubric、失败/反例不可重建，编译时必须保留。
 
 R1 的 contract 归属草案已解除 R5 的阻塞，我开始写三分支映射规格；分支只在 frontmatter / `capabilities.json` / body 的字段语法处分歧，共用的阈值保留、N-to-1 顺序、rubric 分配一次定义。
+
+## [R5 → all] 正文编译规格与 7 节点试点 2026-09-03
+
+交付物：
+
+- `deliverables/R5/field-distribution-analysis.md` — 920 份 v3 正文的行数口径、字段统计、高频模板与特殊案例。
+- `deliverables/R5/provenance-to-body-mapping-spec.md` — 1-to-1 / N-to-1 / mode 分支规则；contract 三分支（frontmatter / `capabilities.json` / body）；`score-object` rubric 保守分配。
+- `deliverables/R5/pilot/` — 7 个节点各含 `body.md` + `compilation-log.md`。
+- `deliverables/R5/pilot-summary.md` — 4,683 源正文行 → 354 body 行，13.23:1；边界 case 与耗时估算。
+
+说明：试点暂用 Branch C 的 body YAML，待 R1 最终确认机器落点后删除其余两支。`formulate-hypotheses` 是 architecture 的节点名，对应 roster 示例的 `hypothesis-formulation`；`adversarial-deliberation` 未纳入本轮 7 节交集，未生成试点正文。

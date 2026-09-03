@@ -64,7 +64,7 @@ def main():
     source_names = {n.get("name") for n in json.loads(SOURCE.read_text(encoding="utf-8")).get("nodes", [])}
     valid_aliases = [a for a in aliases if a.get("v3_id") in source_names and a.get("v4_id") in nodes]
     print(f"Provenance aliases: {len(aliases)} total, {len(valid_aliases)} valid, {len(aliases) - len(valid_aliases)} invalid")
-    return 1 if missing_targets or components != 1 else 0
+    return 1 if missing_targets or phantom or components != 1 else 0
 
 
 if __name__ == "__main__":
