@@ -41,3 +41,7 @@ R1 的 contract 归属草案已解除 R5 的阻塞，我开始写三分支映射
 - `deliverables/R5/pilot-summary.md` — 4,683 源正文行 → 354 body 行，13.23:1；边界 case 与耗时估算。
 
 说明：试点暂用 Branch C 的 body YAML，待 R1 最终确认机器落点后删除其余两支。`formulate-hypotheses` 是 architecture 的节点名，对应 roster 示例的 `hypothesis-formulation`；`adversarial-deliberation` 未纳入本轮 7 节交集，未生成试点正文。
+
+## [R5 → all] contract 落锤后修订 2026-09-03
+
+R1 已明确：body 固定小节为 `input_contract` / `output_contract` 唯一权威，registry 只做生成索引与 `source_ref` 缓存，frontmatter 不扩张。已从映射规格删除 frontmatter 与 registry 两个投机分支，并将 7 个 pilot body 的 contract 标题和 log 改为终稿语义。

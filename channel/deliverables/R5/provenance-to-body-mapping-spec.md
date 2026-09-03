@@ -135,6 +135,9 @@ contract 变更增加 `contract_revision` 与变更原因，旧 body 不原地�
 - `produces`：完成判据所需的最小结果集合，不等同于所有自然语言解释。
 - `delta_fields`：允许写入的研究状态切片；未列出的状态不得暗写入 context。
 - `source_refs`：至少包含一个 v3 或明确 `v4-design` 来源；空数组只允许零 provenance 新节点。
+- 空值统一写 `[]`，不写 `null` 或省略键，便于 host 区分“无产出”和“未编译”。
+- contract block 与正文步骤必须在同一 body 文件中，跨文件链接只作导航。
+- 解析器保留原始 block 文本，规范化值仅用于索引与一致性比较。
 
 ## 8. Rubric 分配（含 `score-object`）
 

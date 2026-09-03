@@ -113,3 +113,28 @@ skill 禁令继续有效：`superpowers` 和 `ara` 全程不许 load / invoke。
 已知未解决项：R2 尚需把第 6 节归属映射回 146 条审计表；R3 尚需将 catalog 实现从临时方案收敛为产品层 A；R5 尚需据字段落点完成正文映射。这些是下游交付，不改变 R1 规范已完成的事实。
 
 自评：最弱处是 runtime 元数据的具体载体仍由 host 选择；规范已固定必需字段、状态和失败门，但未指定 provider。该取舍符合 v4 的 host-neutral 边界，后续若需要统一观测后端再另行裁决。
+
+## [R5 → Sirelia] 完成声明 2026-09-03
+
+交付物清单：
+- `deliverables/R5/field-distribution-analysis.md` — 920 份 v3 正文的扫描口径、字段统计、高频模板、特殊案例与编译约束。
+- `deliverables/R5/provenance-to-body-mapping-spec.md` — 200 行；1-to-1、N-to-1、mode 分支、contract 固定 body 落点、rubric 分配与验收规则。
+- `deliverables/R5/pilot/` — 7 个节点各含 `body.md` + `compilation-log.md`，共 14 个文件。
+- `deliverables/R5/pilot-summary.md` — 4,683 源正文行 → 354 body 行，13.23:1，含耗时估算与边界 case。
+
+验收标准对照：
+| roster 里的验收要求 | 我的交付 | 证据 |
+|---|---|---|
+| v3 字段分布、模板、特殊案例 | 扫描 920 个 SKILL.md；给出 31,780 作者正文行及审计 44,841 行分类口径 | `deliverables/R5/field-distribution-analysis.md:1-99` |
+| 1-to-1 / N-to-1 / mode 映射规则 | 固定抽取、合并顺序、冲突处理、mode 分支和 provenance map | `deliverables/R5/provenance-to-body-mapping-spec.md:17-91` |
+| contract 字段可被 host 解析 | R1 落锤后以 body 固定小节 + YAML/JSON block 为唯一权威，八字段 Delta 白名单 | `deliverables/R5/provenance-to-body-mapping-spec.md:93-151` |
+| 7 节点试点，每节点 body + log | 7 个 pilot 子目录齐全；每个 body 含输入、执行、输出、gate、failure、provenance、Delta | `deliverables/R5/pilot/`、`pilot-summary.md:8-39` |
+| threshold / rubric 不丢 | 试点保留原数字门槛；`score-object` 采用复制并标记待重构 | `deliverables/R5/provenance-to-body-mapping-spec.md:117-129`、各 `compilation-log.md` |
+
+已知未解决项：
+- `systematic-literature-review/SKILL.md` 在当前仓库不存在；无法核验该指定模板，已在字段分析与规格中标记。
+- architecture `old` 中存在跨 package/历史别名；pilot log 记录了无法解析的名称，未猜测正文。
+- `score-object` 15 条 rubric 的共享库是否在 Phase 2 提取，仍待项目级决定；本轮只做保守复制。
+- pilot 耗时是人工+脚本估算，尚未接入逐节点 profiler；不应当作性能承诺。
+
+自评：最弱处是 body 仍是方法学试编，尚未由真实 host AI 执行一轮 contract 解析与 blocked/uncertainty 负测；下一轮应以 R1 固定 parser 做一次端到端验收。另，`adversarial-deliberation` 留在高危审计表但未纳入 roster 7 节交集，我已在 pilot-summary 明示该取舍，若 Sirelia 指定替换节点只需重做该目录。

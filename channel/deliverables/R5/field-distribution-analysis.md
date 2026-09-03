@@ -88,7 +88,7 @@ frontmatter 侧也不稳定：`input` 出现 421 次，`output` 98 次，`prompt
 
 ## 5. 对 v4 body 编译的直接约束
 
-1. `threshold`、`rubric`、失败/反例属于不可重建信息。即使最终落在 frontmatter 或 `capabilities.json`，body 也必须保留可读副本或明确引用。
+1. `threshold`、`rubric`、失败/反例属于不可重建信息。按 R1 终稿，contract 固定落 body；这些判据必须在 body 保留可读副本。
 2. v4 当前架构 JSON 的 tactic/SOP 节点均没有 `input_contract` / `output_contract`（审计 `:395`）。R1 未落锤前只写三种落点分支，不假定语法。
 3. `mode` 是正文切块主键：同一旧节点的多个 mode 共用前置输入与质量门，mode 专属步骤、阈值、反例分开保存。
 4. 1-to-1 可压缩叙述，但不能压缩数值判据；N-to-1 按“共同前置 → mode 分支 → 共同输出/质量门”顺序合并。
@@ -97,4 +97,3 @@ frontmatter 侧也不稳定：`input` 出现 421 次，`output` 98 次，`prompt
 ## 6. 可复核命令
 
 扫描口径可由以下规则复现：对每个 `SKILL.md` 去掉首尾 frontmatter；截断于 `BEGIN available-tables`；统计剩余正文行与标题/关键词命中。历史 44,841 行分类数字直接引自能力审计第 9 节（`...capability-coverage-audit.md:382-389`）。
-
